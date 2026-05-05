@@ -68,7 +68,9 @@ let l = parseFloat(document.getElementById("length").value);
 let w = parseFloat(document.getElementById("width").value);
 let p = parseFloat(document.getElementById("pieces").value);
 let price = parseFloat(document.getElementById("price").value);
-
+function saveData(){
+localStorage.setItem("items", JSON.stringify(items));
+}
 // debug check
 if(!name || !l || !w || !p || !price){
 alert("Fill all fields");
@@ -102,12 +104,12 @@ table.innerHTML += `
 <td>${i.w}</td>
 <td>${i.p}</td>
 <td>${sqm.toFixed(2)}</td>
-<td>${i.total.toFixed(2)}</td>
+<td>${i.total.toFixed(2)} ${currency}</td>
 </tr>`;
 });
 
 document.getElementById("grandTotal").innerText =
-"Total: " + sum.toFixed(2);
+"Total: " + sum.toFixed(2) + " " + currency;
 }
 
 // Optional: Clear all data
