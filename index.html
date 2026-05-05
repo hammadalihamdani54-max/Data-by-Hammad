@@ -34,15 +34,15 @@ th, td { border:1px solid #ccc; padding:5px; text-align:center; }
 <button onclick="addItem()">Add Item</button>
 
 <table>
-<thead>
 <tr>
 <th>Name</th>
 <th>L</th>
 <th>W</th>
 <th>Pcs</th>
+<th>m²</th>
+<th>Price</th>
 <th>Total</th>
 </tr>
-</thead>
 <tbody id="list"></tbody>
 </table>
 
@@ -72,7 +72,12 @@ let l = parseFloat(document.getElementById("length").value);
 let w = parseFloat(document.getElementById("width").value);
 let p = parseFloat(document.getElementById("pieces").value);
 let price = parseFloat(document.getElementById("price").value);
-
+<select id="currency">
+  <option value="SAR">SAR</option>
+  <option value="PKR">PKR</option>
+  <option value="USD">USD</option>
+  <option value="AED">AED</option>
+</select>
 let area = l * w * p;
 let total = area * price;
 
@@ -86,7 +91,7 @@ function render(){
 let table = document.getElementById("list");
 table.innerHTML = "";
 let sum = 0;
-
+let currency = document.getElementById("currency").value;
 items.forEach(i=>{
 sum += i.total;
 
