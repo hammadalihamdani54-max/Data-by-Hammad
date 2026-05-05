@@ -62,31 +62,26 @@ window.onload = function(){
     }
 }
 
-function saveData(){
-    localStorage.setItem("items", JSON.stringify(items));
-}
-
 function addItem(){
 let name = document.getElementById("name").value;
 let l = parseFloat(document.getElementById("length").value);
 let w = parseFloat(document.getElementById("width").value);
 let p = parseFloat(document.getElementById("pieces").value);
 let price = parseFloat(document.getElementById("price").value);
-<select id="currency">
-  <option value="SAR">SAR</option>
-  <option value="PKR">PKR</option>
-  <option value="USD">USD</option>
-  <option value="AED">AED</option>
-</select>
-let area = l * w * p;
-let total = area * price;
 
-items.push({name,l,w,p,total});
-
-saveData();   // ✅ SAVE HERE
-render();
+if(!name || !l || !w || !p || !price){
+alert("Please fill all fields");
+return;
 }
 
+let sqm = l * w * p;
+let total = sqm * price;
+
+items.push({name,l,w,p,sqm,total});
+
+saveData();
+render();
+}
 function render(){
 let table = document.getElementById("list");
 table.innerHTML = "";
