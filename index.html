@@ -68,7 +68,9 @@ let l = parseFloat(document.getElementById("length").value);
 let w = parseFloat(document.getElementById("width").value);
 let p = parseFloat(document.getElementById("pieces").value);
 let price = parseFloat(document.getElementById("price").value);
-
+function saveData(){
+localStorage.setItem("items", JSON.stringify(items));
+                       }
 if(!name || !l || !w || !p || !price){
 alert("Please fill all fields");
 return;
