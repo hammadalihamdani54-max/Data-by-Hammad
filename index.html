@@ -48,6 +48,19 @@ th, td { border:1px solid #ccc; padding:5px; text-align:center; }
 <script>
 let items = [];
 
+// Load data on start
+window.onload = function(){
+    let saved = localStorage.getItem("items");
+    if(saved){
+        items = JSON.parse(saved);
+        render();
+    }
+}
+
+function saveData(){
+    localStorage.setItem("items", JSON.stringify(items));
+}
+
 function addItem(){
 let name = document.getElementById("name").value;
 let l = parseFloat(document.getElementById("length").value);
@@ -59,6 +72,8 @@ let area = l * w * p;
 let total = area * price;
 
 items.push({name,l,w,p,total});
+
+saveData();   // ✅ SAVE HERE
 render();
 }
 
@@ -67,8 +82,9 @@ let table = document.getElementById("list");
 table.innerHTML = "";
 let sum = 0;
 
-items.forEach(i=>{
+items.forEach((i, index)=>{
 sum += i.total;
+
 table.innerHTML += `
 <tr>
 <td>${i.name}</td>
@@ -80,6 +96,13 @@ table.innerHTML += `
 });
 
 document.getElementById("grandTotal").innerText = "Total: " + sum.toFixed(2);
+}
+
+// Optional: Clear all data
+function clearAll(){
+    items = [];
+    saveData();
+    render();
 }
 </script>
 
