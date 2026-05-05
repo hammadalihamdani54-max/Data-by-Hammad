@@ -1,4 +1,4 @@
-To<!DOCTYPE html>
+5To<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -41,7 +41,7 @@ th, td { border:1px solid #ccc; padding:5px; text-align:center; }
 <th>Pcs</th>
 <th>m²</th>
 <th>Price</th>
-<th>Total</th>
+
 </tr>
 <tbody id="list"></tbody>
 </table>
@@ -103,8 +103,8 @@ table.innerHTML += `
 <td>${i.l}</td>
 <td>${i.w}</td>
 <td>${i.p}</td>
-<td>${sqm.toFixed(2)}</td>
-<td>${i.total.toFixed(2)} ${currency}</td>
+<td>${sqm.toFixed(2)} <small>m²</small></td>
+
 </tr>`;
 });
 
