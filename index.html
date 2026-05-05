@@ -25,7 +25,12 @@ th, td { border:1px solid #ccc; padding:5px; text-align:center; }
 <input id="width" type="number" placeholder="Width">
 <input id="pieces" type="number" placeholder="Pieces">
 <input id="price" type="number" placeholder="Price per unit">
-
+<select id="currency">
+  <option value="SAR">🇸🇦 SAR</option>
+  <option value="PKR">🇵🇰 PKR</option>
+  <option value="USD">🇺🇸 USD</option>
+  <option value="AED">🇦🇪 AED</option>
+</select>
 <button onclick="addItem()">Add Item</button>
 
 <table>
@@ -82,8 +87,11 @@ let table = document.getElementById("list");
 table.innerHTML = "";
 let sum = 0;
 
-items.forEach((i, index)=>{
+items.forEach(i=>{
 sum += i.total;
+
+// safe square meter (agar missing ho to 0)
+let sqm = i.sqm ? i.sqm : (i.l * i.w * i.p);
 
 table.innerHTML += `
 <tr>
@@ -91,11 +99,13 @@ table.innerHTML += `
 <td>${i.l}</td>
 <td>${i.w}</td>
 <td>${i.p}</td>
+<td>${sqm.toFixed(2)}</td>
 <td>${i.total.toFixed(2)}</td>
 </tr>`;
 });
 
-document.getElementById("grandTotal").innerText = "Total: " + sum.toFixed(2);
+document.getElementById("grandTotal").innerText =
+"Total: " + sum.toFixed(2);
 }
 
 // Optional: Clear all data
