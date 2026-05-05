@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Data by Hammad</title>
+<style>
+body { font-family: Arial; background:#f4f4f4; margin:0; padding:10px; }
+h2 { text-align:center; }
+.container { background:white; padding:10px; border-radius:10px; }
+input { width:100%; padding:8px; margin:5px 0; }
+button { padding:10px; width:100%; margin-top:5px; background:green; color:white; border:none; }
+table { width:100%; margin-top:10px; border-collapse: collapse; }
+th, td { border:1px solid #ccc; padding:5px; text-align:center; }
+.total { font-size:18px; font-weight:bold; text-align:right; margin-top:10px; }
+</style>
+</head>
+<body>
+
+<h2>Data by Hammad</h2>
+
+<div class="container">
+
+<input id="name" placeholder="Item Name">
+<input id="length" type="number" placeholder="Length">
+<input id="width" type="number" placeholder="Width">
+<input id="pieces" type="number" placeholder="Pieces">
+<input id="price" type="number" placeholder="Price per unit">
+
+<button onclick="addItem()">Add Item</button>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>L</th>
+<th>W</th>
+<th>Pcs</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody id="list"></tbody>
+</table>
+
+<div class="total" id="grandTotal">Total: 0</div>
+
+</div>
+
+<script>
+let items = [];
+
+function addItem(){
+let name = document.getElementById("name").value;
+let l = parseFloat(document.getElementById("length").value);
+let w = parseFloat(document.getElementById("width").value);
+let p = parseFloat(document.getElementById("pieces").value);
+let price = parseFloat(document.getElementById("price").value);
+
+let area = l * w * p;
+let total = area * price;
+
+items.push({name,l,w,p,total});
+render();
+}
+
+function render(){
+let table = document.getElementById("list");
+table.innerHTML = "";
+let sum = 0;
+
+items.forEach(i=>{
+sum += i.total;
+table.innerHTML += `
+<tr>
+<td>${i.name}</td>
+<td>${i.l}</td>
+<td>${i.w}</td>
+<td>${i.p}</td>
+<td>${i.total.toFixed(2)}</td>
+</tr>`;
+});
+
+document.getElementById("grandTotal").innerText = "Total: " + sum.toFixed(2);
+}
+</script>
+
+</body>
+</html>
