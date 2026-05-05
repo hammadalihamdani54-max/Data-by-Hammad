@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+To<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -68,11 +68,10 @@ let l = parseFloat(document.getElementById("length").value);
 let w = parseFloat(document.getElementById("width").value);
 let p = parseFloat(document.getElementById("pieces").value);
 let price = parseFloat(document.getElementById("price").value);
-function saveData(){
-localStorage.setItem("items", JSON.stringify(items));
-                       }
+
+// debug check
 if(!name || !l || !w || !p || !price){
-alert("Please fill all fields");
+alert("Fill all fields");
 return;
 }
 
@@ -81,7 +80,8 @@ let total = sqm * price;
 
 items.push({name,l,w,p,sqm,total});
 
-saveData();
+localStorage.setItem("items", JSON.stringify(items));
+
 render();
 }
 function render(){
