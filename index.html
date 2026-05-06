@@ -26,11 +26,11 @@ th, td { border:1px solid #ccc; padding:5px; text-align:center; }
 <input id="width" type="number" placeholder="Width">
 <input id="pieces" type="number" placeholder="Pieces">
 <input id="price" type="number" placeholder="Price per unit">
-  <input id="customer" placeholder="Customer Name">
+ 
 <input id="discount" type="number" placeholder="Discount (%)">
  <input id="customer" placeholder="Customer Name">
 
-<input id="discount" type="number" placeholder="Discount %">
+
 
 <button onclick="clearAll()" style="background:red;">Clear All Items</button> 
 <select id="currency">
@@ -49,8 +49,8 @@ th, td { border:1px solid #ccc; padding:5px; text-align:center; }
 <th>Pcs</th>
 <th>m²</th>
 <th>Price</th>
-  <th>Action</th>
 <th>Total</th>
+<th>Action</th>
 </tr>
 <tbody id="list"></tbody>
 </table>
@@ -96,13 +96,12 @@ doc.setFontSize(10);
 doc.setFont(undefined, "bold");
 
 doc.text("Item", 14, y);
-doc.text("L", 55, y);
-doc.text("W", 70, y);
-doc.text("Pcs", 85, y);
-doc.text("m²", 105, y);
+doc.text("L", 50, y);
+doc.text("W", 65, y);
+doc.text("Pcs", 80, y);
+doc.text("m²", 100, y);
 doc.text("Price", 130, y);
 doc.text("Total", 165, y);
-
 doc.line(14, y+2, 195, y+2);
 
 y += 10;
@@ -118,8 +117,8 @@ doc.text(String(i.l), 55, y);
 doc.text(String(i.w), 70, y);
 doc.text(String(i.p), 85, y);
 doc.text(i.sqm.toFixed(2), 105, y);
-doc.text(i.price.toFixed(2) + " " + i.currency, 130, y);
-doc.text(i.total.toFixed(2), 165, y);
+doc.text(i.price.toFixed(2) + " " + (i.currency || ""), 130, y);
+doc.text((i.total || 0).toFixed(2), 165, y);
 
 y += 8;
 
@@ -207,18 +206,18 @@ table.innerHTML = "";
 
 let sum = 0;
 
-items.forEach((i, index)=>{
-sum += i.total || 0;
+items.forEach((i,index)=>{
+sum += i.total;
 
 table.innerHTML += `
 <tr>
-<td>${i.name || ""}</td>
-<td>${i.l || 0}</td>
-<td>${i.w || 0}</td>
-<td>${i.p || 0}</td>
-<td>${(i.sqm || 0).toFixed(2)} m²</td>
-<td>${(i.price || 0).toFixed(2)} ${i.currency}</td>
-<td>${(i.total || 0).toFixed(2)} ${i.currency}</td>
+<td>${i.name}</td>
+<td>${i.l}</td>
+<td>${i.w}</td>
+<td>${i.p}</td>
+<td>${i.sqm.toFixed(2)} m²</td>
+<td>${i.price.toFixed(2)} ${i.currency}</td>
+<td>${i.total.toFixed(2)} ${i.currency}</td>
 <td><button onclick="deleteItem(${index})" style="background:red;">❌</button></td>
 </tr>`;
 });
