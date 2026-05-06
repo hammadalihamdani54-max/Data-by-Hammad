@@ -26,6 +26,8 @@ th, td { border:1px solid #ccc; padding:5px; text-align:center; }
 <input id="width" type="number" placeholder="Width">
 <input id="pieces" type="number" placeholder="Pieces">
 <input id="price" type="number" placeholder="Price per unit">
+  <input id="customer" placeholder="Customer Name">
+<input id="discount" type="number" placeholder="Discount (%)">
 <select id="currency">
   <option value="SAR">🇸🇦 SAR</option>
   <option value="PKR">🇵🇰 PKR</option>
@@ -60,67 +62,88 @@ const { jsPDF } = window.jspdf;
 let doc = new jsPDF();
 
 let sum = 0;
+let discount = Number(document.getElementById("discount").value) || 0;
+let customer = document.getElementById("customer").value || "Walk-in Customer";
 
 // ===== HEADER =====
 doc.setFontSize(18);
 doc.text("DATA BY HAMMAD", 14, 15);
 
 doc.setFontSize(11);
-doc.text("INVOICE / BILL", 14, 22);
+doc.text("INVOICE", 14, 22);
+
+let date = new Date().toLocaleString();
+doc.text("Date: " + date, 140, 22);
 
 // line
 doc.line(14, 25, 195, 25);
 
-// ===== TABLE START =====
-let y = 35;
+// customer
+doc.setFontSize(11);
+doc.text("Customer: " + customer, 14, 32);
 
-// table header
+// ===== TABLE HEADER =====
+let y = 42;
+
 doc.setFontSize(10);
 doc.setFont(undefined, "bold");
 
-doc.text("Name", 14, y);
-doc.text("L", 60, y);
-doc.text("W", 75, y);
-doc.text("Pcs", 90, y);
-doc.text("m²", 110, y);
-doc.text("Price", 135, y);
+doc.text("Item", 14, y);
+doc.text("L", 55, y);
+doc.text("W", 70, y);
+doc.text("Pcs", 85, y);
+doc.text("m²", 105, y);
+doc.text("Price", 130, y);
 doc.text("Total", 165, y);
 
 doc.line(14, y+2, 195, y+2);
 
 y += 10;
 
-// reset font
 doc.setFont(undefined, "normal");
 
-// ===== DATA ROWS =====
+// ===== ITEMS =====
 items.forEach(i=>{
 sum += i.total;
 
 doc.text(String(i.name), 14, y);
-doc.text(String(i.l), 60, y);
-doc.text(String(i.w), 75, y);
-doc.text(String(i.p), 90, y);
-doc.text(i.sqm.toFixed(2), 110, y);
-doc.text(i.price.toFixed(2) + " " + i.currency, 135, y);
+doc.text(String(i.l), 55, y);
+doc.text(String(i.w), 70, y);
+doc.text(String(i.p), 85, y);
+doc.text(i.sqm.toFixed(2), 105, y);
+doc.text(i.price.toFixed(2) + " " + i.currency, 130, y);
 doc.text(i.total.toFixed(2), 165, y);
 
 y += 8;
 
-// page break
-if(y > 270){
+if(y > 260){
 doc.addPage();
 y = 20;
 }
 });
 
-// ===== TOTAL BOX =====
-y += 10;
-doc.setFontSize(12);
-doc.setFont(undefined, "bold");
+// ===== DISCOUNT =====
+let discAmount = (sum * discount) / 100;
+let finalTotal = sum - discAmount;
 
-doc.rect(130, y, 60, 10);
-doc.text("TOTAL: " + sum.toFixed(2), 132, y + 7);
+y += 10;
+
+doc.setFont(undefined, "bold");
+doc.text("Subtotal: " + sum.toFixed(2), 140, y);
+
+y += 7;
+doc.text("Discount: " + discount + "% (-" + discAmount.toFixed(2) + ")", 140, y);
+
+y += 7;
+
+// ===== FINAL TOTAL BOX =====
+doc.rect(130, y+2, 60, 12);
+doc.text("TOTAL: " + finalTotal.toFixed(2), 132, y+10);
+
+// ===== FOOTER =====
+doc.setFontSize(10);
+doc.setFont(undefined, "normal");
+doc.text("Thank you for your business!", 14, y+25);
 
 // save
 doc.save("invoice.pdf");
