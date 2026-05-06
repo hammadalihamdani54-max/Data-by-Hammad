@@ -28,6 +28,11 @@ th, td { border:1px solid #ccc; padding:5px; text-align:center; }
 <input id="price" type="number" placeholder="Price per unit">
   <input id="customer" placeholder="Customer Name">
 <input id="discount" type="number" placeholder="Discount (%)">
+ <input id="customer" placeholder="Customer Name">
+
+<input id="discount" type="number" placeholder="Discount %">
+
+<button onclick="clearAll()" style="background:red;">Clear All Items</button> 
 <select id="currency">
   <option value="SAR">🇸🇦 SAR</option>
   <option value="PKR">🇵🇰 PKR</option>
@@ -65,24 +70,26 @@ let sum = 0;
 let discount = Number(document.getElementById("discount").value) || 0;
 let customer = document.getElementById("customer").value || "Walk-in Customer";
 
+// invoice number
+let invoiceNo = localStorage.getItem("invNo") || 1;
+
 // ===== HEADER =====
 doc.setFontSize(18);
 doc.text("DATA BY HAMMAD", 14, 15);
 
 doc.setFontSize(11);
-doc.text("INVOICE", 14, 22);
+doc.text("INVOICE #" + invoiceNo, 14, 22);
 
-let date = new Date().toLocaleString();
-doc.text("Date: " + date, 140, 22);
+let date = new Date();
+doc.text("Date: " + date.toLocaleString(), 120, 22);
 
 // line
 doc.line(14, 25, 195, 25);
 
 // customer
-doc.setFontSize(11);
 doc.text("Customer: " + customer, 14, 32);
 
-// ===== TABLE HEADER =====
+// ===== TABLE =====
 let y = 42;
 
 doc.setFontSize(10);
@@ -102,11 +109,11 @@ y += 10;
 
 doc.setFont(undefined, "normal");
 
-// ===== ITEMS =====
+// items
 items.forEach(i=>{
 sum += i.total;
 
-doc.text(String(i.name), 14, y);
+doc.text(i.name, 14, y);
 doc.text(String(i.l), 55, y);
 doc.text(String(i.w), 70, y);
 doc.text(String(i.p), 85, y);
@@ -122,7 +129,7 @@ y = 20;
 }
 });
 
-// ===== DISCOUNT =====
+// discount
 let discAmount = (sum * discount) / 100;
 let finalTotal = sum - discAmount;
 
@@ -136,17 +143,19 @@ doc.text("Discount: " + discount + "% (-" + discAmount.toFixed(2) + ")", 140, y)
 
 y += 7;
 
-// ===== FINAL TOTAL BOX =====
+// total box
 doc.rect(130, y+2, 60, 12);
 doc.text("TOTAL: " + finalTotal.toFixed(2), 132, y+10);
 
-// ===== FOOTER =====
+// footer
 doc.setFontSize(10);
-doc.setFont(undefined, "normal");
 doc.text("Thank you for your business!", 14, y+25);
 
-// save
-doc.save("invoice.pdf");
+// save invoice
+doc.save("invoice_" + invoiceNo + ".pdf");
+
+// increment invoice number
+localStorage.setItem("invNo", Number(invoiceNo) + 1);
 }
 // Load data on start
 window.onload = function(){
@@ -219,9 +228,9 @@ document.getElementById("grandTotal").innerText =
 }
 // Optional: Clear all data
 function clearAll(){
-    items = [];
-    localStorage.removeItem("items");
-    render();
+items = [];
+localStorage.removeItem("items");
+render();
 }
 </script>
 
