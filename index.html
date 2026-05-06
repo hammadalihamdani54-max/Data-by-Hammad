@@ -1,6 +1,7 @@
 5To<!DOCTYPE html>
 <html>
 <head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <meta charset="UTF-8">
 <title>Data by Hammad</title>
 <style>
@@ -53,7 +54,40 @@ th, td { border:1px solid #ccc; padding:5px; text-align:center; }
 
 <script>
 let items = [];
+function downloadPDF(){
 
+const { jsPDF } = window.jspdf;
+let doc = new jsPDF();
+
+let y = 10;
+let sum = 0;
+
+doc.text("Data by Hammad - Invoice", 10, y);
+y += 10;
+
+items.forEach((i, index)=>{
+sum += i.total;
+
+doc.text(
+`${index+1}. ${i.name} | ${i.l}x${i.w} | Pcs:${i.p} | m²:${i.sqm.toFixed(2)} | ${i.total.toFixed(2)} ${i.currency}`,
+10,
+y
+);
+
+y += 10;
+
+// page overflow fix
+if(y > 280){
+doc.addPage();
+y = 10;
+}
+});
+
+y += 10;
+doc.text("Total: " + sum.toFixed(2), 10, y);
+
+doc.save("invoice.pdf");
+}
 // Load data on start
 window.onload = function(){
     let saved = localStorage.getItem("items");
@@ -75,7 +109,7 @@ let w = Number(document.getElementById("width").value);
 let p = Number(document.getElementById("pieces").value);
 let price = Number(document.getElementById("price").value);
 let currency = document.getElementById("currency").value;
-
+<button onclick="downloadPDF()" style="background:blue;">📄 Download PDF</button>
 if(name === "" || isNaN(l) || isNaN(w) || isNaN(p) || isNaN(price)){
 alert("Fill all fields properly");
 return;
