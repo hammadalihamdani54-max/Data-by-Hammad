@@ -186,7 +186,105 @@ render();
 
 alert("Saved");
 }
+let deletedRecord = null;
+let deletedIndex = null;
 
+/* MONTHLY */
+function loadMonthly(){
+
+let data = JSON.parse(localStorage.getItem("monthly")) || [];
+
+let html="";
+let sum=0;
+
+data.forEach((m,index)=>{
+
+sum += m.total;
+
+html += `
+<div style="
+padding:10px;
+border:1px solid #ccc;
+margin:8px 0;
+border-radius:8px;
+background:#fff">
+
+📅 ${m.date}<br>
+💰 <b>${m.total.toFixed(2)}</b>
+
+<button 
+onclick="deleteMonthly(${index})"
+style="
+margin-top:8px;
+background:red;
+color:#fff;
+border:none;
+padding:6px 10px;
+border-radius:5px;
+cursor:pointer">
+Delete
+</button>
+
+</div>`;
+});
+
+html += `
+<hr>
+<h3>Total: ${sum.toFixed(2)}</h3>
+
+<button 
+onclick="undoDelete()"
+style="
+background:orange;
+color:#fff;
+border:none;
+padding:10px;
+border-radius:5px;
+width:100%;
+margin-top:10px">
+Undo Delete
+</button>
+`;
+
+document.getElementById("records").innerHTML = html;
+}
+
+/* DELETE MONTHLY */
+function deleteMonthly(index){
+
+let data = JSON.parse(localStorage.getItem("monthly")) || [];
+
+deletedRecord = data[index];
+deletedIndex = index;
+
+data.splice(index,1);
+
+localStorage.setItem("monthly", JSON.stringify(data));
+
+loadMonthly();
+}
+
+/* UNDO DELETE */
+function undoDelete(){
+
+if(deletedRecord == null){
+alert("Nothing to undo");
+return;
+}
+
+let data = JSON.parse(localStorage.getItem("monthly")) || [];
+
+data.splice(deletedIndex,0,deletedRecord);
+
+localStorage.setItem("monthly", JSON.stringify(data));
+
+deletedRecord = null;
+deletedIndex = null;
+
+loadMonthly();
+
+alert("Restored");
+}
 /* MONTHLY */
 function loadMonthly(){
 
