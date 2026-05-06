@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Tabuk Marble Pro System</title>
+<title>Shop System Pro</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -29,104 +29,80 @@ table{width:100%;margin-top:10px;border-collapse:collapse}
 th,td{border:1px solid #ccc;padding:6px;text-align:center}
 th{background:#222;color:#fff}
 
-.card{background:#f9f9f9;padding:10px;margin-top:10px;border-radius:8px}
+.card{background:#f8f8f8;padding:10px;margin-top:10px;border-radius:8px}
 </style>
 </head>
 
 <body>
 
-<!-- ================= LOGIN SCREEN ================= -->
-<div id="loginBox" class="container">
-<h2>🔐 ADMIN LOGIN</h2>
-<input id="pass" type="password" placeholder="Enter Password">
-<button class="green" onclick="login()">Login</button>
-</div>
-
-<!-- ================= SYSTEM ================= -->
-<div id="app" style="display:none">
-
 <div class="container">
 
-<h2>TABUK MARBLE SYSTEM</h2>
+<h2 style="text-align:center">🛒 FULL SHOP SYSTEM</h2>
 
+<!-- INPUTS -->
 <input id="name" placeholder="Item Name">
-<input id="length" type="number" placeholder="Length">
-<input id="width" type="number" placeholder="Width">
-<input id="pieces" type="number" placeholder="Pieces">
-
 <input id="cost" type="number" placeholder="Cost Price">
 <input id="sell" type="number" placeholder="Selling Price">
+<input id="qty" type="number" placeholder="Quantity">
 
 <input id="customer" placeholder="Customer Name">
 <input id="discount" type="number" placeholder="Discount %">
 
-<select id="currency">
-<option value="SAR">SAR</option>
-<option value="PKR">PKR</option>
-<option value="USD">USD</option>
+<select id="status">
+<option value="PAID">PAID</option>
+<option value="NOT PAID">NOT PAID</option>
 </select>
 
+<!-- BUTTONS -->
 <button class="green" onclick="addItem()">➕ Add Item</button>
-<button class="blue" onclick="downloadPDF()">📄 PDF Invoice</button>
+<button class="blue" onclick="downloadPDF()">📄 Invoice PDF</button>
 <button class="orange" onclick="confirmOrder()">✅ Confirm Order</button>
-<button class="red" onclick="clearAll()">🗑 Clear</button>
+<button class="red" onclick="clearCart()">🗑 Clear</button>
 
+<!-- TABLE -->
 <table>
 <tr>
-<th>Name</th>
-<th>L</th>
-<th>W</th>
-<th>Pcs</th>
+<th>Item</th>
+<th>Qty</th>
+<th>Sell</th>
 <th>Total</th>
 <th>Action</th>
 </tr>
 <tbody id="list"></tbody>
 </table>
 
-<h3 id="grandTotal">Total: 0</h3>
+<h3 id="totalBox">Total: 0 | Profit: 0</h3>
 
 <div class="card">
-<h3>📊 ADMIN DASHBOARD</h3>
-<p id="dash"></p>
-</div>
-
+<h3>📊 Monthly Dashboard</h3>
+<p id="dash">No Data</p>
 </div>
 
 </div>
 
 <script>
 
-let items=[];
+let cart=[];
 let sales=JSON.parse(localStorage.getItem("sales"))||[];
-
-/* ================= LOGIN ================= */
-function login(){
-let p=document.getElementById("pass").value;
-
-// SIMPLE PASSWORD (change if needed)
-if(p==="1234"){
-loginBox.style.display="none";
-app.style.display="block";
-}else{
-alert("Wrong Password");
-}
-}
 
 /* ================= ADD ITEM ================= */
 function addItem(){
 
 let n=name.value;
-let l=+length.value;
-let w=+width.value;
-let p=+pieces.value;
-let cp=+cost.value;
-let sp=+sell.value;
+let c=+cost.value;
+let s=+sell.value;
+let q=+qty.value;
 
-if(!n||!l||!w||!p||!cp||!sp)return alert("Fill all");
+if(!n||!c||!s||!q){
+alert("Fill all fields");
+return;
+}
 
-let profit=(sp-cp)*p;
+cart.push({
+n,c,s,q,
+profit:(s-c)*q
+});
 
-items.push({n,l,w,p,cp,sp,profit});
 render();
 }
 
@@ -137,36 +113,35 @@ let html="";
 let total=0;
 let profit=0;
 
-items.forEach((i,index)=>{
-total+=i.sp*i.p;
+cart.forEach((i,index)=>{
+total+=i.s*i.q;
 profit+=i.profit;
 
 html+=`
 <tr>
 <td>${i.n}</td>
-<td>${i.l}</td>
-<td>${i.w}</td>
-<td>${i.p}</td>
-<td>${(i.sp*i.p).toFixed(2)}</td>
+<td>${i.q}</td>
+<td>${i.s}</td>
+<td>${(i.s*i.q).toFixed(2)}</td>
 <td><button onclick="del(${index})" style="background:red">❌</button></td>
 </tr>`;
 });
 
 list.innerHTML=html;
-grandTotal.innerText="Sales: "+total.toFixed(2)+" | Profit: "+profit.toFixed(2);
+totalBox.innerText="Total: "+total.toFixed(2)+" | Profit: "+profit.toFixed(2);
 
-dash.innerText="TOTAL PROFIT: "+profit.toFixed(2);
+dash.innerText="Profit: "+profit.toFixed(2);
 }
 
 /* ================= DELETE ================= */
 function del(i){
-items.splice(i,1);
+cart.splice(i,1);
 render();
 }
 
 /* ================= CLEAR ================= */
-function clearAll(){
-items=[];
+function clearCart(){
+cart=[];
 render();
 }
 
@@ -176,8 +151,8 @@ function confirmOrder(){
 let total=0;
 let profit=0;
 
-items.forEach(i=>{
-total+=i.sp*i.p;
+cart.forEach(i=>{
+total+=i.s*i.q;
 profit+=i.profit;
 });
 
@@ -189,33 +164,48 @@ date:new Date().toLocaleString()
 
 localStorage.setItem("sales",JSON.stringify(sales));
 
-items=[];
+cart=[];
 render();
 
-alert("Order Confirmed");
+alert("Order Saved");
 }
 
-/* ================= PDF (NO PROFIT FOR CUSTOMER) ================= */
+/* ================= PDF ================= */
 function downloadPDF(){
 
 const {jsPDF}=window.jspdf;
 let doc=new jsPDF();
 
 let y=20;
-let total=0;
+
+let customer=document.getElementById("customer").value||"Walk-in";
+let status=document.getElementById("status").value;
 
 doc.setFontSize(18);
-doc.text("TABUK MARBLE INVOICE",105,10,{align:"center"});
+doc.text("SHOP INVOICE",105,10,{align:"center"});
 
-items.forEach(i=>{
-total+=i.sp*i.p;
+doc.setFontSize(11);
+doc.text("Customer: "+customer,10,25);
+doc.text("Status: "+status,150,25);
 
-// ONLY CUSTOMER DATA (NO PROFIT)
-doc.text(`${i.n} | ${i.p} pcs | ${i.sp*i.p}`,10,y);
+doc.line(10,30,200,30);
+
+y=40;
+
+let total=0;
+
+cart.forEach(i=>{
+total+=i.s*i.q;
+
+doc.text(`${i.n} | ${i.q} x ${i.s} = ${i.s*i.q}`,10,y);
 y+=8;
 });
 
 doc.text("TOTAL: "+total.toFixed(2),10,y+10);
+
+/* PAID / NOT PAID STAMP */
+doc.setFontSize(16);
+doc.text(status,150,y+10);
 
 doc.save("invoice.pdf");
 }
