@@ -2,14 +2,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Shop System Pro</title>
+<title>Data By Hammad - ERP</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 body{font-family:Arial;background:#eef2f5;padding:10px}
-
-.container{background:#fff;padding:15px;border-radius:10px}
+.box{background:#fff;padding:15px;border-radius:10px}
 
 input,select{
 width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;border-radius:5px
@@ -22,25 +21,21 @@ width:100%;padding:10px;margin-top:5px;border:none;border-radius:5px;color:#fff;
 .green{background:green}
 .blue{background:#007bff}
 .red{background:red}
-.orange{background:orange}
-.gray{background:#444}
 
 table{width:100%;margin-top:10px;border-collapse:collapse}
 th,td{border:1px solid #ccc;padding:6px;text-align:center}
 th{background:#222;color:#fff}
-
-.card{background:#f8f8f8;padding:10px;margin-top:10px;border-radius:8px}
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="box">
 
-<h2 style="text-align:center">🛒 FULL SHOP SYSTEM</h2>
+<h2 style="text-align:center">DATA BY HAMMAD</h2>
 
 <!-- INPUTS -->
-<input id="name" placeholder="Item Name">
+<input id="item" placeholder="Item Name">
 <input id="cost" type="number" placeholder="Cost Price">
 <input id="sell" type="number" placeholder="Selling Price">
 <input id="qty" type="number" placeholder="Quantity">
@@ -53,13 +48,10 @@ th{background:#222;color:#fff}
 <option value="NOT PAID">NOT PAID</option>
 </select>
 
-<!-- BUTTONS -->
 <button class="green" onclick="addItem()">➕ Add Item</button>
-<button class="blue" onclick="downloadPDF()">📄 Invoice PDF</button>
-<button class="orange" onclick="confirmOrder()">✅ Confirm Order</button>
-<button class="red" onclick="clearCart()">🗑 Clear</button>
+<button class="blue" onclick="downloadPDF()">📄 PDF</button>
+<button class="red" onclick="clearAll()">🗑 Clear</button>
 
-<!-- TABLE -->
 <table>
 <tr>
 <th>Item</th>
@@ -71,30 +63,25 @@ th{background:#222;color:#fff}
 <tbody id="list"></tbody>
 </table>
 
-<h3 id="totalBox">Total: 0 | Profit: 0</h3>
-
-<div class="card">
-<h3>📊 Monthly Dashboard</h3>
-<p id="dash">No Data</p>
-</div>
+<h3 id="summary">Total: 0 | Profit: 0</h3>
 
 </div>
 
 <script>
 
 let cart=[];
-let sales=JSON.parse(localStorage.getItem("sales"))||[];
 
-/* ================= ADD ITEM ================= */
+/* ================= ADD ITEM FIXED ================= */
 function addItem(){
 
-let n=name.value;
-let c=+cost.value;
-let s=+sell.value;
-let q=+qty.value;
+let n=document.getElementById("item").value.trim();
+let c=Number(document.getElementById("cost").value);
+let s=Number(document.getElementById("sell").value);
+let q=Number(document.getElementById("qty").value);
 
-if(!n||!c||!s||!q){
-alert("Fill all fields");
+/* STRICT VALIDATION FIX */
+if(!n || !c || !s || !q){
+alert("Fill all fields properly");
 return;
 }
 
@@ -102,6 +89,12 @@ cart.push({
 n,c,s,q,
 profit:(s-c)*q
 });
+
+/* clear inputs */
+item.value="";
+cost.value="";
+sell.value="";
+qty.value="";
 
 render();
 }
@@ -114,7 +107,8 @@ let total=0;
 let profit=0;
 
 cart.forEach((i,index)=>{
-total+=i.s*i.q;
+let t=i.s*i.q;
+total+=t;
 profit+=i.profit;
 
 html+=`
@@ -122,15 +116,13 @@ html+=`
 <td>${i.n}</td>
 <td>${i.q}</td>
 <td>${i.s}</td>
-<td>${(i.s*i.q).toFixed(2)}</td>
+<td>${t.toFixed(2)}</td>
 <td><button onclick="del(${index})" style="background:red">❌</button></td>
 </tr>`;
 });
 
 list.innerHTML=html;
-totalBox.innerText="Total: "+total.toFixed(2)+" | Profit: "+profit.toFixed(2);
-
-dash.innerText="Profit: "+profit.toFixed(2);
+summary.innerText="Total: "+total.toFixed(2)+" | Profit: "+profit.toFixed(2);
 }
 
 /* ================= DELETE ================= */
@@ -140,104 +132,77 @@ render();
 }
 
 /* ================= CLEAR ================= */
-function clearCart(){
+function clearAll(){
 cart=[];
 render();
 }
 
-/* ================= CONFIRM ORDER ================= */
-function confirmOrder(){
-
-let total=0;
-let profit=0;
-
-cart.forEach(i=>{
-total+=i.s*i.q;
-profit+=i.profit;
-});
-
-sales.push({
-total,
-profit,
-date:new Date().toLocaleString()
-});
-
-localStorage.setItem("sales",JSON.stringify(sales));
-
-cart=[];
-render();
-
-alert("Order Saved");
-}
-
-/* ================= PDF ================= */
+/* ================= FIXED PDF ================= */
 function downloadPDF(){
 
-const { jsPDF } = window.jspdf;
-let doc = new jsPDF();
+const {jsPDF}=window.jspdf;
+let doc=new jsPDF();
 
-let y = 20;
-let total = 0;
+let y=20;
+let total=0;
 
-let customer = document.getElementById("customer").value || "Walk-in Customer";
-let status = document.getElementById("status").value || "NOT PAID";
+let customer=document.getElementById("customer").value || "Walk-in Customer";
+let status=document.getElementById("status").value;
+let discount=Number(document.getElementById("discount").value)||0;
 
-/* ===== HEADER ===== */
+/* HEADER */
 doc.setFontSize(18);
-doc.setFont(undefined, "bold");
-doc.text("🛒 SHOP INVOICE", 105, 10, { align: "center" });
+doc.text("DATA BY HAMMAD",105,10,{align:"center"});
 
 doc.setFontSize(11);
-doc.setFont(undefined, "normal");
-doc.text("Customer: " + customer, 14, 25);
-doc.text("Status: " + status, 150, 25);
+doc.text("Customer: "+customer,10,25);
+doc.text("Status: "+status,150,25);
 
-doc.line(14, 30, 195, 30);
+let date=new Date();
+doc.text("Date: "+date.toLocaleString(),10,32);
 
-/* ===== TABLE HEAD ===== */
-y = 40;
+doc.line(10,35,200,35);
 
-doc.setFont(undefined, "bold");
-doc.text("Item", 14, y);
-doc.text("Qty", 70, y);
-doc.text("Price", 110, y);
-doc.text("Total", 150, y);
+y=45;
 
-doc.line(14, y+2, 195, y+2);
+/* TABLE HEADER */
+doc.text("Item",10,y);
+doc.text("Qty",70,y);
+doc.text("Sell",110,y);
+doc.text("Total",150,y);
 
-y += 10;
+y+=10;
 
-/* ===== ITEMS ===== */
-doc.setFont(undefined, "normal");
-
+/* ITEMS */
 cart.forEach(i=>{
-let rowTotal = i.s * i.q;
-total += rowTotal;
+let t=i.s*i.q;
+total+=t;
 
-doc.text(i.n, 14, y);
-doc.text(String(i.q), 70, y);
-doc.text(String(i.s), 110, y);
-doc.text(rowTotal.toFixed(2), 150, y);
+doc.text(i.n,10,y);
+doc.text(String(i.q),70,y);
+doc.text(String(i.s),110,y);
+doc.text(t.toFixed(2),150,y);
 
-y += 8;
-
-if(y > 270){
-doc.addPage();
-y = 20;
-}
+y+=8;
+if(y>270){doc.addPage();y=20;}
 });
 
-/* ===== TOTAL BOX ===== */
-doc.line(120, y, 195, y);
-y += 10;
+/* DISCOUNT */
+let disc=(total*discount)/100;
+let final=total-disc;
 
-doc.setFont(undefined, "bold");
-doc.text("TOTAL: " + total.toFixed(2), 150, y);
+y+=10;
+doc.text("Subtotal: "+total.toFixed(2),10,y);
+y+=7;
+doc.text("Discount: "+discount+"%",10,y);
+y+=7;
 
-/* ===== STAMP ===== */
-doc.setTextColor(status === "PAID" ? 0 : 200, 0, 0);
+doc.setFontSize(14);
+doc.text("TOTAL: "+final.toFixed(2),10,y+10);
+
+/* STATUS STAMP */
 doc.setFontSize(16);
-doc.text(status, 160, y + 15);
+doc.text(status,150,y+10);
 
 doc.save("invoice.pdf");
 }
