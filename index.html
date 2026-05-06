@@ -64,13 +64,12 @@ window.onload = function(){
 
 function addItem(){
 let name = document.getElementById("name").value;
-let l = parseFloat(document.getElementById("length").value);
-let w = parseFloat(document.getElementById("width").value);
-let p = parseFloat(document.getElementById("pieces").value);
-let price = parseFloat(document.getElementById("price").value);
+let l = Number(document.getElementById("length").value);
+let w = Number(document.getElementById("width").value);
+let p = Number(document.getElementById("pieces").value);
 
 // debug check
-if(!name || !l || !w || !p || !price){
+if(name === "" || isNaN(l) || isNaN(w) || isNaN(p) || isNaN(price)){
 alert("Fill all fields");
 return;
 }
@@ -93,7 +92,7 @@ items.forEach(i=>{
 sum += i.total;
 
 // safe square meter (agar missing ho to 0)
-let sqm = i.sqm;
+let sqm = i.sqm || 0;
 
 table.innerHTML += `
 <tr>
