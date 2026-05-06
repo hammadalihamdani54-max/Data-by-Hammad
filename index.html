@@ -9,13 +9,8 @@
 <style>
 body{font-family:Arial;background:#eef2f5;margin:0}
 
-.topbar{
-display:flex;gap:5px;padding:10px;background:#222
-}
-
-.topbar button{
-flex:1;padding:10px;border:none;color:#fff;font-weight:bold;border-radius:5px
-}
+.topbar{display:flex;gap:5px;padding:10px;background:#222}
+.topbar button{flex:1;padding:10px;border:none;color:#fff;font-weight:bold;border-radius:5px}
 
 .box{display:none;padding:15px}
 .active{display:block}
@@ -42,19 +37,17 @@ th{background:#111;color:#fff}
 
 <body>
 
-<!-- TOP MENU -->
 <div class="topbar">
 <button onclick="openTab('pos')" style="background:green">POS</button>
 <button onclick="openTab('invoice')" style="background:#007bff">INVOICE</button>
 <button onclick="openTab('monthly')" style="background:orange">MONTHLY</button>
 </div>
 
-<!-- ================= POS ================= -->
+<!-- POS -->
 <div id="pos" class="box active">
-
 <div class="card">
 
-<h2>📦 ADD ITEMS (POS)</h2>
+<h2>ADD ITEMS</h2>
 
 <input id="name" placeholder="Item Name">
 <input id="length" type="number" placeholder="Length">
@@ -62,76 +55,56 @@ th{background:#111;color:#fff}
 <input id="pieces" type="number" placeholder="Pieces">
 <input id="price" type="number" placeholder="Price">
 
-<button class="green" onclick="addItem()">➕ Add Item</button>
-<button class="red" onclick="clearCart()">🗑 Clear</button>
+<button class="green" onclick="addItem()">Add Item</button>
+<button class="red" onclick="clearCart()">Clear</button>
 
 <table>
-<tr>
-<th>Item</th>
-<th>Qty</th>
-<th>Total</th>
-<th>Action</th>
-</tr>
+<tr><th>Item</th><th>Qty</th><th>Total</th><th>Action</th></tr>
 <tbody id="list"></tbody>
 </table>
 
 <h3 id="totalBox">Total: 0</h3>
 
-<button class="blue" onclick="confirmOrder()">✔ Confirm Order</button>
+<button class="blue" onclick="confirmOrder()">Confirm Order</button>
 
 </div>
 </div>
 
-<!-- ================= INVOICE ================= -->
+<!-- INVOICE -->
 <div id="invoice" class="box">
-
 <div class="card">
 
 <h2 style="text-align:center">TABUK MARBLE</h2>
-<p style="text-align:center">Premium Marble Invoice</p>
 
 <input id="customer" placeholder="Customer Name">
 <input id="discount" type="number" placeholder="Discount %">
 
-<select id="status">
-<option>PAID</option>
-<option>NOT PAID</option>
-</select>
-
-<button class="blue" onclick="downloadPDF()">📄 Download PDF</button>
+<button class="blue" onclick="downloadPDF()">Download PDF</button>
 
 </div>
 </div>
 
-<!-- ================= MONTHLY ================= -->
+<!-- MONTHLY -->
 <div id="monthly" class="box">
-
 <div class="card">
-<h2>📊 MONTHLY RECORDS</h2>
+<h2>Monthly Records</h2>
 <div id="records"></div>
 </div>
-
 </div>
 
 <script>
 
-let cart=[];
-let monthly=JSON.parse(localStorage.getItem("monthly"))||[];
+let cart = [];
+let monthly = JSON.parse(localStorage.getItem("monthly")) || [];
 
-/* ================= TAB FIX (FAST) ================= */
+/* TAB */
 function openTab(tab){
-
-document.querySelectorAll(".box").forEach(b=>{
-b.classList.remove("active");
-});
-
+document.querySelectorAll(".box").forEach(b=>b.classList.remove("active"));
 document.getElementById(tab).classList.add("active");
-
-if(tab === "monthly"){
-loadMonthly();
+if(tab==="monthly") loadMonthly();
 }
 
-/* ================= FAST ADD ================= */
+/* ADD ITEM */
 function addItem(){
 
 let name = document.getElementById("name").value.trim();
@@ -145,60 +118,61 @@ alert("Fill all fields");
 return;
 }
 
-let total = l * w * p * price;
+let total = l*w*p*price;
 
-cart.push({name,l,w,p,price,total});
+cart.push({name,p,total});
 
-renderFast();
+render();
 
-// clear inputs
-document.getElementById("name").value="";
-document.getElementById("length").value="";
-document.getElementById("width").value="";
-document.getElementById("pieces").value="";
-document.getElementById("price").value="";
+/* clear */
+["name","length","width","pieces","price"].forEach(id=>{
+document.getElementById(id).value="";
+});
 }
-/* ================= LIGHT RENDER (FAST) ================= */
-function clearCart(){
-cart=[];
-renderFast();
-}
-  function del(i){
-cart.splice(i,1);
-renderFast();
-}
-  function renderFast(){
+
+/* RENDER */
+function render(){
 
 let html="";
 let sum=0;
 
-for(let i=0;i<cart.length;i++){
+cart.forEach((i,index)=>{
+sum+=i.total;
 
-sum += cart[i].total;
-
-html += `
+html+=`
 <tr>
-<td>${cart[i].name}</td>
-<td>${cart[i].p}</td>
-<td>${cart[i].total.toFixed(2)}</td>
-<td><button onclick="del(${i})" style="background:red">❌</button></td>
+<td>${i.name}</td>
+<td>${i.p}</td>
+<td>${i.total.toFixed(2)}</td>
+<td><button onclick="del(${index})" style="background:red">❌</button></td>
 </tr>`;
+});
+
+document.getElementById("list").innerHTML=html;
+document.getElementById("totalBox").innerText="Total: "+sum.toFixed(2);
 }
 
-document.getElementById("list").innerHTML = html;
-document.getElementById("totalBox").innerText = "Total: " + sum.toFixed(2);
+/* DELETE */
+function del(i){
+cart.splice(i,1);
+render();
 }
-/* ================= CONFIRM ================= */
+
+/* CLEAR */
+function clearCart(){
+cart=[];
+render();
+}
+
+/* CONFIRM */
 function confirmOrder(){
 
-if(cart.length === 0){
-alert("No items added");
+if(cart.length===0){
+alert("No items");
 return;
 }
 
-let total=0;
-
-for(let i of cart) total += i.total;
+let total=cart.reduce((a,b)=>a+b.total,0);
 
 monthly.push({
 total,
@@ -208,133 +182,53 @@ date:new Date().toLocaleString()
 localStorage.setItem("monthly",JSON.stringify(monthly));
 
 cart=[];
-renderFast();
+render();
 
-alert("Order Saved");
-
-// auto refresh monthly
-loadMonthly();
+alert("Saved");
 }
-/* ================= MONTHLY ================= */
+
+/* MONTHLY */
+function loadMonthly(){
+
+let data = JSON.parse(localStorage.getItem("monthly")) || [];
+
+let html="";
+let sum=0;
+
+data.forEach(m=>{
+sum+=m.total;
+
+html+=`
+<div style="padding:10px;border:1px solid #ccc;margin:5px">
+${m.date}<br>${m.total.toFixed(2)}
+</div>`;
+});
+
+document.getElementById("records").innerHTML =
+html + "<hr>Total: "+sum.toFixed(2);
+}
+
+/* PDF */
 function downloadPDF(){
 
 const { jsPDF } = window.jspdf;
 let doc = new jsPDF();
 
-let sum = 0;
+let sum=0;
 
-// ===== HEADER DESIGN =====
-doc.setFillColor(30,30,30);
-doc.rect(0,0,210,30,"F");
-
-doc.setTextColor(255,255,255);
-doc.setFontSize(18);
 doc.text("TABUK MARBLE", 105, 15, {align:"center"});
 
-doc.setFontSize(10);
-doc.text("Premium Marble Invoice", 105, 22, {align:"center"});
+let y=30;
 
-// reset color
-doc.setTextColor(0,0,0);
-
-let y = 40;
-
-// ===== CUSTOMER =====
-let customer = document.getElementById("customer").value || "Walk-in Customer";
-let discount = Number(document.getElementById("discount").value) || 0;
-
-doc.setFontSize(11);
-doc.text("Customer: " + customer, 10, y);
-
-y += 6;
-doc.text("Date: " + new Date().toLocaleString(), 10, y);
-
-y += 10;
-
-// ===== TABLE HEADER =====
-doc.setFillColor(0,0,0);
-doc.setTextColor(255,255,255);
-doc.rect(10,y-5,190,8,"F");
-
-doc.text("Item", 12, y);
-doc.text("Qty", 90, y);
-doc.text("Total", 160, y);
-
-doc.setTextColor(0,0,0);
-
-y += 10;
-
-// ===== ITEMS =====
 cart.forEach(i=>{
-sum += i.total;
-
-doc.text(i.name, 12, y);
-doc.text(String(i.p), 90, y);
-doc.text(i.total.toFixed(2), 160, y);
-
-y += 8;
-
-if(y > 270){
-doc.addPage();
-y = 20;
-}
+sum+=i.total;
+doc.text(`${i.name} ${i.p} ${i.total.toFixed(2)}`,10,y);
+y+=8;
 });
 
-// ===== TOTAL =====
-let discAmount = (sum * discount)/100;
-let finalTotal = sum - discAmount;
+doc.text("TOTAL: "+sum.toFixed(2),10,y+10);
 
-y += 10;
-
-doc.setFontSize(12);
-doc.text("Subtotal: " + sum.toFixed(2), 140, y);
-
-y += 6;
-doc.text("Discount: " + discount + "%", 140, y);
-
-y += 6;
-
-// TOTAL BOX
-doc.setFillColor(0,150,0);
-doc.rect(130, y, 70, 12, "F");
-
-doc.setTextColor(255,255,255);
-doc.text("TOTAL: " + finalTotal.toFixed(2), 135, y+8);
-
-doc.setTextColor(0,0,0);
-
-// ===== FOOTER =====
-y += 25;
-doc.text("Thank you for shopping with us!", 10, y);
-
-// SIGNATURE
-y += 15;
-doc.line(140, y, 200, y);
-doc.text("Authorized Signature", 140, y+5);
-
-// SAVE
-doc.save("tabuk_invoice.pdf");
-}
-
- function loadMonthly(){
-
-let data = JSON.parse(localStorage.getItem("monthly")) || [];
-
-let html = "";
-let sum = 0;
-
-for(let m of data){
-sum += m.total;
-
-html += `
-<div style="padding:10px;border:1px solid #ccc;margin:5px;border-radius:6px;background:#fff">
-📅 ${m.date}<br>
-💰 <b>${m.total.toFixed(2)}</b>
-</div>`;
-}
-
-document.getElementById("records").innerHTML =
-html + `<hr><b>Total: ${sum.toFixed(2)}</b>`;
+doc.save("invoice.pdf");
 }
 
 </script>
