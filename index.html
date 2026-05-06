@@ -33,7 +33,7 @@ th, td { border:1px solid #ccc; padding:5px; text-align:center; }
   <option value="AED">🇦🇪 AED</option>
 </select>
 <button onclick="addItem()">Add Item</button>
-
+<button onclick="downloadPDF()" style="background:blue;">📄 Download PDF</button>
 <table>
 <tr>
 <th>Name</th>
@@ -109,7 +109,7 @@ let w = Number(document.getElementById("width").value);
 let p = Number(document.getElementById("pieces").value);
 let price = Number(document.getElementById("price").value);
 let currency = document.getElementById("currency").value;
-<button onclick="downloadPDF()" style="background:blue;">📄 Download PDF</button>
+
 if(name === "" || isNaN(l) || isNaN(w) || isNaN(p) || isNaN(price)){
 alert("Fill all fields properly");
 return;
@@ -139,17 +139,17 @@ table.innerHTML = "";
 let sum = 0;
 
 items.forEach((i, index)=>{
-sum += i.total;
+sum += i.total || 0;
 
 table.innerHTML += `
 <tr>
-<td>${i.name}</td>
-<td>${i.l}</td>
-<td>${i.w}</td>
-<td>${i.p}</td>
-<td>${i.sqm.toFixed(2)} m²</td>
-<td>${i.price.toFixed(2)} ${i.currency}</td>
-<td>${i.total.toFixed(2)} ${i.currency}</td>
+<td>${i.name || ""}</td>
+<td>${i.l || 0}</td>
+<td>${i.w || 0}</td>
+<td>${i.p || 0}</td>
+<td>${(i.sqm || 0).toFixed(2)} m²</td>
+<td>${(i.price || 0).toFixed(2)} ${i.currency}</td>
+<td>${(i.total || 0).toFixed(2)} ${i.currency}</td>
 <td><button onclick="deleteItem(${index})" style="background:red;">❌</button></td>
 </tr>`;
 });
