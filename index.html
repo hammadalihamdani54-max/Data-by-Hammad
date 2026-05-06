@@ -41,7 +41,7 @@ th, td { border:1px solid #ccc; padding:5px; text-align:center; }
 <th>Pcs</th>
 <th>m²</th>
 <th>Price</th>
-
+<th>Total</th>
 </tr>
 <tbody id="list"></tbody>
 </table>
@@ -63,36 +63,44 @@ window.onload = function(){
 }
 
 function addItem(){
-let name = document.getElementById("name").value;
+
+let name = document.getElementById("name").value.trim();
 let l = Number(document.getElementById("length").value);
 let w = Number(document.getElementById("width").value);
 let p = Number(document.getElementById("pieces").value);
+let price = Number(document.getElementById("price").value);
+let currency = document.getElementById("currency").value;
 
-// debug check
 if(name === "" || isNaN(l) || isNaN(w) || isNaN(p) || isNaN(price)){
-alert("Fill all fields");
+alert("Fill all fields properly");
 return;
 }
 
 let sqm = l * w * p;
 let total = sqm * price;
 
-items.push({name,l,w,p,price,sqm,total});
+items.push({name, l, w, p, price, sqm, total, currency});
 
 localStorage.setItem("items", JSON.stringify(items));
 
 render();
+
+// clear inputs
+document.getElementById("name").value = "";
+document.getElementById("length").value = "";
+document.getElementById("width").value = "";
+document.getElementById("pieces").value = "";
+document.getElementById("price").value = "";
+
 }
 function render(){
 let table = document.getElementById("list");
 table.innerHTML = "";
+
 let sum = 0;
-let currency = document.getElementById("currency").value;
+
 items.forEach(i=>{
 sum += i.total;
-
-// safe square meter (agar missing ho to 0)
-let sqm = i.sqm || 0;
 
 table.innerHTML += `
 <tr>
@@ -100,15 +108,15 @@ table.innerHTML += `
 <td>${i.l}</td>
 <td>${i.w}</td>
 <td>${i.p}</td>
-<td>${sqm.toFixed(2)} <small>m²</small></td>
-<td>${(i.price ? i.price : 0).toFixed(2)} ${currency}</td>
+<td>${i.sqm.toFixed(2)}</td>
+<td>${i.price.toFixed(2)} ${i.currency}</td>
+<td>${i.total.toFixed(2)} ${i.currency}</td>
 </tr>`;
 });
 
 document.getElementById("grandTotal").innerText =
-"Total: " + sum.toFixed(2) + " " + currency;
+"Total: " + sum.toFixed(2);
 }
-
 // Optional: Clear all data
 function clearAll(){
     items = [];
