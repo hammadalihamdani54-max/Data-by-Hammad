@@ -118,18 +118,19 @@ th{background:#111;color:#fff}
 let cart=[];
 let monthly=JSON.parse(localStorage.getItem("monthly"))||[];
 
-/* ================= TAB SWITCH ================= */
+/* ================= TAB FIX (FAST) ================= */
 function openTab(tab){
-pos.classList.remove("active");
-invoice.classList.remove("active");
-monthly.classList.remove("active");
+
+document.querySelectorAll(".box").forEach(b=>{
+b.classList.remove("active");
+});
 
 document.getElementById(tab).classList.add("active");
 
 if(tab==="monthly") loadMonthly();
 }
 
-/* ================= ADD ITEM ================= */
+/* ================= FAST ADD ================= */
 function addItem(){
 
 let n=name.value.trim();
@@ -138,18 +139,18 @@ let w=+width.value;
 let p=+pieces.value;
 let price=+price.value;
 
-if(!n||!l||!w||!p||!price){
+if(!n || !l || !w || !p || !price){
 alert("Fill all fields");
 return;
 }
 
-let sqm=l*w*p;
-let total=sqm*price;
+let total=l*w*p*price;
 
 cart.push({n,p,total});
 
-render();
+renderFast();
 
+/* clear */
 name.value="";
 length.value="";
 width.value="";
@@ -157,46 +158,41 @@ pieces.value="";
 price.value="";
 }
 
-/* ================= RENDER ================= */
-function render(){
+/* ================= LIGHT RENDER (FAST) ================= */
+function renderFast(){
 
 let html="";
 let sum=0;
 
-cart.forEach((i,index)=>{
-sum+=i.total;
+for(let i=0;i<cart.length;i++){
+
+sum+=cart[i].total;
 
 html+=`
 <tr>
-<td>${i.n}</td>
-<td>${i.p}</td>
-<td>${i.total.toFixed(2)}</td>
-<td><button onclick="del(${index})" style="background:red">❌</button></td>
+<td>${cart[i].n}</td>
+<td>${cart[i].p}</td>
+<td>${cart[i].total.toFixed(2)}</td>
+<td><button onclick="del(${i})" style="background:red">❌</button></td>
 </tr>`;
-});
+}
 
 list.innerHTML=html;
 totalBox.innerText="Total: "+sum.toFixed(2);
 }
 
-/* ================= DELETE ================= */
+/* ================= DELETE FAST ================= */
 function del(i){
 cart.splice(i,1);
-render();
+renderFast();
 }
 
-/* ================= CLEAR ================= */
-function clearCart(){
-cart=[];
-render();
-}
-
-/* ================= CONFIRM ORDER ================= */
+/* ================= CONFIRM ================= */
 function confirmOrder(){
 
 let total=0;
 
-cart.forEach(i=>total+=i.total);
+for(let i of cart) total+=i.total;
 
 monthly.push({
 total,
@@ -205,70 +201,30 @@ date:new Date().toLocaleString()
 
 localStorage.setItem("monthly",JSON.stringify(monthly));
 
-alert("Order Confirmed");
 cart=[];
-render();
+renderFast();
+
+alert("Order Saved");
 }
 
-/* ================= MONTHLY LOAD ================= */
+/* ================= MONTHLY ================= */
 function loadMonthly(){
 
 let html="";
 let sum=0;
 
-monthly.forEach(m=>{
+for(let m of monthly){
 sum+=m.total;
 
 html+=`
-<div style="border:1px solid #ccc;padding:10px;margin:5px">
+<div style="padding:8px;border:1px solid #ccc;margin:5px">
 📅 ${m.date}<br>
 💰 ${m.total.toFixed(2)}
 </div>`;
-});
+}
 
 records.innerHTML=html+"<hr><b>Total: "+sum.toFixed(2)+"</b>";
 }
-
-/* ================= PDF ================= */
-function downloadPDF(){
-
-const {jsPDF}=window.jspdf;
-let doc=new jsPDF();
-
-let y=20;
-let total=0;
-
-let customer=document.getElementById("customer").value||"Walk-in";
-let status=document.getElementById("status").value;
-
-doc.setFontSize(18);
-doc.text("TABUK MARBLE",105,10,{align:"center"});
-
-doc.setFontSize(11);
-doc.text("Customer: "+customer,10,25);
-doc.text("Status: "+status,150,25);
-
-doc.line(10,30,200,30);
-
-y=40;
-
-cart.forEach(i=>{
-total+=i.total;
-
-doc.text(`${i.n} | ${i.p} pcs | ${i.total.toFixed(2)}`,10,y);
-y+=8;
-});
-
-doc.text("TOTAL: "+total.toFixed(2),10,y+10);
-
-doc.setFontSize(16);
-doc.text(status,150,y+10);
-
-doc.text("Signature: ________________",10,280);
-
-doc.save("invoice.pdf");
-}
-
 </script>
 
 </body>
