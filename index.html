@@ -173,78 +173,106 @@ function downloadPDF(){
 const { jsPDF } = window.jspdf;
 let doc = new jsPDF();
 
-let sum=0;
+let sum = 0;
 let discount = Number(document.getElementById("discount").value) || 0;
 let customer = document.getElementById("customer").value || "Walk-in Customer";
+let invoiceNo = localStorage.getItem("invNo") || 1001;
 
-// HEADER
-doc.setFontSize(22);
-doc.setFont(undefined,"bold");
-doc.text("TABUK MARBLE",105,15,{align:"center"});
+// ================= HEADER BOX =================
+doc.setDrawColor(0);
+doc.setFillColor(245,245,245);
+doc.rect(10, 10, 190, 30, "F");
+
+// COMPANY NAME
+doc.setFontSize(20);
+doc.setFont(undefined, "bold");
+doc.text("TABUK MARBLE", 105, 20, { align: "center" });
 
 doc.setFontSize(10);
-doc.setFont(undefined,"normal");
-doc.text("Premium Stone & Marble Supplier",105,22,{align:"center"});
+doc.setFont(undefined, "normal");
+doc.text("Premium Marble & Stone Supplier", 105, 27, { align: "center" });
 
-doc.text("Invoice #" + invoiceNo,14,35);
-doc.text("Customer: "+customer,14,42);
-doc.text("Date: "+new Date().toLocaleString(),140,35);
+// ================= INVOICE INFO =================
+doc.setFontSize(11);
+doc.text("Invoice #: " + invoiceNo, 14, 50);
+doc.text("Customer: " + customer, 14, 57);
+doc.text("Date: " + new Date().toLocaleString(), 120, 50);
 
-doc.line(14,45,195,45);
+// LINE
+doc.setDrawColor(0);
+doc.line(10, 62, 200, 62);
 
-// TABLE HEADER
-let y=55;
+// ================= TABLE HEADER =================
+let y = 72;
 
-doc.setFont(undefined,"bold");
-doc.text("Item",14,y);
-doc.text("Size",60,y);
-doc.text("Qty",100,y);
-doc.text("Total",160,y);
+doc.setFillColor(230,230,230);
+doc.rect(10, y-6, 190, 10, "F");
 
-doc.line(14,y+2,195,y+2);
+doc.setFont(undefined, "bold");
+doc.text("Item", 12, y);
+doc.text("Size", 60, y);
+doc.text("Pcs", 100, y);
+doc.text("m²", 125, y);
+doc.text("Total", 165, y);
 
-y+=10;
-doc.setFont(undefined,"normal");
+y += 10;
 
-// DATA
+// ================= TABLE DATA =================
+doc.setFont(undefined, "normal");
+
 items.forEach(i=>{
-sum+=i.total;
+sum += i.total;
 
-doc.text(i.name,14,y);
-doc.text(`${i.l}x${i.w}`,60,y);
-doc.text(String(i.p),100,y);
-doc.text(i.total.toFixed(2),160,y);
+// row line
+doc.setDrawColor(220);
+doc.line(10, y+2, 200, y+2);
 
-y+=8;
+doc.text(i.name, 12, y);
+doc.text(`${i.l}x${i.w}`, 60, y);
+doc.text(String(i.p), 100, y);
+doc.text(i.sqm.toFixed(2), 125, y);
+doc.text(i.total.toFixed(2), 165, y);
 
-if(y>270){
+y += 10;
+
+if(y > 270){
 doc.addPage();
-y=20;
+y = 20;
 }
 });
 
-// TOTAL
-let discAmount=(sum*discount)/100;
-let finalTotal=sum-discAmount;
+// ================= TOTAL BOX =================
+let discAmount = (sum * discount) / 100;
+let finalTotal = sum - discAmount;
 
-doc.setFont(undefined,"bold");
-doc.text("Subtotal: "+sum.toFixed(2),140,y+10);
-doc.text("Discount: "+discount+"%",140,y+17);
-doc.text("TOTAL: "+finalTotal.toFixed(2),140,y+25);
+y += 10;
 
-// SIGNATURES
-doc.line(20,y+40,80,y+40);
-doc.text("Customer Signature",20,y+45);
+doc.setDrawColor(0);
+doc.setFillColor(240,240,240);
+doc.rect(120, y, 80, 30, "F");
 
-doc.line(120,y+40,180,y+40);
-doc.text("Authorized",120,y+45);
+doc.setFont(undefined, "bold");
+doc.text("Subtotal: " + sum.toFixed(2), 125, y + 8);
+doc.text("Discount: " + discount + "%", 125, y + 15);
+doc.text("TOTAL: " + finalTotal.toFixed(2), 125, y + 25);
 
-// FOOTER
-doc.text("Thank you for your business!",105,y+60,{align:"center"});
+// ================= FOOTER =================
+doc.setFontSize(10);
+doc.setFont(undefined, "normal");
 
-doc.save("invoice_"+invoiceNo+".pdf");
+doc.text("Thank you for your business!", 105, 285, { align: "center" });
 
-localStorage.setItem("invNo", Number(invoiceNo)+1);
+// SIGNATURE LINES
+doc.line(20, 270, 80, 270);
+doc.text("Customer Sign", 25, 278);
+
+doc.line(130, 270, 190, 270);
+doc.text("Authorized Sign", 135, 278);
+
+// SAVE
+doc.save("TABUK_MARBLE_" + invoiceNo + ".pdf");
+
+localStorage.setItem("invNo", Number(invoiceNo) + 1);
 }
 </script>
 
