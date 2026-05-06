@@ -2,79 +2,60 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Tabuk Marble Pro</title>
+<title>Tabuk Marble Pro System</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-body { font-family: Arial; background:#eef2f5; padding:10px; }
+body{font-family:Arial;background:#eef2f5;padding:10px}
 
-.container {
-  background:white;
-  padding:15px;
-  border-radius:10px;
-  box-shadow:0 0 12px rgba(0,0,0,0.1);
+.container{background:#fff;padding:15px;border-radius:10px}
+
+input,select{
+width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;border-radius:5px
 }
 
-input, select {
-  width:100%;
-  padding:8px;
-  margin:5px 0;
-  border:1px solid #ccc;
-  border-radius:5px;
+button{
+width:100%;padding:10px;margin-top:5px;border:none;border-radius:5px;color:#fff;font-weight:bold
 }
 
-button {
-  width:100%;
-  padding:10px;
-  margin-top:5px;
-  border:none;
-  border-radius:5px;
-  font-weight:bold;
-  color:white;
-}
+.green{background:green}
+.blue{background:#007bff}
+.red{background:red}
+.orange{background:orange}
+.gray{background:#444}
 
-.add { background:green; }
-.pdf { background:#007bff; }
-.clear { background:red; }
+table{width:100%;margin-top:10px;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:6px;text-align:center}
+th{background:#222;color:#fff}
 
-table {
-  width:100%;
-  margin-top:10px;
-  border-collapse:collapse;
-}
-
-th {
-  background:#222;
-  color:white;
-}
-
-th, td {
-  border:1px solid #ccc;
-  padding:6px;
-  text-align:center;
-}
-
-.total {
-  font-size:20px;
-  font-weight:bold;
-  text-align:right;
-  margin-top:10px;
-}
+.card{background:#f9f9f9;padding:10px;margin-top:10px;border-radius:8px}
 </style>
 </head>
 
 <body>
 
-<h2 style="text-align:center;">TABUK MARBLE SYSTEM</h2>
+<!-- ================= LOGIN SCREEN ================= -->
+<div id="loginBox" class="container">
+<h2>🔐 ADMIN LOGIN</h2>
+<input id="pass" type="password" placeholder="Enter Password">
+<button class="green" onclick="login()">Login</button>
+</div>
+
+<!-- ================= SYSTEM ================= -->
+<div id="app" style="display:none">
 
 <div class="container">
+
+<h2>TABUK MARBLE SYSTEM</h2>
 
 <input id="name" placeholder="Item Name">
 <input id="length" type="number" placeholder="Length">
 <input id="width" type="number" placeholder="Width">
 <input id="pieces" type="number" placeholder="Pieces">
-<input id="price" type="number" placeholder="Price">
+
+<input id="cost" type="number" placeholder="Cost Price">
+<input id="sell" type="number" placeholder="Selling Price">
 
 <input id="customer" placeholder="Customer Name">
 <input id="discount" type="number" placeholder="Discount %">
@@ -85,9 +66,10 @@ th, td {
 <option value="USD">USD</option>
 </select>
 
-<button class="add" onclick="addItem()">➕ Add Item</button>
-<button class="pdf" onclick="downloadPDF()">📄 Download Invoice</button>
-<button class="clear" onclick="clearAll()">🗑 Clear All</button>
+<button class="green" onclick="addItem()">➕ Add Item</button>
+<button class="blue" onclick="downloadPDF()">📄 PDF Invoice</button>
+<button class="orange" onclick="confirmOrder()">✅ Confirm Order</button>
+<button class="red" onclick="clearAll()">🗑 Clear</button>
 
 <table>
 <tr>
@@ -95,185 +77,149 @@ th, td {
 <th>L</th>
 <th>W</th>
 <th>Pcs</th>
-<th>m²</th>
 <th>Total</th>
 <th>Action</th>
 </tr>
 <tbody id="list"></tbody>
 </table>
 
-<div class="total" id="grandTotal">Total: 0</div>
+<h3 id="grandTotal">Total: 0</h3>
+
+<div class="card">
+<h3>📊 ADMIN DASHBOARD</h3>
+<p id="dash"></p>
+</div>
+
+</div>
 
 </div>
 
 <script>
-let items = [];
-let invoiceNo = localStorage.getItem("invNo") || 1001;
 
-// ADD
-function addItem(){
-let name = document.getElementById("name").value.trim();
-let l = Number(document.getElementById("length").value);
-let w = Number(document.getElementById("width").value);
-let p = Number(document.getElementById("pieces").value);
-let price = Number(document.getElementById("price").value);
-let currency = document.getElementById("currency").value;
+let items=[];
+let sales=JSON.parse(localStorage.getItem("sales"))||[];
 
-if(!name || !l || !w || !p || !price){
-alert("Fill all fields");
-return;
+/* ================= LOGIN ================= */
+function login(){
+let p=document.getElementById("pass").value;
+
+// SIMPLE PASSWORD (change if needed)
+if(p==="1234"){
+loginBox.style.display="none";
+app.style.display="block";
+}else{
+alert("Wrong Password");
+}
 }
 
-let sqm = l*w*p;
-let total = sqm*price;
+/* ================= ADD ITEM ================= */
+function addItem(){
 
-items.push({name,l,w,p,sqm,total,price,currency});
+let n=name.value;
+let l=+length.value;
+let w=+width.value;
+let p=+pieces.value;
+let cp=+cost.value;
+let sp=+sell.value;
+
+if(!n||!l||!w||!p||!cp||!sp)return alert("Fill all");
+
+let profit=(sp-cp)*p;
+
+items.push({n,l,w,p,cp,sp,profit});
 render();
 }
 
-// DELETE
-function deleteItem(i){
+/* ================= RENDER ================= */
+function render(){
+
+let html="";
+let total=0;
+let profit=0;
+
+items.forEach((i,index)=>{
+total+=i.sp*i.p;
+profit+=i.profit;
+
+html+=`
+<tr>
+<td>${i.n}</td>
+<td>${i.l}</td>
+<td>${i.w}</td>
+<td>${i.p}</td>
+<td>${(i.sp*i.p).toFixed(2)}</td>
+<td><button onclick="del(${index})" style="background:red">❌</button></td>
+</tr>`;
+});
+
+list.innerHTML=html;
+grandTotal.innerText="Sales: "+total.toFixed(2)+" | Profit: "+profit.toFixed(2);
+
+dash.innerText="TOTAL PROFIT: "+profit.toFixed(2);
+}
+
+/* ================= DELETE ================= */
+function del(i){
 items.splice(i,1);
 render();
 }
 
-// RENDER
-function render(){
-let html="";
-let sum=0;
-
-items.forEach((i,index)=>{
-sum+=i.total;
-
-html+=`
-<tr>
-<td>${i.name}</td>
-<td>${i.l}</td>
-<td>${i.w}</td>
-<td>${i.p}</td>
-<td>${i.sqm.toFixed(2)}</td>
-<td>${i.total.toFixed(2)}</td>
-<td><button style="background:red;" onclick="deleteItem(${index})">❌</button></td>
-</tr>`;
-});
-
-document.getElementById("list").innerHTML=html;
-document.getElementById("grandTotal").innerText="Total: "+sum.toFixed(2);
-}
-
-// CLEAR
+/* ================= CLEAR ================= */
 function clearAll(){
 items=[];
 render();
 }
 
-// 🧾 NEXT LEVEL PDF
-function downloadPDF(){
+/* ================= CONFIRM ORDER ================= */
+function confirmOrder(){
 
-const { jsPDF } = window.jspdf;
-let doc = new jsPDF();
-
-let sum = 0;
-let discount = Number(document.getElementById("discount").value) || 0;
-let customer = document.getElementById("customer").value || "Walk-in Customer";
-let invoiceNo = localStorage.getItem("invNo") || 1001;
-
-// ================= HEADER BOX =================
-doc.setDrawColor(0);
-doc.setFillColor(245,245,245);
-doc.rect(10, 10, 190, 30, "F");
-
-// COMPANY NAME
-doc.setFontSize(20);
-doc.setFont(undefined, "bold");
-doc.text("TABUK MARBLE", 105, 20, { align: "center" });
-
-doc.setFontSize(10);
-doc.setFont(undefined, "normal");
-doc.text("Premium Marble & Stone Supplier", 105, 27, { align: "center" });
-
-// ================= INVOICE INFO =================
-doc.setFontSize(11);
-doc.text("Invoice #: " + invoiceNo, 14, 50);
-doc.text("Customer: " + customer, 14, 57);
-doc.text("Date: " + new Date().toLocaleString(), 120, 50);
-
-// LINE
-doc.setDrawColor(0);
-doc.line(10, 62, 200, 62);
-
-// ================= TABLE HEADER =================
-let y = 72;
-
-doc.setFillColor(230,230,230);
-doc.rect(10, y-6, 190, 10, "F");
-
-doc.setFont(undefined, "bold");
-doc.text("Item", 12, y);
-doc.text("Size", 60, y);
-doc.text("Pcs", 100, y);
-doc.text("m²", 125, y);
-doc.text("Total", 165, y);
-
-y += 10;
-
-// ================= TABLE DATA =================
-doc.setFont(undefined, "normal");
+let total=0;
+let profit=0;
 
 items.forEach(i=>{
-sum += i.total;
-
-// row line
-doc.setDrawColor(220);
-doc.line(10, y+2, 200, y+2);
-
-doc.text(i.name, 12, y);
-doc.text(`${i.l}x${i.w}`, 60, y);
-doc.text(String(i.p), 100, y);
-doc.text(i.sqm.toFixed(2), 125, y);
-doc.text(i.total.toFixed(2), 165, y);
-
-y += 10;
-
-if(y > 270){
-doc.addPage();
-y = 20;
-}
+total+=i.sp*i.p;
+profit+=i.profit;
 });
 
-// ================= TOTAL BOX =================
-let discAmount = (sum * discount) / 100;
-let finalTotal = sum - discAmount;
+sales.push({
+total,
+profit,
+date:new Date().toLocaleString()
+});
 
-y += 10;
+localStorage.setItem("sales",JSON.stringify(sales));
 
-doc.setDrawColor(0);
-doc.setFillColor(240,240,240);
-doc.rect(120, y, 80, 30, "F");
+items=[];
+render();
 
-doc.setFont(undefined, "bold");
-doc.text("Subtotal: " + sum.toFixed(2), 125, y + 8);
-doc.text("Discount: " + discount + "%", 125, y + 15);
-doc.text("TOTAL: " + finalTotal.toFixed(2), 125, y + 25);
-
-// ================= FOOTER =================
-doc.setFontSize(10);
-doc.setFont(undefined, "normal");
-
-doc.text("Thank you for your business!", 105, 285, { align: "center" });
-
-// SIGNATURE LINES
-doc.line(20, 270, 80, 270);
-doc.text("Customer Sign", 25, 278);
-
-doc.line(130, 270, 190, 270);
-doc.text("Authorized Sign", 135, 278);
-
-// SAVE
-doc.save("TABUK_MARBLE_" + invoiceNo + ".pdf");
-
-localStorage.setItem("invNo", Number(invoiceNo) + 1);
+alert("Order Confirmed");
 }
+
+/* ================= PDF (NO PROFIT FOR CUSTOMER) ================= */
+function downloadPDF(){
+
+const {jsPDF}=window.jspdf;
+let doc=new jsPDF();
+
+let y=20;
+let total=0;
+
+doc.setFontSize(18);
+doc.text("TABUK MARBLE INVOICE",105,10,{align:"center"});
+
+items.forEach(i=>{
+total+=i.sp*i.p;
+
+// ONLY CUSTOMER DATA (NO PROFIT)
+doc.text(`${i.n} | ${i.p} pcs | ${i.sp*i.p}`,10,y);
+y+=8;
+});
+
+doc.text("TOTAL: "+total.toFixed(2),10,y+10);
+
+doc.save("invoice.pdf");
+}
+
 </script>
 
 </body>
