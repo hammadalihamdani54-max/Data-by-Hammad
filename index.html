@@ -2,13 +2,25 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Data By Hammad - ERP</title>
+<title>Tabuk Marble ERP</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-body{font-family:Arial;background:#eef2f5;padding:10px}
-.box{background:#fff;padding:15px;border-radius:10px}
+body{font-family:Arial;background:#eef2f5;margin:0}
+
+.topbar{
+display:flex;gap:5px;padding:10px;background:#222
+}
+
+.topbar button{
+flex:1;padding:10px;border:none;color:#fff;font-weight:bold;border-radius:5px
+}
+
+.box{display:none;padding:15px}
+.active{display:block}
+
+.card{background:#fff;padding:15px;border-radius:10px;margin:10px}
 
 input,select{
 width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;border-radius:5px
@@ -22,107 +34,149 @@ width:100%;padding:10px;margin-top:5px;border:none;border-radius:5px;color:#fff;
 .blue{background:#007bff}
 .red{background:red}
 
-table{width:100%;margin-top:10px;border-collapse:collapse}
+table{width:100%;border-collapse:collapse;margin-top:10px}
 th,td{border:1px solid #ccc;padding:6px;text-align:center}
-th{background:#222;color:#fff}
+th{background:#111;color:#fff}
 </style>
 </head>
 
 <body>
 
-<div class="box">
+<!-- TOP MENU -->
+<div class="topbar">
+<button onclick="openTab('pos')" style="background:green">POS</button>
+<button onclick="openTab('invoice')" style="background:#007bff">INVOICE</button>
+<button onclick="openTab('monthly')" style="background:orange">MONTHLY</button>
+</div>
 
-<h2 style="text-align:center">DATA BY HAMMAD</h2>
+<!-- ================= POS ================= -->
+<div id="pos" class="box active">
 
-<!-- INPUTS -->
-<input id="item" placeholder="Item Name">
-<input id="cost" type="number" placeholder="Cost Price">
-<input id="sell" type="number" placeholder="Selling Price">
-<input id="qty" type="number" placeholder="Quantity">
+<div class="card">
 
-<input id="customer" placeholder="Customer Name">
-<input id="discount" type="number" placeholder="Discount %">
+<h2>📦 ADD ITEMS (POS)</h2>
 
-<select id="status">
-<option value="PAID">PAID</option>
-<option value="NOT PAID">NOT PAID</option>
-</select>
+<input id="name" placeholder="Item Name">
+<input id="length" type="number" placeholder="Length">
+<input id="width" type="number" placeholder="Width">
+<input id="pieces" type="number" placeholder="Pieces">
+<input id="price" type="number" placeholder="Price">
 
 <button class="green" onclick="addItem()">➕ Add Item</button>
-<button class="blue" onclick="downloadPDF()">📄 PDF</button>
-<button class="red" onclick="clearAll()">🗑 Clear</button>
+<button class="red" onclick="clearCart()">🗑 Clear</button>
 
 <table>
 <tr>
 <th>Item</th>
 <th>Qty</th>
-<th>Sell</th>
 <th>Total</th>
 <th>Action</th>
 </tr>
 <tbody id="list"></tbody>
 </table>
 
-<h3 id="summary">Total: 0 | Profit: 0</h3>
+<h3 id="totalBox">Total: 0</h3>
+
+<button class="blue" onclick="confirmOrder()">✔ Confirm Order</button>
+
+</div>
+</div>
+
+<!-- ================= INVOICE ================= -->
+<div id="invoice" class="box">
+
+<div class="card">
+
+<h2 style="text-align:center">TABUK MARBLE</h2>
+<p style="text-align:center">Premium Marble Invoice</p>
+
+<input id="customer" placeholder="Customer Name">
+<input id="discount" type="number" placeholder="Discount %">
+
+<select id="status">
+<option>PAID</option>
+<option>NOT PAID</option>
+</select>
+
+<button class="blue" onclick="downloadPDF()">📄 Download PDF</button>
+
+</div>
+</div>
+
+<!-- ================= MONTHLY ================= -->
+<div id="monthly" class="box">
+
+<div class="card">
+<h2>📊 MONTHLY RECORDS</h2>
+<div id="records"></div>
+</div>
 
 </div>
 
 <script>
 
 let cart=[];
+let monthly=JSON.parse(localStorage.getItem("monthly"))||[];
 
-/* ================= ADD ITEM FIXED ================= */
+/* ================= TAB SWITCH ================= */
+function openTab(tab){
+pos.classList.remove("active");
+invoice.classList.remove("active");
+monthly.classList.remove("active");
+
+document.getElementById(tab).classList.add("active");
+
+if(tab==="monthly") loadMonthly();
+}
+
+/* ================= ADD ITEM ================= */
 function addItem(){
 
-let n=document.getElementById("item").value.trim();
-let c=Number(document.getElementById("cost").value);
-let s=Number(document.getElementById("sell").value);
-let q=Number(document.getElementById("qty").value);
+let n=name.value.trim();
+let l=+length.value;
+let w=+width.value;
+let p=+pieces.value;
+let price=+price.value;
 
-/* STRICT VALIDATION FIX */
-if(!n || !c || !s || !q){
-alert("Fill all fields properly");
+if(!n||!l||!w||!p||!price){
+alert("Fill all fields");
 return;
 }
 
-cart.push({
-n,c,s,q,
-profit:(s-c)*q
-});
+let sqm=l*w*p;
+let total=sqm*price;
 
-/* clear inputs */
-item.value="";
-cost.value="";
-sell.value="";
-qty.value="";
+cart.push({n,p,total});
 
 render();
+
+name.value="";
+length.value="";
+width.value="";
+pieces.value="";
+price.value="";
 }
 
 /* ================= RENDER ================= */
 function render(){
 
 let html="";
-let total=0;
-let profit=0;
+let sum=0;
 
 cart.forEach((i,index)=>{
-let t=i.s*i.q;
-total+=t;
-profit+=i.profit;
+sum+=i.total;
 
 html+=`
 <tr>
 <td>${i.n}</td>
-<td>${i.q}</td>
-<td>${i.s}</td>
-<td>${t.toFixed(2)}</td>
+<td>${i.p}</td>
+<td>${i.total.toFixed(2)}</td>
 <td><button onclick="del(${index})" style="background:red">❌</button></td>
 </tr>`;
 });
 
 list.innerHTML=html;
-summary.innerText="Total: "+total.toFixed(2)+" | Profit: "+profit.toFixed(2);
+totalBox.innerText="Total: "+sum.toFixed(2);
 }
 
 /* ================= DELETE ================= */
@@ -132,12 +186,50 @@ render();
 }
 
 /* ================= CLEAR ================= */
-function clearAll(){
+function clearCart(){
 cart=[];
 render();
 }
 
-/* ================= FIXED PDF ================= */
+/* ================= CONFIRM ORDER ================= */
+function confirmOrder(){
+
+let total=0;
+
+cart.forEach(i=>total+=i.total);
+
+monthly.push({
+total,
+date:new Date().toLocaleString()
+});
+
+localStorage.setItem("monthly",JSON.stringify(monthly));
+
+alert("Order Confirmed");
+cart=[];
+render();
+}
+
+/* ================= MONTHLY LOAD ================= */
+function loadMonthly(){
+
+let html="";
+let sum=0;
+
+monthly.forEach(m=>{
+sum+=m.total;
+
+html+=`
+<div style="border:1px solid #ccc;padding:10px;margin:5px">
+📅 ${m.date}<br>
+💰 ${m.total.toFixed(2)}
+</div>`;
+});
+
+records.innerHTML=html+"<hr><b>Total: "+sum.toFixed(2)+"</b>";
+}
+
+/* ================= PDF ================= */
 function downloadPDF(){
 
 const {jsPDF}=window.jspdf;
@@ -146,63 +238,33 @@ let doc=new jsPDF();
 let y=20;
 let total=0;
 
-let customer=document.getElementById("customer").value || "Walk-in Customer";
+let customer=document.getElementById("customer").value||"Walk-in";
 let status=document.getElementById("status").value;
-let discount=Number(document.getElementById("discount").value)||0;
 
-/* HEADER */
 doc.setFontSize(18);
-doc.text("DATA BY HAMMAD",105,10,{align:"center"});
+doc.text("TABUK MARBLE",105,10,{align:"center"});
 
 doc.setFontSize(11);
 doc.text("Customer: "+customer,10,25);
 doc.text("Status: "+status,150,25);
 
-let date=new Date();
-doc.text("Date: "+date.toLocaleString(),10,32);
+doc.line(10,30,200,30);
 
-doc.line(10,35,200,35);
+y=40;
 
-y=45;
-
-/* TABLE HEADER */
-doc.text("Item",10,y);
-doc.text("Qty",70,y);
-doc.text("Sell",110,y);
-doc.text("Total",150,y);
-
-y+=10;
-
-/* ITEMS */
 cart.forEach(i=>{
-let t=i.s*i.q;
-total+=t;
+total+=i.total;
 
-doc.text(i.n,10,y);
-doc.text(String(i.q),70,y);
-doc.text(String(i.s),110,y);
-doc.text(t.toFixed(2),150,y);
-
+doc.text(`${i.n} | ${i.p} pcs | ${i.total.toFixed(2)}`,10,y);
 y+=8;
-if(y>270){doc.addPage();y=20;}
 });
 
-/* DISCOUNT */
-let disc=(total*discount)/100;
-let final=total-disc;
+doc.text("TOTAL: "+total.toFixed(2),10,y+10);
 
-y+=10;
-doc.text("Subtotal: "+total.toFixed(2),10,y);
-y+=7;
-doc.text("Discount: "+discount+"%",10,y);
-y+=7;
-
-doc.setFontSize(14);
-doc.text("TOTAL: "+final.toFixed(2),10,y+10);
-
-/* STATUS STAMP */
 doc.setFontSize(16);
 doc.text(status,150,y+10);
+
+doc.text("Signature: ________________",10,280);
 
 doc.save("invoice.pdf");
 }
