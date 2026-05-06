@@ -173,39 +173,71 @@ alert("Order Saved");
 /* ================= PDF ================= */
 function downloadPDF(){
 
-const {jsPDF}=window.jspdf;
-let doc=new jsPDF();
+const { jsPDF } = window.jspdf;
+let doc = new jsPDF();
 
-let y=20;
+let y = 20;
+let total = 0;
 
-let customer=document.getElementById("customer").value||"Walk-in";
-let status=document.getElementById("status").value;
+let customer = document.getElementById("customer").value || "Walk-in Customer";
+let status = document.getElementById("status").value || "NOT PAID";
 
+/* ===== HEADER ===== */
 doc.setFontSize(18);
-doc.text("SHOP INVOICE",105,10,{align:"center"});
+doc.setFont(undefined, "bold");
+doc.text("🛒 SHOP INVOICE", 105, 10, { align: "center" });
 
 doc.setFontSize(11);
-doc.text("Customer: "+customer,10,25);
-doc.text("Status: "+status,150,25);
+doc.setFont(undefined, "normal");
+doc.text("Customer: " + customer, 14, 25);
+doc.text("Status: " + status, 150, 25);
 
-doc.line(10,30,200,30);
+doc.line(14, 30, 195, 30);
 
-y=40;
+/* ===== TABLE HEAD ===== */
+y = 40;
 
-let total=0;
+doc.setFont(undefined, "bold");
+doc.text("Item", 14, y);
+doc.text("Qty", 70, y);
+doc.text("Price", 110, y);
+doc.text("Total", 150, y);
+
+doc.line(14, y+2, 195, y+2);
+
+y += 10;
+
+/* ===== ITEMS ===== */
+doc.setFont(undefined, "normal");
 
 cart.forEach(i=>{
-total+=i.s*i.q;
+let rowTotal = i.s * i.q;
+total += rowTotal;
 
-doc.text(`${i.n} | ${i.q} x ${i.s} = ${i.s*i.q}`,10,y);
-y+=8;
+doc.text(i.n, 14, y);
+doc.text(String(i.q), 70, y);
+doc.text(String(i.s), 110, y);
+doc.text(rowTotal.toFixed(2), 150, y);
+
+y += 8;
+
+if(y > 270){
+doc.addPage();
+y = 20;
+}
 });
 
-doc.text("TOTAL: "+total.toFixed(2),10,y+10);
+/* ===== TOTAL BOX ===== */
+doc.line(120, y, 195, y);
+y += 10;
 
-/* PAID / NOT PAID STAMP */
+doc.setFont(undefined, "bold");
+doc.text("TOTAL: " + total.toFixed(2), 150, y);
+
+/* ===== STAMP ===== */
+doc.setTextColor(status === "PAID" ? 0 : 200, 0, 0);
 doc.setFontSize(16);
-doc.text(status,150,y+10);
+doc.text(status, 160, y + 15);
 
 doc.save("invoice.pdf");
 }
