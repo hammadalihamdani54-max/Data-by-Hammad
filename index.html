@@ -59,36 +59,70 @@ function downloadPDF(){
 const { jsPDF } = window.jspdf;
 let doc = new jsPDF();
 
-let y = 10;
 let sum = 0;
 
-doc.text("Data by Hammad - Invoice", 10, y);
+// ===== HEADER =====
+doc.setFontSize(18);
+doc.text("DATA BY HAMMAD", 14, 15);
+
+doc.setFontSize(11);
+doc.text("INVOICE / BILL", 14, 22);
+
+// line
+doc.line(14, 25, 195, 25);
+
+// ===== TABLE START =====
+let y = 35;
+
+// table header
+doc.setFontSize(10);
+doc.setFont(undefined, "bold");
+
+doc.text("Name", 14, y);
+doc.text("L", 60, y);
+doc.text("W", 75, y);
+doc.text("Pcs", 90, y);
+doc.text("m²", 110, y);
+doc.text("Price", 135, y);
+doc.text("Total", 165, y);
+
+doc.line(14, y+2, 195, y+2);
+
 y += 10;
 
-// simple table (no plugin needed)
-doc.text("Name | L | W | Pcs | m² | Price | Total", 10, y);
-y += 7;
+// reset font
+doc.setFont(undefined, "normal");
 
+// ===== DATA ROWS =====
 items.forEach(i=>{
 sum += i.total;
 
-doc.text(
-`${i.name} | ${i.l} | ${i.w} | ${i.p} | ${i.sqm.toFixed(2)} | ${i.price} ${i.currency} | ${i.total.toFixed(2)}`,
-10,
-y
-);
+doc.text(String(i.name), 14, y);
+doc.text(String(i.l), 60, y);
+doc.text(String(i.w), 75, y);
+doc.text(String(i.p), 90, y);
+doc.text(i.sqm.toFixed(2), 110, y);
+doc.text(i.price.toFixed(2) + " " + i.currency, 135, y);
+doc.text(i.total.toFixed(2), 165, y);
 
-y += 7;
+y += 8;
 
-if(y > 280){
+// page break
+if(y > 270){
 doc.addPage();
-y = 10;
+y = 20;
 }
 });
 
+// ===== TOTAL BOX =====
 y += 10;
-doc.text("TOTAL: " + sum.toFixed(2), 10, y);
+doc.setFontSize(12);
+doc.setFont(undefined, "bold");
 
+doc.rect(130, y, 60, 10);
+doc.text("TOTAL: " + sum.toFixed(2), 132, y + 7);
+
+// save
 doc.save("invoice.pdf");
 }
 // Load data on start
