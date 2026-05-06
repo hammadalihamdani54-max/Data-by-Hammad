@@ -2,23 +2,71 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Tabuk Marble POS</title>
+<title>Tabuk Marble Pro</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-body { font-family: Arial; background:#f4f4f4; padding:10px; }
-.container { background:white; padding:10px; border-radius:10px; }
-input, select { width:100%; padding:8px; margin:5px 0; }
-button { padding:10px; width:100%; margin-top:5px; }
-table { width:100%; margin-top:10px; border-collapse: collapse; }
-th, td { border:1px solid #ccc; padding:5px; text-align:center; }
+body { font-family: Arial; background:#eef2f5; padding:10px; }
+
+.container {
+  background:white;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 0 12px rgba(0,0,0,0.1);
+}
+
+input, select {
+  width:100%;
+  padding:8px;
+  margin:5px 0;
+  border:1px solid #ccc;
+  border-radius:5px;
+}
+
+button {
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  border:none;
+  border-radius:5px;
+  font-weight:bold;
+  color:white;
+}
+
+.add { background:green; }
+.pdf { background:#007bff; }
+.clear { background:red; }
+
+table {
+  width:100%;
+  margin-top:10px;
+  border-collapse:collapse;
+}
+
+th {
+  background:#222;
+  color:white;
+}
+
+th, td {
+  border:1px solid #ccc;
+  padding:6px;
+  text-align:center;
+}
+
+.total {
+  font-size:20px;
+  font-weight:bold;
+  text-align:right;
+  margin-top:10px;
+}
 </style>
 </head>
 
 <body>
 
-<h2 style="text-align:center;">TABUK MARBLE</h2>
+<h2 style="text-align:center;">TABUK MARBLE SYSTEM</h2>
 
 <div class="container">
 
@@ -37,24 +85,32 @@ th, td { border:1px solid #ccc; padding:5px; text-align:center; }
 <option value="USD">USD</option>
 </select>
 
-<button onclick="addItem()">Add Item</button>
-<button onclick="downloadPDF()">Download PDF</button>
+<button class="add" onclick="addItem()">➕ Add Item</button>
+<button class="pdf" onclick="downloadPDF()">📄 Download Invoice</button>
+<button class="clear" onclick="clearAll()">🗑 Clear All</button>
 
 <table>
 <tr>
-<th>Name</th><th>L</th><th>W</th><th>Pcs</th><th>m²</th><th>Price</th><th>Total</th><th>Action</th>
+<th>Name</th>
+<th>L</th>
+<th>W</th>
+<th>Pcs</th>
+<th>m²</th>
+<th>Total</th>
+<th>Action</th>
 </tr>
 <tbody id="list"></tbody>
 </table>
 
-<h3 id="grandTotal">Total: 0</h3>
+<div class="total" id="grandTotal">Total: 0</div>
 
 </div>
 
 <script>
 let items = [];
+let invoiceNo = localStorage.getItem("invNo") || 1001;
 
-// ADD ITEM
+// ADD
 function addItem(){
 let name = document.getElementById("name").value.trim();
 let l = Number(document.getElementById("length").value);
@@ -71,13 +127,13 @@ return;
 let sqm = l*w*p;
 let total = sqm*price;
 
-items.push({name,l,w,p,price,sqm,total,currency});
+items.push({name,l,w,p,sqm,total,price,currency});
 render();
 }
 
 // DELETE
-function deleteItem(index){
-items.splice(index,1);
+function deleteItem(i){
+items.splice(i,1);
 render();
 }
 
@@ -96,9 +152,8 @@ html+=`
 <td>${i.w}</td>
 <td>${i.p}</td>
 <td>${i.sqm.toFixed(2)}</td>
-<td>${i.price} ${i.currency}</td>
 <td>${i.total.toFixed(2)}</td>
-<td><button onclick="deleteItem(${index})">❌</button></td>
+<td><button style="background:red;" onclick="deleteItem(${index})">❌</button></td>
 </tr>`;
 });
 
@@ -106,32 +161,90 @@ document.getElementById("list").innerHTML=html;
 document.getElementById("grandTotal").innerText="Total: "+sum.toFixed(2);
 }
 
-// PDF
+// CLEAR
+function clearAll(){
+items=[];
+render();
+}
+
+// 🧾 NEXT LEVEL PDF
 function downloadPDF(){
 
 const { jsPDF } = window.jspdf;
 let doc = new jsPDF();
 
 let sum=0;
+let discount = Number(document.getElementById("discount").value) || 0;
+let customer = document.getElementById("customer").value || "Walk-in Customer";
 
-doc.text("TABUK MARBLE INVOICE", 10, 10);
+// HEADER
+doc.setFontSize(22);
+doc.setFont(undefined,"bold");
+doc.text("TABUK MARBLE",105,15,{align:"center"});
 
-let y=20;
+doc.setFontSize(10);
+doc.setFont(undefined,"normal");
+doc.text("Premium Stone & Marble Supplier",105,22,{align:"center"});
 
+doc.text("Invoice #" + invoiceNo,14,35);
+doc.text("Customer: "+customer,14,42);
+doc.text("Date: "+new Date().toLocaleString(),140,35);
+
+doc.line(14,45,195,45);
+
+// TABLE HEADER
+let y=55;
+
+doc.setFont(undefined,"bold");
+doc.text("Item",14,y);
+doc.text("Size",60,y);
+doc.text("Qty",100,y);
+doc.text("Total",160,y);
+
+doc.line(14,y+2,195,y+2);
+
+y+=10;
+doc.setFont(undefined,"normal");
+
+// DATA
 items.forEach(i=>{
 sum+=i.total;
 
-doc.text(
-`${i.name} | ${i.l}x${i.w} | ${i.total.toFixed(2)} ${i.currency}`,
-10,y
-);
+doc.text(i.name,14,y);
+doc.text(`${i.l}x${i.w}`,60,y);
+doc.text(String(i.p),100,y);
+doc.text(i.total.toFixed(2),160,y);
 
 y+=8;
+
+if(y>270){
+doc.addPage();
+y=20;
+}
 });
 
-doc.text("Total: "+sum.toFixed(2),10,y+10);
+// TOTAL
+let discAmount=(sum*discount)/100;
+let finalTotal=sum-discAmount;
 
-doc.save("invoice.pdf");
+doc.setFont(undefined,"bold");
+doc.text("Subtotal: "+sum.toFixed(2),140,y+10);
+doc.text("Discount: "+discount+"%",140,y+17);
+doc.text("TOTAL: "+finalTotal.toFixed(2),140,y+25);
+
+// SIGNATURES
+doc.line(20,y+40,80,y+40);
+doc.text("Customer Signature",20,y+45);
+
+doc.line(120,y+40,180,y+40);
+doc.text("Authorized",120,y+45);
+
+// FOOTER
+doc.text("Thank you for your business!",105,y+60,{align:"center"});
+
+doc.save("invoice_"+invoiceNo+".pdf");
+
+localStorage.setItem("invNo", Number(invoiceNo)+1);
 }
 </script>
 
