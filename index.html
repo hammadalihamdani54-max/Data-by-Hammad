@@ -126,36 +126,36 @@ b.classList.remove("active");
 });
 
 document.getElementById(tab).classList.add("active");
-
-if(tab==="monthly") loadMonthly();
 }
-
 /* ================= FAST ADD ================= */
 function addItem(){
 
-let n=name.value.trim();
-let l=+length.value;
-let w=+width.value;
-let p=+pieces.value;
-let price=+price.value;
+let name = document.getElementById("name").value.trim();
+let l = +document.getElementById("length").value;
+let w = +document.getElementById("width").value;
+let p = +document.getElementById("pieces").value;
+let price = +document.getElementById("price").value;
 
-if(!n || !l || !w || !p || !price){
+if(!name || !l || !w || !p || !price){
 alert("Fill all fields");
 return;
 }
+function del(i){
+cart.splice(i,1);
+renderFast();
+}
+let total = l * w * p * price;
 
-let total=l*w*p*price;
-
-cart.push({n,p,total});
+cart.push({name,l,w,p,price,total});
 
 renderFast();
 
 /* clear */
-name.value="";
-length.value="";
-width.value="";
-pieces.value="";
-price.value="";
+document.getElementById("name").value="";
+document.getElementById("length").value="";
+document.getElementById("width").value="";
+document.getElementById("pieces").value="";
+document.getElementById("price").value="";
 }
 
 /* ================= LIGHT RENDER (FAST) ================= */
@@ -166,33 +166,26 @@ let sum=0;
 
 for(let i=0;i<cart.length;i++){
 
-sum+=cart[i].total;
+sum += cart[i].total;
 
-html+=`
+html += `
 <tr>
-<td>${cart[i].n}</td>
+<td>${cart[i].name}</td>
 <td>${cart[i].p}</td>
 <td>${cart[i].total.toFixed(2)}</td>
 <td><button onclick="del(${i})" style="background:red">❌</button></td>
 </tr>`;
 }
 
-list.innerHTML=html;
-totalBox.innerText="Total: "+sum.toFixed(2);
+document.getElementById("list").innerHTML = html;
+document.getElementById("totalBox").innerText = "Total: " + sum.toFixed(2);
 }
-
-/* ================= DELETE FAST ================= */
-function del(i){
-cart.splice(i,1);
-renderFast();
-}
-
 /* ================= CONFIRM ================= */
 function confirmOrder(){
 
 let total=0;
 
-for(let i of cart) total+=i.total;
+for(let i of cart) total += i.total;
 
 monthly.push({
 total,
@@ -206,7 +199,6 @@ renderFast();
 
 alert("Order Saved");
 }
-
 /* ================= MONTHLY ================= */
 function loadMonthly(){
 
