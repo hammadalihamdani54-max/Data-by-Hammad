@@ -272,7 +272,7 @@
                     <div style="overflow-x: auto; max-height: 350px; overflow-y: auto;">
                         <table id="cartTable">
                             <thead>
-                                <tr><th>Item</th><th>Thick</th><th>W</th><th>L</th><th>sqm</th><th>Price</th><th>Total</th><th></th><tr>
+                                <tr><th>Item</th><th>Thick</th><th>W</th><th>L</th><th>sqm</th><th>Price</th><th>Total</th><th></th></tr>
                             </thead>
                             <tbody id="cartBody"></tbody>
                         </table>
@@ -362,7 +362,7 @@
             <div style="text-align: center; margin-top: 20px;">
                 <button id="closeModalBtn" class="btn-info">Close</button>
                 <button id="printInvoiceBtn" class="btn-success">Print</button>
-                <button id="shareWhatsAppBtn" class="btn-whatsapp">Share via WhatsApp</button>
+                <button id="shareWhatsAppBtn" class="btn-whatsapp">Share Invoice PDF</button>
             </div>
         </div>
     </div>
@@ -399,7 +399,7 @@
                 undoDelete: "Undo Delete", undoDeleteSuccess: "Invoice restored!",
                 noInvoices: "No invoices found", cartEmpty: "Cart is empty!",
                 orderConfirmed: "Order Confirmed! Invoice: ", productAdded: "added to cart!",
-                view: "View", delete: "Delete", download: "Download", share: "Share"
+                view: "View", delete: "Delete", download: "Download", share: "Share PDF"
             },
             ur: {
                 pos: "POS سسٹم", monthly: "ماہانہ رپورٹ", inventory: "انوینٹری",
@@ -420,7 +420,7 @@
                 undoDelete: "حذف واپس لیں", undoDeleteSuccess: "انوائس بحال کر دی گئی!",
                 noInvoices: "کوئی انوائس نہیں ملی", cartEmpty: "کارٹ خالی ہے!",
                 orderConfirmed: "آرڈر تصدیق ہوگیا! انوائس: ", productAdded: "کارٹ میں شامل ہوگیا!",
-                view: "دیکھیں", delete: "حذف کریں", download: "ڈاؤن لوڈ", share: "شیئر کریں"
+                view: "دیکھیں", delete: "حذف کریں", download: "ڈاؤن لوڈ", share: "پی ڈی ایف شیئر کریں"
             },
             ar: {
                 pos: "نظام البيع", monthly: "التقرير الشهري", inventory: "المخزون",
@@ -441,7 +441,7 @@
                 undoDelete: "تراجع عن الحذف", undoDeleteSuccess: "تم استعادة الفاتورة!",
                 noInvoices: "لم يتم العثور على فواتير", cartEmpty: "السلة فارغة!",
                 orderConfirmed: "تم تأكيد الطلب! الفاتورة: ", productAdded: "تمت الإضافة إلى السلة!",
-                view: "عرض", delete: "حذف", download: "تحميل", share: "مشاركة"
+                view: "عرض", delete: "حذف", download: "تحميل", share: "مشاركة PDF"
             }
         };
 
@@ -504,15 +504,12 @@
             if (currentLanguage === 'ar') {
                 container.classList.add('rtl');
                 container.classList.remove('ltr');
-                document.body.style.fontFamily = "'Segoe UI', 'Arial', 'Noto Sans Arabic', sans-serif";
             } else if (currentLanguage === 'ur') {
                 container.classList.add('rtl');
                 container.classList.remove('ltr');
-                document.body.style.fontFamily = "'Segoe UI', 'Arial', 'Noto Nastaliq Urdu', 'Noto Sans Arabic', sans-serif";
             } else {
                 container.classList.add('ltr');
                 container.classList.remove('rtl');
-                document.body.style.fontFamily = "'Segoe UI', Arial, sans-serif";
             }
         }
 
@@ -721,7 +718,7 @@
             const t = translations[currentLanguage];
             
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7">' + getTranslation('noInvoices') + '</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7">' + getTranslation('noInvoices') + 'NonNull‚';
                 return;
             }
             
@@ -748,7 +745,7 @@
                 btn.addEventListener('click', (e) => { e.stopPropagation(); downloadSingleInvoice(btn.getAttribute('data-invoice')); });
             });
             document.querySelectorAll('.monthly-share-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => { e.stopPropagation(); shareViaWhatsApp(btn.getAttribute('data-invoice')); });
+                btn.addEventListener('click', (e) => { e.stopPropagation(); shareInvoicePDF(btn.getAttribute('data-invoice')); });
             });
             document.querySelectorAll('#monthlyBody .clickable-row').forEach(row => {
                 row.addEventListener('click', () => viewInvoiceDetails(row.getAttribute('data-invoice')));
@@ -779,7 +776,7 @@
             const t = translations[currentLanguage];
             
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6">' + getTranslation('noInvoices') + '</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6">' + getTranslation('noInvoices') + 'NonNull‚';
                 return;
             }
             
@@ -809,7 +806,7 @@
                 btn.addEventListener('click', () => downloadSingleInvoice(btn.getAttribute('data-invoice')));
             });
             document.querySelectorAll('.share-invoice-btn').forEach(btn => {
-                btn.addEventListener('click', () => shareViaWhatsApp(btn.getAttribute('data-invoice')));
+                btn.addEventListener('click', () => shareInvoicePDF(btn.getAttribute('data-invoice')));
             });
         }
 
@@ -906,16 +903,13 @@
         function downloadSingleInvoice(invoiceNo) {
             const order = allOrders.find(o => o.invoiceNo === invoiceNo);
             if (!order) return;
-            
+            generateAndSavePDF(order);
+        }
+
+        function generateAndSavePDF(order) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             const t = translations[currentLanguage];
-            
-            // Set font for Arabic/Urdu support
-            if (currentLanguage === 'ar' || currentLanguage === 'ur') {
-                doc.setFont('helvetica');
-                doc.addFileToVFS('NotoSansArabic-Regular.ttf', '');
-            }
             
             doc.setFillColor(26, 26, 46);
             doc.rect(0, 0, 210, 50, 'F');
@@ -978,33 +972,85 @@
             
             doc.save('TABUK_MARBLE_' + order.invoiceNo + '.pdf');
             showToast('Invoice downloaded!');
+            return doc;
         }
 
-        function shareViaWhatsApp(invoiceNo) {
+        function shareInvoicePDF(invoiceNo) {
             const order = allOrders.find(o => o.invoiceNo === invoiceNo);
             if (!order) return;
             
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
             const t = translations[currentLanguage];
-            let message = `🏛️ TABUK MARBLE - ${t.invoice}\n`;
-            message += `${t.invoice}: ${order.invoiceNo}\n`;
-            message += `${t.date}: ${new Date(order.date).toLocaleString()}\n`;
-            message += `${t.customer}: ${order.customer}\n`;
-            message += `━━━━━━━━━━━━━━━━━━\n`;
             
-            order.items.forEach(item => {
-                message += `${item.name}: ${item.area} sqm x ${formatCurrency(item.sellingPrice)} = ${formatCurrency(item.total)}\n`;
+            doc.setFillColor(26, 26, 46);
+            doc.rect(0, 0, 210, 50, 'F');
+            doc.setTextColor(255, 215, 0);
+            doc.setFontSize(22);
+            doc.text('TABUK MARBLE', 105, 20, { align: 'center' });
+            doc.setFontSize(10);
+            doc.setTextColor(255, 255, 255);
+            doc.text(t.company, 105, 30, { align: 'center' });
+            doc.text(t.address, 105, 40, { align: 'center' });
+            
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(10);
+            doc.text(t.invoice + ': ' + order.invoiceNo, 140, 62);
+            doc.text(t.date + ': ' + new Date(order.date).toLocaleString(), 140, 69);
+            doc.text(t.customer + ': ' + order.customer, 20, 62);
+            
+            doc.setFillColor(26, 26, 46);
+            doc.rect(20, 78, 170, 10, 'F');
+            doc.setTextColor(255, 215, 0);
+            doc.setFontSize(9);
+            doc.text(t.item, 25, 85);
+            doc.text(t.thick, 65, 85);
+            doc.text(t.width + 'x' + t.length, 95, 85);
+            doc.text(t.area, 130, 85);
+            doc.text(t.total, 165, 85);
+            
+            let y = 93;
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(8);
+            
+            order.items.forEach((item) => {
+                if (y > 260) { doc.addPage(); y = 20; }
+                doc.text(item.name.substring(0, 15), 25, y);
+                doc.text(item.thickness + 'cm', 65, y);
+                doc.text(item.width + 'x' + item.length + 'm', 95, y);
+                doc.text(item.area + ' sqm', 130, y);
+                doc.text(formatCurrency(item.total), 165, y);
+                y += 7;
             });
-            message += `━━━━━━━━━━━━━━━━━━\n`;
-            message += `${t.subtotal}: ${formatCurrency(order.subtotal)}\n`;
-            message += `${t.discount}: ${order.discountPercent}% (-${formatCurrency(order.discountAmount)})\n`;
-            message += `${t.grandTotal}: ${formatCurrency(order.total)}\n`;
-            message += `━━━━━━━━━━━━━━━━━━\n`;
-            message += `${t.thankYou}\n`;
-            message += `${t.address}`;
             
+            y += 10;
+            doc.setFontSize(10);
+            doc.text(t.subtotal + ': ' + formatCurrency(order.subtotal), 140, y);
+            y += 6;
+            doc.text(t.discount + ': ' + order.discountPercent + '% (-' + formatCurrency(order.discountAmount) + ')', 140, y);
+            y += 8;
+            
+            doc.setFillColor(17, 153, 142);
+            doc.rect(120, y - 5, 70, 12, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(12);
+            doc.text(t.grandTotal + ': ' + formatCurrency(order.total), 155, y + 2, { align: 'center' });
+            
+            doc.setTextColor(100, 100, 100);
+            doc.setFontSize(8);
+            y += 20;
+            doc.text(t.thankYou, 105, y, { align: 'center' });
+            doc.text(t.address, 105, y + 6, { align: 'center' });
+            
+            const pdfBlob = doc.output('blob');
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            
+            const message = `🏛️ TABUK MARBLE - ${t.invoice} ${order.invoiceNo}\n${t.customer}: ${order.customer}\n${t.grandTotal}: ${formatCurrency(order.total)}\n\nClick to view PDF invoice`;
             const encodedMessage = encodeURIComponent(message);
-            window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodedMessage}`, '_blank');
-            showToast('Opening WhatsApp...');
+            const whatsappUrl = `https://wa.me/${PHONE_NUMBER}?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+            showToast('Opening WhatsApp... Share the PDF manually');
         }
 
         function loadInventory() {
@@ -1130,7 +1176,7 @@
                 document.querySelector('#invoicesTab .report-panel h3').innerHTML = t.allInvoices;
             if (document.getElementById('closeModalBtn')) document.getElementById('closeModalBtn').innerHTML = 'Close';
             if (document.getElementById('printInvoiceBtn')) document.getElementById('printInvoiceBtn').innerHTML = 'Print';
-            if (document.getElementById('shareWhatsAppBtn')) document.getElementById('shareWhatsAppBtn').innerHTML = 'Share via WhatsApp';
+            if (document.getElementById('shareWhatsAppBtn')) document.getElementById('shareWhatsAppBtn').innerHTML = 'Share Invoice PDF';
             applyLanguageDirection();
         }
 
@@ -1155,80 +1201,33 @@
                 return;
             }
             
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
             const customer = document.getElementById('posCustomer').value || 'Walk-in Customer';
             const discountPercent = parseFloat(document.getElementById('posDiscount').value) || 0;
             const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
             const discountAmount = (subtotal * discountPercent) / 100;
-            const grandTotal = subtotal - discountAmount;
+            const total = subtotal - discountAmount;
+            const cost = cart.reduce((sum, item) => sum + (item.costPrice * item.area), 0);
+            const profit = total - cost;
             const invoiceNo = 'INV-' + String(allOrders.length + 1).padStart(4, '0');
-            const t = translations[currentLanguage];
             
-            doc.setFillColor(26, 26, 46);
-            doc.rect(0, 0, 210, 50, 'F');
-            doc.setTextColor(255, 215, 0);
-            doc.setFontSize(22);
-            doc.text('TABUK MARBLE', 105, 20, { align: 'center' });
-            doc.setFontSize(10);
-            doc.setTextColor(255, 255, 255);
-            doc.text(t.company, 105, 30, { align: 'center' });
-            doc.text(t.address, 105, 40, { align: 'center' });
+            const tempOrder = {
+                invoiceNo: invoiceNo,
+                date: new Date().toISOString(),
+                customer: customer,
+                items: cart.map(item => ({ ...item })),
+                subtotal: subtotal,
+                discountPercent: discountPercent,
+                discountAmount: discountAmount,
+                total: total,
+                cost: cost,
+                profit: profit
+            };
             
-            doc.setTextColor(0, 0, 0);
-            doc.setFontSize(10);
-            doc.text(t.invoice + ': ' + invoiceNo, 140, 62);
-            doc.text(t.date + ': ' + new Date().toLocaleString(), 140, 69);
-            doc.text(t.customer + ': ' + customer, 20, 62);
-            
-            doc.setFillColor(26, 26, 46);
-            doc.rect(20, 78, 170, 10, 'F');
-            doc.setTextColor(255, 215, 0);
-            doc.setFontSize(9);
-            doc.text(t.item, 25, 85);
-            doc.text(t.thick, 65, 85);
-            doc.text(t.width + 'x' + t.length, 95, 85);
-            doc.text(t.area, 130, 85);
-            doc.text(t.total, 165, 85);
-            
-            let y = 93;
-            doc.setTextColor(0, 0, 0);
-            doc.setFontSize(8);
-            
-            cart.forEach((item) => {
-                if (y > 260) { doc.addPage(); y = 20; }
-                doc.text(item.name.substring(0, 15), 25, y);
-                doc.text(item.thickness + 'cm', 65, y);
-                doc.text(item.width + 'x' + item.length + 'm', 95, y);
-                doc.text(item.area + ' sqm', 130, y);
-                doc.text(formatCurrency(item.total), 165, y);
-                y += 7;
-            });
-            
-            y += 10;
-            doc.setFontSize(10);
-            doc.text(t.subtotal + ': ' + formatCurrency(subtotal), 140, y);
-            y += 6;
-            doc.text(t.discount + ': ' + discountPercent + '% (-' + formatCurrency(discountAmount) + ')', 140, y);
-            y += 8;
-            
-            doc.setFillColor(17, 153, 142);
-            doc.rect(120, y - 5, 70, 12, 'F');
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(12);
-            doc.text(t.grandTotal + ': ' + formatCurrency(grandTotal), 155, y + 2, { align: 'center' });
-            
-            doc.setTextColor(100, 100, 100);
-            doc.setFontSize(8);
-            y += 20;
-            doc.text(t.thankYou, 105, y, { align: 'center' });
-            doc.text(t.address, 105, y + 6, { align: 'center' });
-            
-            doc.save('TABUK_MARBLE_' + invoiceNo + '.pdf');
-            showToast('Invoice downloaded!');
+            generateAndSavePDF(tempOrder);
         }
 
         function closeModal() { document.getElementById('invoiceModal').style.display = 'none'; }
+        
         function printInvoice() {
             const printContent = document.getElementById('invoiceDetails').innerHTML;
             const win = window.open('', '_blank');
@@ -1246,9 +1245,13 @@
             win.document.close();
             win.print();
         }
+        
         function shareCurrentInvoice() {
-            if (window.currentInvoice) shareViaWhatsApp(window.currentInvoice.invoiceNo);
-            else showToast('No invoice selected');
+            if (window.currentInvoice) {
+                shareInvoicePDF(window.currentInvoice.invoiceNo);
+            } else {
+                showToast('No invoice selected');
+            }
         }
 
         function showToast(message) {
