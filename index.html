@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path fill="%23333" d="M20,20 L80,20 L80,80 L20,80 Z"/><circle cx="50" cy="50" r="15"/></svg>'), linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
             min-height: 100vh;
             padding: 15px;
         }
@@ -22,7 +22,7 @@
         .container {
             max-width: 1600px;
             margin: 0 auto;
-            background: white;
+            background: rgba(255,255,255,0.95);
             border-radius: 15px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
@@ -38,9 +38,20 @@
             gap: 10px;
         }
 
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 40px;
+        }
+
         .logo-area h2 {
             color: #ffd700;
             font-size: 24px;
+            letter-spacing: 2px;
         }
 
         .language-selector, .currency-selector {
@@ -55,6 +66,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-weight: bold;
         }
 
         .lang-btn.active, .currency-btn.active {
@@ -77,10 +89,12 @@
             font-size: 14px;
             cursor: pointer;
             min-width: 100px;
+            transition: all 0.3s;
         }
 
         .tab-btn.active {
-            background: #3498db;
+            background: #ffd700;
+            color: #1a1a2e;
         }
 
         .tab-content {
@@ -94,8 +108,8 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .pos-grid {
@@ -108,6 +122,7 @@
             background: #f8f9fa;
             padding: 20px;
             border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .product-list {
@@ -120,7 +135,7 @@
         }
 
         .product-card {
-            background: white;
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
             padding: 12px;
             border-radius: 8px;
             cursor: pointer;
@@ -129,9 +144,9 @@
         }
 
         .product-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            border-color: #3498db;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            border-color: #ffd700;
         }
 
         .form-group {
@@ -155,7 +170,7 @@
 
         input:focus {
             outline: none;
-            border-color: #3498db;
+            border-color: #ffd700;
         }
 
         button {
@@ -168,11 +183,12 @@
             font-size: 14px;
             font-weight: bold;
             margin: 5px;
+            transition: all 0.3s;
         }
 
         button:hover {
-            transform: translateY(-1px);
-            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         .btn-success {
@@ -206,8 +222,8 @@
         }
 
         th {
-            background: #3498db;
-            color: white;
+            background: #1a1a2e;
+            color: #ffd700;
             position: sticky;
             top: 0;
         }
@@ -215,9 +231,10 @@
         .total-box {
             margin-top: 20px;
             padding: 15px;
-            background: white;
+            background: linear-gradient(135deg, #1a1a2e 0%, #2c3e50 100%);
             border-radius: 10px;
             text-align: right;
+            color: white;
         }
 
         .stats-grid {
@@ -228,7 +245,7 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #2c3e50 100%);
             color: white;
             padding: 15px;
             border-radius: 10px;
@@ -238,10 +255,15 @@
         .stat-card .value {
             font-size: 28px;
             font-weight: bold;
+            color: #ffd700;
         }
 
         .profit-card {
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .loss-card {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
         }
 
         .input-row {
@@ -282,8 +304,8 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: #333;
-            color: white;
+            background: #1a1a2e;
+            color: #ffd700;
             padding: 12px 20px;
             border-radius: 8px;
             z-index: 1000;
@@ -306,34 +328,35 @@
     <div class="container">
         <div class="top-bar">
             <div class="logo-area">
-                <h2>🏛️ TABUK MARBLE</h2>
+                <div class="logo-icon">🏛️</div>
+                <h2>TABUK MARBLE</h2>
             </div>
             <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                 <div class="language-selector">
-                    <button class="lang-btn active" id="langEn">EN</button>
-                    <button class="lang-btn" id="langUr">UR</button>
-                    <button class="lang-btn" id="langAr">AR</button>
+                    <button class="lang-btn active" data-lang="en">🇬🇧 English</button>
+                    <button class="lang-btn" data-lang="ur">🇵🇰 اردو</button>
+                    <button class="lang-btn" data-lang="ar">🇸🇦 العربية</button>
                 </div>
                 <div class="currency-selector">
-                    <button class="currency-btn active" id="currencySAR">SAR ﷼</button>
-                    <button class="currency-btn" id="currencyUSD">USD $</button>
+                    <button class="currency-btn active" data-currency="SAR">﷼ Saudi Riyal</button>
+                    <button class="currency-btn" data-currency="USD">$ US Dollar</button>
                 </div>
             </div>
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active" id="tabPos">📦 POS System</button>
-            <button class="tab-btn" id="tabMonthly">📊 Monthly Report</button>
-            <button class="tab-btn" id="tabInventory">📋 Inventory</button>
-            <button class="tab-btn" id="TabProfitLoss">💰 Profit & Loss</button>
-            <button class="tab-btn" id="tabInvoices">🧾 Invoices</button>
+            <button class="tab-btn active" data-tab="pos">📦 POS System</button>
+            <button class="tab-btn" data-tab="monthly">📊 Monthly Report</button>
+            <button class="tab-btn" data-tab="inventory">📋 Inventory</button>
+            <button class="tab-btn" data-tab="profitloss">💰 Profit & Loss</button>
+            <button class="tab-btn" data-tab="invoices">🧾 Invoices</button>
         </div>
 
         <!-- POS Tab -->
         <div id="posTab" class="tab-content active">
             <div class="pos-grid">
                 <div class="products-panel">
-                    <h3>🪨 Products</h3>
+                    <h3>🪨 Products / منتجات</h3>
                     <div class="search-box">
                         <input type="text" id="searchProduct" placeholder="🔍 Search products...">
                     </div>
@@ -351,13 +374,13 @@
                 </div>
 
                 <div class="cart-panel">
-                    <h3>🛒 Shopping Cart</h3>
+                    <h3>🛒 Shopping Cart / سلة التسوق</h3>
                     <div class="form-group">
-                        <label>👤 Customer Name:</label>
+                        <label>👤 Customer Name / اسم العميل:</label>
                         <input type="text" id="posCustomer" value="Walk-in Customer">
                     </div>
                     <div class="form-group">
-                        <label>🎁 Discount (%):</label>
+                        <label>🎁 Discount (%) / خصم:</label>
                         <input type="number" id="posDiscount" value="0" step="1" min="0" max="100">
                     </div>
                     
@@ -373,7 +396,7 @@
                     <div class="total-box">
                         <p><strong>Subtotal:</strong> <span id="subtotal">﷼ 0.00</span></p>
                         <p><strong>Discount:</strong> <span id="discountPercent">0</span>% (-<span id="discountAmount">﷼ 0.00</span>)</p>
-                        <h2 style="color:#27ae60"><strong>Grand Total:</strong> <span id="grandTotal">﷼ 0.00</span></h2>
+                        <h2 style="color:#ffd700"><strong>Grand Total:</strong> <span id="grandTotal">﷼ 0.00</span></h2>
                     </div>
                     
                     <div class="action-buttons">
@@ -469,11 +492,63 @@
         let allOrders = [];
         let products = [];
         let currentCurrency = 'SAR';
+        let currentLanguage = 'en';
         let actionHistory = [];
+
+        // Translations
+        const translations = {
+            en: {
+                products: "Products",
+                cart: "Shopping Cart",
+                customerName: "Customer Name",
+                discount: "Discount (%)",
+                confirmOrder: "Confirm Order",
+                clearCart: "Clear Cart",
+                undo: "Undo",
+                downloadInvoice: "Download Invoice",
+                totalSales: "Total Sales",
+                totalOrders: "Total Orders",
+                totalProfit: "Total Profit",
+                monthlyTransactions: "Monthly Transactions",
+                addProduct: "Add New Product",
+                allInvoices: "All Invoices"
+            },
+            ur: {
+                products: "پروڈکٹس",
+                cart: "کارٹ",
+                customerName: "گاہک کا نام",
+                discount: "ڈسکاؤنٹ",
+                confirmOrder: "آرڈر تصدیق کریں",
+                clearCart: "کارٹ صاف کریں",
+                undo: "کالعدم",
+                downloadInvoice: "انوائس ڈاؤن لوڈ",
+                totalSales: "کل فروخت",
+                totalOrders: "کل آرڈرز",
+                totalProfit: "کل منافع",
+                monthlyTransactions: "ماہانہ لین دین",
+                addProduct: "نیا پروڈکٹ شامل کریں",
+                allInvoices: "تمام انوائسز"
+            },
+            ar: {
+                products: "المنتجات",
+                cart: "سلة التسوق",
+                customerName: "اسم العميل",
+                discount: "الخصم",
+                confirmOrder: "تأكيد الطلب",
+                clearCart: "مسح السلة",
+                undo: "تراجع",
+                downloadInvoice: "تحميل الفاتورة",
+                totalSales: "إجمالي المبيعات",
+                totalOrders: "إجمالي الطلبات",
+                totalProfit: "إجمالي الربح",
+                monthlyTransactions: "المعاملات الشهرية",
+                addProduct: "إضافة منتج جديد",
+                allInvoices: "جميع الفواتير"
+            }
+        };
 
         // Initialize data from localStorage
         function initData() {
-            // Load products
             let savedProducts = localStorage.getItem('tabuk_products');
             if (savedProducts) {
                 products = JSON.parse(savedProducts);
@@ -488,7 +563,6 @@
                 saveProducts();
             }
 
-            // Load orders
             let savedOrders = localStorage.getItem('tabuk_orders');
             if (savedOrders) {
                 allOrders = JSON.parse(savedOrders);
@@ -502,12 +576,13 @@
             displayInvoices();
             updateCartDisplay();
             
-            // Set default month
             const today = new Date();
             const monthPicker = document.getElementById('monthPicker');
             if (monthPicker) {
                 monthPicker.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
             }
+            
+            applyLanguage();
         }
 
         function saveProducts() {
@@ -528,6 +603,20 @@
             return `${symbols[currentCurrency]} ${converted}`;
         }
 
+        function applyLanguage() {
+            const t = translations[currentLanguage];
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (t[key]) {
+                    if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
+                        el.placeholder = t[key];
+                    } else {
+                        el.innerHTML = t[key];
+                    }
+                }
+            });
+        }
+
         function displayProducts() {
             const searchTerm = document.getElementById('searchProduct')?.value.toLowerCase() || '';
             const filtered = products.filter(p => p.name.toLowerCase().includes(searchTerm));
@@ -541,12 +630,11 @@
                         <h4>${p.name}</h4>
                         <div>📏 ${p.thickness}mm | ${p.width}×${p.length}m</div>
                         <div>📐 Area: ${area} sqm</div>
-                        <div class="price">${formatCurrency(p.sellingPrice)}/sqm</div>
+                        <div class="price" style="color:#11998e; font-weight:bold">${formatCurrency(p.sellingPrice)}/sqm</div>
                     </div>
                 `;
             }).join('');
             
-            // Add click events to product cards
             document.querySelectorAll('.product-card').forEach(card => {
                 card.addEventListener('click', () => {
                     const id = parseInt(card.getAttribute('data-id'));
@@ -566,7 +654,6 @@
             const area = (product.width * product.length).toFixed(2);
             const total = parseFloat(area) * product.sellingPrice;
             
-            // Save to history
             actionHistory.push(JSON.parse(JSON.stringify(cart)));
             
             cart.push({
@@ -602,7 +689,6 @@
             const area = (width * length).toFixed(2);
             const total = parseFloat(area) * sellingPrice;
             
-            // Save to history
             actionHistory.push(JSON.parse(JSON.stringify(cart)));
             
             cart.push({
@@ -618,7 +704,6 @@
                 total: total
             });
             
-            // Clear inputs and focus on name
             document.getElementById('marbleName').value = '';
             document.getElementById('thickness').value = '';
             document.getElementById('width').value = '';
@@ -659,7 +744,6 @@
                 `;
             }).join('');
             
-            // Add remove event listeners
             document.querySelectorAll('.remove-item-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const index = parseInt(btn.getAttribute('data-index'));
@@ -737,12 +821,10 @@
             
             showToast(`✅ Order Confirmed! Invoice: ${invoiceNo}`);
             
-            // Reset cart
             cart = [];
             actionHistory = [];
             updateCartDisplay();
             
-            // Refresh all displays
             updateMonthlyReport();
             updateProfitLoss();
             displayInvoices();
@@ -780,7 +862,7 @@
                     <td>${o.customer}</td>
                     <td>${o.items.length}</td>
                     <td>${formatCurrency(o.total)}</td>
-                    <td style="color:green">${formatCurrency(o.profit)}</td>
+                    <td style="color:#38ef7d">${formatCurrency(o.profit)}</td>
                 </tr>
             `).join('');
         }
@@ -826,7 +908,6 @@
                 </tr>
             `).join('');
             
-            // Add event listeners for invoice buttons
             document.querySelectorAll('.view-invoice-btn').forEach(btn => {
                 btn.addEventListener('click', () => viewInvoiceDetails(btn.getAttribute('data-invoice')));
             });
@@ -862,22 +943,25 @@
             
             detailsDiv.innerHTML = `
                 <div style="text-align:center; margin-bottom:20px">
-                    <h2>TABUK MARBLE</h2>
-                    <p>Premium Marble Solutions</p>
+                    <div style="background:#1a1a2e; padding:15px; border-radius:10px">
+                        <h2 style="color:#ffd700">🏛️ TABUK MARBLE</h2>
+                        <p style="color:white">Premium Marble Solutions</p>
+                    </div>
                 </div>
-                <div style="border-top:2px solid #333; padding:10px 0">
+                <div style="border-top:2px solid #ffd700; padding:10px 0">
                     <p><strong>Invoice #:</strong> ${order.invoiceNo}</p>
                     <p><strong>Date:</strong> ${new Date(order.date).toLocaleString()}</p>
                     <p><strong>Customer:</strong> ${order.customer}</p>
                 </div>
                 ${itemsHtml}
-                <div style="text-align:right; margin-top:15px; padding-top:10px; border-top:2px solid #333">
+                <div style="text-align:right; margin-top:15px; padding-top:10px; border-top:2px solid #ffd700">
                     <p><strong>Subtotal:</strong> ${formatCurrency(order.subtotal)}</p>
                     <p><strong>Discount:</strong> ${order.discountPercent}% (-${formatCurrency(order.discountAmount)})</p>
-                    <h3 style="color:#27ae60"><strong>Grand Total:</strong> ${formatCurrency(order.total)}</h3>
+                    <h3 style="color:#11998e"><strong>Grand Total:</strong> ${formatCurrency(order.total)}</h3>
                 </div>
                 <div style="text-align:center; margin-top:20px; font-size:12px; color:#666">
                     <p>Thank you for choosing TABUK MARBLE!</p>
+                    <p>📍 Tabuk, Saudi Arabia | 📞 +966 XX XXX XXXX</p>
                 </div>
             `;
             
@@ -886,7 +970,7 @@
         }
 
         function deleteInvoice(invoiceNo) {
-            if (confirm(`Delete invoice ${invoiceNo} permanently? This cannot be undone.`)) {
+            if (confirm(`Delete invoice ${invoiceNo} permanently?`)) {
                 allOrders = allOrders.filter(o => o.invoiceNo !== invoiceNo);
                 saveOrders();
                 displayInvoices();
@@ -902,11 +986,23 @@
 
         function printInvoice() {
             const printContent = document.getElementById('invoiceDetails').innerHTML;
-            const originalContent = document.body.innerHTML;
-            document.body.innerHTML = printContent;
-            window.print();
-            document.body.innerHTML = originalContent;
-            location.reload();
+            const win = window.open('', '_blank');
+            win.document.write(`
+                <html>
+                <head>
+                    <title>Invoice</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+                        th { background: #1a1a2e; color: #ffd700; }
+                    </style>
+                </head>
+                <body>${printContent}</body>
+                </html>
+            `);
+            win.document.close();
+            win.print();
         }
 
         function loadInventory() {
@@ -918,33 +1014,16 @@
             tbody.innerHTML = filtered.map(p => `
                 <tr>
                     <td>${p.name}</td>
-                    <td>${p.thickness}mm</td>
-                    <td>${p.width}m</td>
-                    <td>${p.length}m</td>
-                    <td>${formatCurrency(p.sellingPrice)}</td>
-                    <td>${formatCurrency(p.costPrice)}</td>
-                    <td>
-                        <button class="view-product-btn" data-id="${p.id}" style="padding:5px 10px; background:#3498db">👁️ View</button>
-                        <button class="delete-product-btn" data-id="${p.id}" style="padding:5px 10px; background:#eb3349">🗑️ Delete</button>
-                    </td>
+                    <td>${p.thickness}mm</td><td>${p.width}m</td><td>${p.length}m</td>
+                    <td>${formatCurrency(p.sellingPrice)}</td><td>${formatCurrency(p.costPrice)}</td>
+                    <td><button class="delete-product-btn" data-id="${p.id}" style="padding:5px 10px; background:#eb3349">🗑️ Delete</button></td>
                 </tr>
             `).join('');
             
-            // Add event listeners
-            document.querySelectorAll('.view-product-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = parseInt(btn.getAttribute('data-id'));
-                    const product = products.find(p => p.id === id);
-                    if (product) {
-                        const area = (product.width * product.length).toFixed(2);
-                        alert(`📦 PRODUCT DETAILS\n\nName: ${product.name}\nThickness: ${product.thickness}mm\nWidth: ${product.width}m\nLength: ${product.length}m\nArea: ${area} sqm\nSelling Price: ${formatCurrency(product.sellingPrice)}/sqm\nCost Price: ${formatCurrency(product.costPrice)}/sqm\n\nProfit per sqm: ${formatCurrency(product.sellingPrice - product.costPrice)}`);
-                    }
-                });
-            });
             document.querySelectorAll('.delete-product-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = parseInt(btn.getAttribute('data-id'));
-                    if (confirm('Delete this product permanently?')) {
+                    if (confirm('Delete this product?')) {
                         products = products.filter(p => p.id !== id);
                         saveProducts();
                         displayProducts();
@@ -997,31 +1076,28 @@
             updateProfitLoss();
             displayInvoices();
             loadInventory();
-            showToast(`Currency: ${currency}`);
+            showToast(`Currency: ${currency === 'SAR' ? '﷼ Saudi Riyal' : '$ US Dollar'}`);
+        }
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            applyLanguage();
+            showToast(lang === 'en' ? 'English selected' : lang === 'ur' ? 'اردو منتخب' : 'تم اختيار العربية');
         }
 
         function switchTab(tabName) {
-            // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            // Show selected tab
             document.getElementById(tabName + 'Tab').classList.add('active');
-            // Update button active state
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
             
-            if (tabName === 'pos') document.getElementById('tabPos').classList.add('active');
-            if (tabName === 'monthly') document.getElementById('tabMonthly').classList.add('active');
-            if (tabName === 'inventory') document.getElementById('tabInventory').classList.add('active');
-            if (tabName === 'profitloss') document.getElementById('TabProfitLoss').classList.add('active');
-            if (tabName === 'invoices') document.getElementById('tabInvoices').classList.add('active');
-            
-            // Refresh data
             if (tabName === 'inventory') loadInventory();
             if (tabName === 'monthly') loadMonthlyData();
         }
 
         function downloadInvoice() {
             if (cart.length === 0) {
-                showToast('Cart is empty! Add items first.');
+                showToast('Cart is empty!');
                 return;
             }
             
@@ -1034,66 +1110,96 @@
             const grandTotal = subtotal - discountAmount;
             const invoiceNo = `INV-${String(allOrders.length + 1).padStart(4, '0')}`;
             
-            // Header
-            doc.setFillColor(26, 26, 46);
-            doc.rect(0, 0, 210, 45, 'F');
-            doc.setTextColor(255, 215, 0);
-            doc.setFontSize(22);
-            doc.text('TABUK MARBLE', 105, 20, { align: 'center' });
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(10);
-            doc.text('Premium Marble Solutions', 105, 30, { align: 'center' });
+            // Marble Pattern Background
+            doc.setFillColor(245, 245, 245);
+            doc.rect(0, 0, 210, 297, 'F');
             
-            // Details
+            // Professional Header with Marble Design
+            doc.setFillColor(26, 26, 46);
+            doc.rect(0, 0, 210, 55, 'F');
+            
+            // Logo and Company Name
+            doc.setTextColor(255, 215, 0);
+            doc.setFontSize(26);
+            doc.text('🏛️ TABUK MARBLE', 105, 25, { align: 'center' });
+            doc.setFontSize(11);
+            doc.setTextColor(255, 255, 255);
+            doc.text('Premium Marble Solutions', 105, 35, { align: 'center' });
+            doc.text('Tabuk, Saudi Arabia | Tel: +966 XX XXX XXXX', 105, 45, { align: 'center' });
+            
+            // Decorative Line
+            doc.setDrawColor(255, 215, 0);
+            doc.setLineWidth(0.5);
+            doc.line(20, 60, 190, 60);
+            
+            // Invoice Details
             doc.setTextColor(0, 0, 0);
             doc.setFontSize(10);
-            doc.text(`Invoice #: ${invoiceNo}`, 140, 55);
-            doc.text(`Date: ${new Date().toLocaleString()}`, 140, 62);
-            doc.text(`Customer: ${customer}`, 20, 55);
+            doc.text(`Invoice Number: ${invoiceNo}`, 140, 72);
+            doc.text(`Date: ${new Date().toLocaleString()}`, 140, 79);
+            doc.text(`Customer: ${customer}`, 20, 72);
             
             // Table Header
-            doc.setFillColor(52, 152, 219);
-            doc.rect(20, 72, 170, 8, 'F');
-            doc.setTextColor(255, 255, 255);
+            doc.setFillColor(26, 26, 46);
+            doc.rect(20, 90, 170, 10, 'F');
+            doc.setTextColor(255, 215, 0);
             doc.setFontSize(9);
-            doc.text('Item', 25, 78);
-            doc.text('Dimensions', 70, 78);
-            doc.text('Area', 120, 78);
-            doc.text('Total', 160, 78);
+            doc.text('Item', 25, 97);
+            doc.text('Thickness', 70, 97);
+            doc.text('Dimensions (W×L)', 95, 97);
+            doc.text('Area', 125, 97);
+            doc.text('Total', 160, 97);
             
-            let y = 85;
+            let y = 105;
             doc.setTextColor(0, 0, 0);
+            doc.setFontSize(9);
+            
             cart.forEach((item) => {
                 if (y > 260) {
                     doc.addPage();
                     y = 20;
+                    doc.setFillColor(26, 26, 46);
+                    doc.rect(20, y - 5, 170, 10, 'F');
+                    doc.setTextColor(255, 215, 0);
+                    doc.text('Item', 25, y + 2);
+                    doc.text('Thickness', 70, y + 2);
+                    doc.text('Dimensions', 95, y + 2);
+                    doc.text('Area', 125, y + 2);
+                    doc.text('Total', 160, y + 2);
+                    doc.setTextColor(0, 0, 0);
+                    y += 10;
                 }
-                doc.setFontSize(8);
-                doc.text(item.name.substring(0, 18), 25, y);
-                doc.text(`${item.thickness}mm, ${item.width}×${item.length}m`, 70, y);
-                doc.text(`${item.area} sqm`, 120, y);
+                doc.text(item.name.substring(0, 20), 25, y);
+                doc.text(`${item.thickness}mm`, 70, y);
+                doc.text(`${item.width}×${item.length}m`, 95, y);
+                doc.text(`${item.area} sqm`, 125, y);
                 doc.text(formatCurrency(item.total), 160, y);
-                y += 7;
+                y += 8;
             });
             
-            y += 8;
+            y += 10;
             doc.setFontSize(10);
             doc.text(`Subtotal: ${formatCurrency(subtotal)}`, 140, y);
             y += 6;
             doc.text(`Discount (${discountPercent}%): -${formatCurrency(discountAmount)}`, 140, y);
             y += 8;
-            doc.setFillColor(39, 174, 96);
-            doc.rect(120, y - 5, 70, 10, 'F');
+            
+            // Grand Total Box
+            doc.setFillColor(17, 153, 142);
+            doc.rect(120, y - 5, 70, 12, 'F');
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(12);
-            doc.text(`TOTAL: ${formatCurrency(grandTotal)}`, 155, y + 1, { align: 'center' });
+            doc.text(`TOTAL: ${formatCurrency(grandTotal)}`, 155, y + 2, { align: 'center' });
             
+            // Footer
             doc.setTextColor(100, 100, 100);
             doc.setFontSize(8);
-            doc.text('Thank you for choosing TABUK MARBLE!', 105, 270, { align: 'center' });
+            y += 20;
+            doc.text('Thank you for choosing TABUK MARBLE!', 105, y, { align: 'center' });
+            doc.text('For inquiries: info@tabukmarble.com', 105, y + 6, { align: 'center' });
             
             doc.save(`TABUK_MARBLE_${invoiceNo}.pdf`);
-            showToast('Invoice downloaded!');
+            showToast(`Invoice downloaded! ${formatCurrency(grandTotal)}`);
         }
 
         function showToast(message) {
@@ -1104,51 +1210,44 @@
             setTimeout(() => toast.remove(), 2500);
         }
 
-        // Setup all event listeners
+        // Setup Event Listeners
         function setupEventListeners() {
-            // Tab buttons
-            document.getElementById('tabPos').addEventListener('click', () => switchTab('pos'));
-            document.getElementById('tabMonthly').addEventListener('click', () => switchTab('monthly'));
-            document.getElementById('tabInventory').addEventListener('click', () => switchTab('inventory'));
-            document.getElementById('TabProfitLoss').addEventListener('click', () => switchTab('profitloss'));
-            document.getElementById('tabInvoices').addEventListener('click', () => switchTab('invoices'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab')));
+            });
             
-            // POS buttons
-            document.getElementById('addCustomMarbleBtn').addEventListener('click', addCustomMarble);
-            document.getElementById('confirmOrderBtn').addEventListener('click', confirmOrder);
-            document.getElementById('clearCartBtn').addEventListener('click', clearCart);
-            document.getElementById('undoCartBtn').addEventListener('click', undoLastAction);
-            document.getElementById('downloadInvoiceBtn').addEventListener('click', downloadInvoice);
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    setLanguage(btn.getAttribute('data-lang'));
+                });
+            });
             
-            // Search inputs
-            document.getElementById('searchProduct').addEventListener('keyup', searchProducts);
-            document.getElementById('inventorySearch').addEventListener('keyup', searchInventory);
-            document.getElementById('invoiceSearch').addEventListener('keyup', searchInvoices);
+            document.querySelectorAll('.currency-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    setCurrency(btn.getAttribute('data-currency'));
+                });
+            });
             
-            // Monthly picker
-            document.getElementById('monthPicker').addEventListener('change', loadMonthlyData);
-            
-            // Discount input
-            document.getElementById('posDiscount').addEventListener('input', updateCartDisplay);
-            
-            // Inventory buttons
-            document.getElementById('addProductBtn').addEventListener('click', showAddProductModal);
-            
-            // Currency buttons
-            document.getElementById('currencySAR').addEventListener('click', () => setCurrency('SAR'));
-            document.getElementById('currencyUSD').addEventListener('click', () => setCurrency('USD'));
-            
-            // Modal buttons
-            document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-            document.getElementById('printInvoiceBtn').addEventListener('click', printInvoice);
-            
-            // Language buttons (simple)
-            document.getElementById('langEn').addEventListener('click', () => showToast('English selected'));
-            document.getElementById('langUr').addEventListener('click', () => showToast('اردو منتخب'));
-            document.getElementById('langAr').addEventListener('click', () => showToast('تم اختيار العربية'));
+            document.getElementById('addCustomMarbleBtn')?.addEventListener('click', addCustomMarble);
+            document.getElementById('confirmOrderBtn')?.addEventListener('click', confirmOrder);
+            document.getElementById('clearCartBtn')?.addEventListener('click', clearCart);
+            document.getElementById('undoCartBtn')?.addEventListener('click', undoLastAction);
+            document.getElementById('downloadInvoiceBtn')?.addEventListener('click', downloadInvoice);
+            document.getElementById('searchProduct')?.addEventListener('keyup', searchProducts);
+            document.getElementById('inventorySearch')?.addEventListener('keyup', searchInventory);
+            document.getElementById('invoiceSearch')?.addEventListener('keyup', searchInvoices);
+            document.getElementById('monthPicker')?.addEventListener('change', loadMonthlyData);
+            document.getElementById('posDiscount')?.addEventListener('input', updateCartDisplay);
+            document.getElementById('addProductBtn')?.addEventListener('click', showAddProductModal);
+            document.getElementById('closeModalBtn')?.addEventListener('click', closeModal);
+            document.getElementById('printInvoiceBtn')?.addEventListener('click', printInvoice);
         }
 
-        // Initialize on page load
+        // Initialize
         window.addEventListener('DOMContentLoaded', () => {
             initData();
             setupEventListeners();
