@@ -8,7 +8,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
             min-height: 100vh;
             padding: 15px;
@@ -30,11 +30,7 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .logo-area { display: flex; align-items: center; gap: 10px; }
         .logo-icon { font-size: 40px; }
         .logo-area h2 { color: #ffd700; font-size: 24px; letter-spacing: 2px; }
         .logo-area p { color: #ccc; font-size: 11px; margin-top: 5px; }
@@ -49,15 +45,8 @@
             font-weight: bold;
             transition: all 0.3s;
         }
-        .lang-btn.active, .currency-btn.active {
-            background: #ffd700;
-            color: #1a1a2e;
-        }
-        .tabs {
-            display: flex;
-            background: #2c3e50;
-            flex-wrap: wrap;
-        }
+        .lang-btn.active, .currency-btn.active { background: #ffd700; color: #1a1a2e; }
+        .tabs { display: flex; background: #2c3e50; flex-wrap: wrap; }
         .tab-btn {
             flex: 1;
             background: #34495e;
@@ -69,25 +58,14 @@
             min-width: 100px;
             transition: all 0.3s;
         }
-        .tab-btn.active {
-            background: #ffd700;
-            color: #1a1a2e;
-        }
-        .tab-content {
-            display: none;
-            padding: 25px;
-            animation: fadeIn 0.3s;
-        }
+        .tab-btn.active { background: #ffd700; color: #1a1a2e; }
+        .tab-content { display: none; padding: 25px; animation: fadeIn 0.3s; }
         .tab-content.active { display: block; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .pos-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 25px;
-        }
+        .pos-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 25px; }
         .products-panel, .cart-panel, .report-panel, .inventory-panel {
             background: #f8f9fa;
             padding: 20px;
@@ -222,10 +200,9 @@
             from { transform: translateX(100%); }
             to { transform: translateX(0); }
         }
-        @media (max-width: 768px) {
-            .pos-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 768px) { .pos-grid { grid-template-columns: 1fr; } }
         .cart-item { border-bottom: 1px solid #eee; }
+        .action-group { display: flex; gap: 5px; flex-wrap: wrap; }
     </style>
 </head>
 <body>
@@ -394,6 +371,7 @@
         let currentCurrency = 'SAR';
         let currentLanguage = 'en';
         let actionHistory = [];
+        let deletedInvoicesHistory = []; // For undo delete
 
         const translations = {
             en: {
@@ -409,7 +387,12 @@
                 revenue: "Total Revenue", cost: "Total Cost", netProfit: "Net Profit",
                 margin: "Profit Margin", thankYou: "Thank you for choosing TABUK MARBLE!",
                 address: "Al Arjan District, Tabuk | Tel: +966 59 603 8998",
-                company: "Premium Marble Solutions", subtotal: "Subtotal", grandTotal: "Grand Total"
+                company: "Premium Marble Solutions", subtotal: "Subtotal", grandTotal: "Grand Total",
+                deleteConfirm: "Are you sure you want to delete this invoice?",
+                deleteSuccess: "Invoice deleted successfully!",
+                undoDelete: "Undo Delete", undoDeleteSuccess: "Invoice restored!",
+                noInvoices: "No invoices found", cartEmpty: "Cart is empty!",
+                orderConfirmed: "Order Confirmed! Invoice: ", productAdded: "added to cart!"
             },
             ur: {
                 pos: "POS سسٹم", monthly: "ماہانہ رپورٹ", inventory: "انوینٹری",
@@ -424,7 +407,12 @@
                 revenue: "کل آمدنی", cost: "کل لاگت", netProfit: "خالص منافع",
                 margin: "منافع مارجن", thankYou: "تبوک ماربل کا انتخاب کرنے کا شکریہ!",
                 address: "العرجان، تبوک | فون: 8998 603 59 966+",
-                company: "پريميئم ماربل سلوشنز", subtotal: "ذیلی کل", grandTotal: "کل کل"
+                company: "پريميئم ماربل سلوشنز", subtotal: "ذیلی کل", grandTotal: "کل کل",
+                deleteConfirm: "کیا آپ واقعی یہ انوائس حذف کرنا چاہتے ہیں؟",
+                deleteSuccess: "انوائس حذف کر دی گئی!",
+                undoDelete: "حذف واپس لیں", undoDeleteSuccess: "انوائس بحال کر دی گئی!",
+                noInvoices: "کوئی انوائس نہیں ملی", cartEmpty: "کارٹ خالی ہے!",
+                orderConfirmed: "آرڈر تصدیق ہوگیا! انوائس: ", productAdded: "کارٹ میں شامل ہوگیا!"
             },
             ar: {
                 pos: "نظام البيع", monthly: "التقرير الشهري", inventory: "المخزون",
@@ -439,7 +427,12 @@
                 revenue: "إجمالي الإيرادات", cost: "إجمالي التكلفة", netProfit: "صافي الربح",
                 margin: "هامش الربح", thankYou: "شكرا لاختيارك تابوک ماربل!",
                 address: "العرجان، تبوك | هاتف: 8998 603 59 966+",
-                company: "حلول الرخام الفاخرة", subtotal: "المجموع الفرعي", grandTotal: "المجموع الكلي"
+                company: "حلول الرخام الفاخرة", subtotal: "المجموع الفرعي", grandTotal: "المجموع الكلي",
+                deleteConfirm: "هل أنت متأكد من حذف هذه الفاتورة؟",
+                deleteSuccess: "تم حذف الفاتورة بنجاح!",
+                undoDelete: "تراجع عن الحذف", undoDeleteSuccess: "تم استعادة الفاتورة!",
+                noInvoices: "لم يتم العثور على فواتير", cartEmpty: "السلة فارغة!",
+                orderConfirmed: "تم تأكيد الطلب! الفاتورة: ", productAdded: "تمت الإضافة إلى السلة!"
             }
         };
 
@@ -473,17 +466,13 @@
             
             const today = new Date();
             const monthPicker = document.getElementById('monthPicker');
-            if (monthPicker) {
-                monthPicker.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
-            }
+            if (monthPicker) monthPicker.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
         }
 
-        function saveProducts() {
-            localStorage.setItem('tabuk_products', JSON.stringify(products));
-        }
+        function saveProducts() { localStorage.setItem('tabuk_products', JSON.stringify(products)); }
+        function saveOrders() { localStorage.setItem('tabuk_orders', JSON.stringify(allOrders)); updateAll(); }
 
-        function saveOrders() {
-            localStorage.setItem('tabuk_orders', JSON.stringify(allOrders));
+        function updateAll() {
             updateMonthlyReport();
             updateProfitLoss();
             displayInvoices();
@@ -494,6 +483,10 @@
             const rates = { SAR: 1, USD: 0.27 };
             const converted = (amount * rates[currentCurrency]).toFixed(2);
             return `${symbols[currentCurrency]}${converted}`;
+        }
+
+        function getTranslation(key) {
+            return translations[currentLanguage][key] || key;
         }
 
         function displayProducts() {
@@ -523,26 +516,9 @@
                     document.getElementById('marblePrice').value = card.getAttribute('data-price');
                     document.getElementById('costPrice').value = card.getAttribute('data-cost');
                     document.getElementById('marbleName').focus();
-                    showToast(getTranslation('productLoaded'));
+                    showToast(getTranslation('productLoaded') || 'Product loaded, click Add to Cart');
                 });
             });
-        }
-
-        function getTranslation(key) {
-            const t = translations[currentLanguage];
-            const messages = {
-                productLoaded: currentLanguage === 'en' ? 'Product loaded, click Add to Cart' : 
-                               (currentLanguage === 'ur' ? 'پروڈکٹ لوڈ ہوگئی، کارٹ میں شامل کریں' : 'تم تحميل المنتج، أضف إلى السلة'),
-                addedToCart: currentLanguage === 'en' ? 'added to cart!' : 
-                            (currentLanguage === 'ur' ? 'کارٹ میں شامل ہوگیا!' : 'تمت الإضافة إلى السلة!'),
-                fillFields: currentLanguage === 'en' ? 'Please fill all fields!' : 
-                           (currentLanguage === 'ur' ? 'براہ کرم تمام فیلڈز پُر کریں!' : 'الرجاء ملء جميع الحقول!'),
-                cartEmpty: currentLanguage === 'en' ? 'Cart is empty!' : 
-                          (currentLanguage === 'ur' ? 'کارٹ خالی ہے!' : 'السلة فارغة!'),
-                orderConfirmed: currentLanguage === 'en' ? 'Order Confirmed! Invoice: ' : 
-                               (currentLanguage === 'ur' ? 'آرڈر تصدیق ہوگیا! انوائس: ' : 'تم تأكيد الطلب! الفاتورة: ')
-            };
-            return messages[key] || '';
         }
 
         function addCustomMarble() {
@@ -554,7 +530,7 @@
             const costPrice = parseFloat(document.getElementById('costPrice').value);
             
             if (!name || !thickness || !width || !length || !sellingPrice) {
-                showToast(getTranslation('fillFields'));
+                showToast(getTranslation('fillFields') || 'Please fill all fields!');
                 return;
             }
             
@@ -576,7 +552,7 @@
             });
             
             updateCartDisplay();
-            showToast(name + ' ' + getTranslation('addedToCart'));
+            showToast(name + ' ' + getTranslation('productAdded'));
             
             document.getElementById('marbleName').value = '';
             document.getElementById('thickness').value = '';
@@ -695,10 +671,7 @@
             cart = [];
             actionHistory = [];
             updateCartDisplay();
-            
-            updateMonthlyReport();
-            updateProfitLoss();
-            displayInvoices();
+            updateAll();
         }
 
         function updateMonthlyReport() {
@@ -709,7 +682,6 @@
             document.getElementById('totalSales').innerHTML = formatCurrency(totalSales);
             document.getElementById('totalOrders').innerHTML = totalOrders;
             document.getElementById('totalProfit').innerHTML = formatCurrency(totalProfit);
-            
             loadMonthlyData();
         }
 
@@ -717,16 +689,15 @@
             const monthPicker = document.getElementById('monthPicker');
             if (!monthPicker.value) return;
             const selectedMonth = monthPicker.value;
-            
             const filtered = allOrders.filter(o => o.date.substring(0, 7) === selectedMonth);
             const tbody = document.getElementById('monthlyBody');
             
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6">No orders for this month</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6">' + getTranslation('noInvoices') + '</td></tr>';
                 return;
             }
             
-            tbody.innerHTML = filtered.map((o, idx) => `
+            tbody.innerHTML = filtered.map(o => `
                 <tr class="clickable-row" data-invoice="${o.invoiceNo}" style="cursor:pointer">
                     <td>${new Date(o.date).toLocaleDateString()}</td>
                     <td><strong>${o.invoiceNo}</strong></td>
@@ -738,10 +709,7 @@
             `).join('');
             
             document.querySelectorAll('#monthlyBody .clickable-row').forEach(row => {
-                row.addEventListener('click', () => {
-                    const invoiceNo = row.getAttribute('data-invoice');
-                    viewInvoiceDetails(invoiceNo);
-                });
+                row.addEventListener('click', () => viewInvoiceDetails(row.getAttribute('data-invoice')));
             });
         }
 
@@ -768,7 +736,7 @@
             if (!tbody) return;
             
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6">No invoices found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6">' + getTranslation('noInvoices') + '</td></tr>';
                 return;
             }
             
@@ -779,9 +747,9 @@
                     <td>${o.customer}</td>
                     <td>${o.items.length} items</td>
                     <td>${formatCurrency(o.total)}</td>
-                    <td>
-                        <button class="view-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#3498db; border:none; color:white; cursor:pointer; border-radius:5px">View</button>
-                        <button class="delete-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">Delete</button>
+                    <td class="action-group">
+                        <button class="view-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#3498db; border:none; color:white; cursor:pointer; border-radius:5px">👁️ ${getTranslation('view') || 'View'}</button>
+                        <button class="delete-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">🗑️ ${getTranslation('delete') || 'Delete'}</button>
                     </td>
                 </tr>
             `).join('');
@@ -790,12 +758,44 @@
                 btn.addEventListener('click', () => viewInvoiceDetails(btn.getAttribute('data-invoice')));
             });
             document.querySelectorAll('.delete-invoice-btn').forEach(btn => {
-                btn.addEventListener('click', () => deleteInvoice(btn.getAttribute('data-invoice')));
+                btn.addEventListener('click', () => deleteInvoiceWithConfirm(btn.getAttribute('data-invoice')));
             });
         }
 
-        function searchInvoices() {
-            displayInvoices();
+        function deleteInvoiceWithConfirm(invoiceNo) {
+            const confirmMsg = getTranslation('deleteConfirm');
+            if (confirm(confirmMsg)) {
+                const deletedInvoice = allOrders.find(o => o.invoiceNo === invoiceNo);
+                if (deletedInvoice) {
+                    deletedInvoicesHistory.push({ ...deletedInvoice, deletedAt: new Date() });
+                    allOrders = allOrders.filter(o => o.invoiceNo !== invoiceNo);
+                    saveOrders();
+                    updateAll();
+                    showToast(getTranslation('deleteSuccess'));
+                    
+                    // Show undo option
+                    setTimeout(() => {
+                        const undoMsg = getTranslation('undoDelete');
+                        const undoBtn = confirm(undoMsg + '?');
+                        if (undoBtn) {
+                            undoDeleteInvoice();
+                        }
+                    }, 1000);
+                }
+            }
+        }
+
+        function undoDeleteInvoice() {
+            if (deletedInvoicesHistory.length > 0) {
+                const lastDeleted = deletedInvoicesHistory.pop();
+                allOrders.push(lastDeleted);
+                allOrders.sort((a, b) => new Date(a.date) - new Date(b.date));
+                saveOrders();
+                updateAll();
+                showToast(getTranslation('undoDeleteSuccess'));
+            } else {
+                showToast('No deleted invoice to restore');
+            }
         }
 
         function viewInvoiceDetails(invoiceNo) {
@@ -823,7 +823,7 @@
                     </tr>
                 `;
             });
-            itemsHtml += '</table>';
+            itemsHtml += '�';
             
             detailsDiv.innerHTML = `
                 <div style="text-align:center; margin-bottom:20px">
@@ -853,37 +853,23 @@
             modal.style.display = 'flex';
         }
 
-        function deleteInvoice(invoiceNo) {
-            if (confirm('Delete invoice ' + invoiceNo + ' permanently?')) {
-                allOrders = allOrders.filter(o => o.invoiceNo !== invoiceNo);
-                saveOrders();
-                displayInvoices();
-                updateMonthlyReport();
-                updateProfitLoss();
-                showToast('Invoice deleted successfully');
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('invoiceModal').style.display = 'none';
-        }
+        function closeModal() { document.getElementById('invoiceModal').style.display = 'none'; }
 
         function printInvoice() {
             const printContent = document.getElementById('invoiceDetails').innerHTML;
             const win = window.open('', '_blank');
             win.document.write(`
-                <html>
-                <head>
-                    <title>TABUK MARBLE - Invoice</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; padding: 30px; }
-                        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-                        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
-                        th { background: #1a1a2e; color: #ffd700; }
-                    </style>
-                </head>
-                <body>${printContent}</body>
-                </html>
+                <html><head><title>TABUK MARBLE - Invoice</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 30px; }
+                    table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+                    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+                    th { background: #1a1a2e; color: #ffd700; }
+                    @media print {
+                        body { margin: 0; padding: 20px; }
+                    }
+                </style>
+                </head><body>${printContent}</body></html>
             `);
             win.document.close();
             win.print();
@@ -921,10 +907,6 @@
             });
         }
 
-        function searchInventory() {
-            loadInventory();
-        }
-
         function showAddProductModal() {
             const name = prompt('Enter product name:');
             if (!name) return;
@@ -959,9 +941,7 @@
             currentCurrency = currency;
             displayProducts();
             updateCartDisplay();
-            updateMonthlyReport();
-            updateProfitLoss();
-            displayInvoices();
+            updateAll();
             loadInventory();
             showToast('Currency: ' + (currency === 'SAR' ? 'Saudi Riyal' : 'US Dollar'));
         }
@@ -986,7 +966,14 @@
             if (statHeaders[1]) statHeaders[1].innerHTML = t.totalOrders;
             if (statHeaders[2]) statHeaders[2].innerHTML = t.totalProfit;
             if (document.getElementById('addProductBtn')) document.getElementById('addProductBtn').innerHTML = t.addProduct;
-            if (document.querySelector('.report-panel h3')) document.querySelector('.report-panel h3').innerHTML = t.monthlyTransactions || 'Monthly Transactions';
+            if (document.querySelector('.report-panel h3')) {
+                if (document.querySelector('#monthlyTab .report-panel h3')) 
+                    document.querySelector('#monthlyTab .report-panel h3').innerHTML = t.monthlyTransactions || 'Monthly Transactions';
+                if (document.querySelector('#invoicesTab .report-panel h3'))
+                    document.querySelector('#invoicesTab .report-panel h3').innerHTML = t.invoices || 'All Invoices';
+            }
+            if (document.getElementById('closeModalBtn')) document.getElementById('closeModalBtn').innerHTML = 'Close';
+            if (document.getElementById('printInvoiceBtn')) document.getElementById('printInvoiceBtn').innerHTML = 'Print';
         }
 
         function setLanguage(lang) {
@@ -1000,7 +987,6 @@
             document.getElementById(tabName + 'Tab').classList.add('active');
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
-            
             if (tabName === 'inventory') loadInventory();
             if (tabName === 'monthly') loadMonthlyData();
         }
@@ -1021,6 +1007,7 @@
             const invoiceNo = 'INV-' + String(allOrders.length + 1).padStart(4, '0');
             const t = translations[currentLanguage];
             
+            // Header
             doc.setFillColor(26, 26, 46);
             doc.rect(0, 0, 210, 50, 'F');
             doc.setTextColor(255, 215, 0);
@@ -1028,21 +1015,17 @@
             doc.text('TABUK MARBLE', 105, 20, { align: 'center' });
             doc.setFontSize(10);
             doc.setTextColor(255, 255, 255);
+            doc.text(t.company, 105, 30, { align: 'center' });
+            doc.text(t.address, 105, 40, { align: 'center' });
             
-            if (currentLanguage === 'ar') {
-                doc.text(t.company, 105, 30, { align: 'center' });
-                doc.text(t.address, 105, 40, { align: 'center' });
-            } else {
-                doc.text(t.company, 105, 30, { align: 'center' });
-                doc.text(t.address, 105, 40, { align: 'center' });
-            }
-            
+            // Invoice Details
             doc.setTextColor(0, 0, 0);
             doc.setFontSize(10);
             doc.text(t.invoice + ': ' + invoiceNo, 140, 62);
             doc.text(t.date + ': ' + new Date().toLocaleString(), 140, 69);
             doc.text(t.customer + ': ' + customer, 20, 62);
             
+            // Table Header
             doc.setFillColor(26, 26, 46);
             doc.rect(20, 78, 170, 10, 'F');
             doc.setTextColor(255, 215, 0);
@@ -1083,6 +1066,7 @@
             doc.setFontSize(12);
             doc.text(t.grandTotal + ': ' + formatCurrency(grandTotal), 155, y + 2, { align: 'center' });
             
+            // Footer
             doc.setTextColor(100, 100, 100);
             doc.setFontSize(8);
             y += 20;
@@ -1098,14 +1082,13 @@
             toast.className = 'toast';
             toast.innerHTML = message;
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2500);
+            setTimeout(() => toast.remove(), 3000);
         }
 
         function setupEventListeners() {
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab')));
             });
-            
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
@@ -1113,7 +1096,6 @@
                     setLanguage(btn.getAttribute('data-lang'));
                 });
             });
-            
             document.querySelectorAll('.currency-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
@@ -1121,7 +1103,6 @@
                     setCurrency(btn.getAttribute('data-currency'));
                 });
             });
-            
             document.getElementById('addCustomMarbleBtn')?.addEventListener('click', addCustomMarble);
             document.getElementById('confirmOrderBtn')?.addEventListener('click', confirmOrder);
             document.getElementById('clearCartBtn')?.addEventListener('click', clearCart);
