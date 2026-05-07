@@ -345,10 +345,19 @@ doc.rect(10,55,190,10,"F");
 
 doc.setTextColor(255,255,255);
 
-doc.text("Item",15,62);
-doc.text("Qty",90,62);
-doc.text("Total",160,62);
+doc.text(i.name,12,y);
 
+doc.text(String(i.l),75,y);
+
+doc.text(String(i.w),95,y);
+
+doc.text(String(i.p),115,y);
+
+let sqm = (i.l * i.w * i.p).toFixed(2);
+
+doc.text(String(sqm),140,y);
+
+doc.text(i.total.toFixed(2),170,y);
 doc.setTextColor(0,0,0);
 
 let y = 75;
