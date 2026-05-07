@@ -286,25 +286,7 @@ loadMonthly();
 alert("Restored");
 }
 /* MONTHLY */
-function loadMonthly(){
 
-let data = JSON.parse(localStorage.getItem("monthly")) || [];
-
-let html="";
-let sum=0;
-
-data.forEach(m=>{
-sum+=m.total;
-
-html+=`
-<div style="padding:10px;border:1px solid #ccc;margin:5px">
-${m.date}<br>${m.total.toFixed(2)}
-</div>`;
-});
-
-document.getElementById("records").innerHTML =
-html + "<hr>Total: "+sum.toFixed(2);
-}
 
 /* PDF */
 function downloadPDF(){
