@@ -59,7 +59,13 @@ th{background:#111;color:#fff}
 <button class="red" onclick="clearCart()">Clear</button>
 
 <table>
-<tr><th>Item</th><th>Qty</th><th>Total</th><th>Action</th></tr>
+<tr><th>Item</th>
+<th>Length</th>
+<th>Width</th>
+<th>Pieces</th>
+<th>Sqm</th>
+<th>Total</th>
+<th>Action</th></tr>
 <tbody id="list"></tbody>
 </table>
 
@@ -93,7 +99,7 @@ th{background:#111;color:#fff}
 </div>
 
 <script>
-
+let invoiceNo = Math.floor(Math.random() * 90000) + 10000;
 let cart = [];
 let monthly = JSON.parse(localStorage.getItem("monthly")) || [];
 
@@ -120,7 +126,7 @@ return;
 
 let total = l*w*p*price;
 
-cart.push({name,p,total});
+cart.push({name,l,w,p,total});
 
 render();
 
@@ -142,7 +148,10 @@ sum+=i.total;
 html+=`
 <tr>
 <td>${i.name}</td>
+<td>${i.l}</td>
+<td>${i.w}</td>
 <td>${i.p}</td>
+<td>${(i.l*i.w).toFixed(2)}</td>
 <td>${i.total.toFixed(2)}</td>
 <td><button onclick="del(${index})" style="background:red">❌</button></td>
 </tr>`;
@@ -290,7 +299,8 @@ alert("Restored");
 
 /* PDF */
 function downloadPDF(){
-
+doc.text("Invoice No: " + invoiceNo, 10, 45);
+doc.text("Date: " + new Date().toLocaleString(), 10, 52);
 const { jsPDF } = window.jspdf;
 let doc = new jsPDF();
 
