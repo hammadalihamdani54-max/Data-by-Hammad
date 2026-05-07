@@ -8,7 +8,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Arial', 'Noto Sans', sans-serif;
             background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
             min-height: 100vh;
             padding: 15px;
@@ -203,8 +203,8 @@
         }
         @media (max-width: 768px) { .pos-grid { grid-template-columns: 1fr; } }
         .action-group { display: flex; gap: 5px; flex-wrap: wrap; }
-        [dir="rtl"] { direction: rtl; text-align: right; }
-        [dir="rtl"] .total-box { text-align: left; }
+        .rtl { direction: rtl; text-align: right; }
+        .ltr { direction: ltr; text-align: left; }
     </style>
 </head>
 <body>
@@ -220,6 +220,7 @@
             <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                 <div class="language-selector">
                     <button class="lang-btn active" data-lang="en">English</button>
+                    <button class="lang-btn" data-lang="ur">اردو</button>
                     <button class="lang-btn" data-lang="ar">العربية</button>
                 </div>
                 <div class="currency-selector">
@@ -271,7 +272,7 @@
                     <div style="overflow-x: auto; max-height: 350px; overflow-y: auto;">
                         <table id="cartTable">
                             <thead>
-                                <tr><th>Item</th><th>Thick</th><th>W</th><th>L</th><th>sqm</th><th>Price</th><th>Total</th><th></th></tr>
+                                <tr><th>Item</th><th>Thick</th><th>W</th><th>L</th><th>sqm</th><th>Price</th><th>Total</th><th></th><tr>
                             </thead>
                             <tbody id="cartBody"></tbody>
                         </table>
@@ -376,9 +377,7 @@
         let deletedInvoicesHistory = [];
         let deletedProductsHistory = [];
 
-        // Phone number for call and WhatsApp
-        const PHONE_NUMBER = '0598074287';
-        const FULL_PHONE = '+966598074287';
+        const PHONE_NUMBER = '966598074287';
 
         const translations = {
             en: {
@@ -400,9 +399,28 @@
                 undoDelete: "Undo Delete", undoDeleteSuccess: "Invoice restored!",
                 noInvoices: "No invoices found", cartEmpty: "Cart is empty!",
                 orderConfirmed: "Order Confirmed! Invoice: ", productAdded: "added to cart!",
-                view: "View", delete: "Delete", download: "Download", share: "Share",
-                revenueValue: "SAR", costValue: "SAR", profitValue: "SAR",
-                monthlyTransactions: "Monthly Transactions", allInvoices: "All Invoices"
+                view: "View", delete: "Delete", download: "Download", share: "Share"
+            },
+            ur: {
+                pos: "POS سسٹم", monthly: "ماہانہ رپورٹ", inventory: "انوینٹری",
+                profitloss: "منافع اور نقصان", invoices: "انوائسز", products: "پروڈکٹس",
+                shoppingCart: "شاپنگ کارٹ", customerName: "گاہک کا نام", discount: "ڈسکاؤنٹ %",
+                confirmOrder: "آرڈر تصدیق", clearCart: "کارٹ صاف", undo: "کالعدم",
+                downloadInvoice: "انوائس ڈاؤن لوڈ", totalSales: "کل فروخت", totalOrders: "کل آرڈرز",
+                totalProfit: "کل منافع", addProduct: "نیا پروڈکٹ", search: "تلاش کریں",
+                item: "آئٹم", thick: "موٹائی(س م)", width: "چوڑائی(م)", length: "لمبائی(م)", area: "رقبہ",
+                price: "قیمت", total: "کل", actions: "اعمال", date: "تاریخ",
+                invoice: "انوائس", customer: "گاہک", items: "آئٹمز", profit: "منافع",
+                revenue: "کل آمدنی", cost: "کل لاگت", netProfit: "خالص منافع",
+                margin: "منافع مارجن", thankYou: "تبوک ماربل کا انتخاب کرنے کا شکریہ!",
+                address: "العرجان، تبوک | فون: 966 59 807 4287+",
+                company: "پريميئم ماربل سلوشنز", subtotal: "ذیلی کل", grandTotal: "کل کل",
+                deleteConfirm: "کیا آپ واقعی یہ انوائس حذف کرنا چاہتے ہیں؟",
+                deleteSuccess: "انوائس حذف کر دی گئی!",
+                undoDelete: "حذف واپس لیں", undoDeleteSuccess: "انوائس بحال کر دی گئی!",
+                noInvoices: "کوئی انوائس نہیں ملی", cartEmpty: "کارٹ خالی ہے!",
+                orderConfirmed: "آرڈر تصدیق ہوگیا! انوائس: ", productAdded: "کارٹ میں شامل ہوگیا!",
+                view: "دیکھیں", delete: "حذف کریں", download: "ڈاؤن لوڈ", share: "شیئر کریں"
             },
             ar: {
                 pos: "نظام البيع", monthly: "التقرير الشهري", inventory: "المخزون",
@@ -423,9 +441,7 @@
                 undoDelete: "تراجع عن الحذف", undoDeleteSuccess: "تم استعادة الفاتورة!",
                 noInvoices: "لم يتم العثور على فواتير", cartEmpty: "السلة فارغة!",
                 orderConfirmed: "تم تأكيد الطلب! الفاتورة: ", productAdded: "تمت الإضافة إلى السلة!",
-                view: "عرض", delete: "حذف", download: "تحميل", share: "مشاركة",
-                revenueValue: "ر.س", costValue: "ر.س", profitValue: "ر.س",
-                monthlyTransactions: "المعاملات الشهرية", allInvoices: "جميع الفواتير"
+                view: "عرض", delete: "حذف", download: "تحميل", share: "مشاركة"
             }
         };
 
@@ -483,13 +499,20 @@
             return translations[currentLanguage][key] || key;
         }
 
-        function applyRTL() {
+        function applyLanguageDirection() {
+            const container = document.querySelector('.container');
             if (currentLanguage === 'ar') {
-                document.body.setAttribute('dir', 'rtl');
-                document.querySelector('.container').style.direction = 'rtl';
+                container.classList.add('rtl');
+                container.classList.remove('ltr');
+                document.body.style.fontFamily = "'Segoe UI', 'Arial', 'Noto Sans Arabic', sans-serif";
+            } else if (currentLanguage === 'ur') {
+                container.classList.add('rtl');
+                container.classList.remove('ltr');
+                document.body.style.fontFamily = "'Segoe UI', 'Arial', 'Noto Nastaliq Urdu', 'Noto Sans Arabic', sans-serif";
             } else {
-                document.body.setAttribute('dir', 'ltr');
-                document.querySelector('.container').style.direction = 'ltr';
+                container.classList.add('ltr');
+                container.classList.remove('rtl');
+                document.body.style.fontFamily = "'Segoe UI', Arial, sans-serif";
             }
         }
 
@@ -556,7 +579,7 @@
             });
             
             updateCartDisplay();
-            showToast(name + ' added to cart!');
+            showToast(name + ' ' + getTranslation('productAdded'));
             
             document.getElementById('marbleName').value = '';
             document.getElementById('thickness').value = '';
@@ -591,7 +614,7 @@
                         <td>${formatCurrency(item.sellingPrice)}</td>
                         <td>${formatCurrency(item.total)}</td>
                         <td><button class="remove-item-btn" data-index="${idx}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">X</button></td>
-                     </tr>
+                    </tr>
                 `;
             }).join('');
             
@@ -765,7 +788,7 @@
                     <td><strong>${o.invoiceNo}</strong></td>
                     <td>${new Date(o.date).toLocaleDateString()}</td>
                     <td>${o.customer}</td>
-                    <tr>${o.items.length} items</td>
+                    <td>${o.items.length} items</td>
                     <td>${formatCurrency(o.total)}</td>
                     <td class="action-group">
                         <button class="view-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#3498db; border:none; color:white; cursor:pointer; border-radius:5px">👁️ ${t.view}</button>
@@ -887,6 +910,12 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             const t = translations[currentLanguage];
+            
+            // Set font for Arabic/Urdu support
+            if (currentLanguage === 'ar' || currentLanguage === 'ur') {
+                doc.setFont('helvetica');
+                doc.addFileToVFS('NotoSansArabic-Regular.ttf', '');
+            }
             
             doc.setFillColor(26, 26, 46);
             doc.rect(0, 0, 210, 50, 'F');
@@ -1102,13 +1131,13 @@
             if (document.getElementById('closeModalBtn')) document.getElementById('closeModalBtn').innerHTML = 'Close';
             if (document.getElementById('printInvoiceBtn')) document.getElementById('printInvoiceBtn').innerHTML = 'Print';
             if (document.getElementById('shareWhatsAppBtn')) document.getElementById('shareWhatsAppBtn').innerHTML = 'Share via WhatsApp';
-            applyRTL();
+            applyLanguageDirection();
         }
 
         function setLanguage(lang) {
             currentLanguage = lang;
             updateUILanguage();
-            showToast(lang === 'en' ? 'English selected' : 'تم اختيار العربية');
+            showToast(lang === 'en' ? 'English selected' : (lang === 'ur' ? 'Urdu selected' : 'تم اختيار العربية'));
         }
 
         function switchTab(tabName) {
