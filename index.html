@@ -5,7 +5,6 @@
 <title>Tabuk Marble ERP</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <style>
 body{font-family:Arial;background:#eef2f5;margin:0}
 
@@ -299,9 +298,10 @@ alert("Restored");
 
 /* PDF */
 function downloadPDF(){
-doc.text("Invoice No: " + invoiceNo, 10, 45);
+const jsPDF = window.jspdf.jsPDF;
+  doc.text("Invoice No: " + invoiceNo, 10, 45);
 doc.text("Date: " + new Date().toLocaleString(), 10, 52);
-const { jsPDF } = window.jspdf;
+
 let doc = new jsPDF();
 
 let customer =
