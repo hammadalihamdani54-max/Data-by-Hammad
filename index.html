@@ -28,7 +28,6 @@
             overflow: hidden;
         }
 
-        /* Header */
         .top-bar {
             background: #1a1a2e;
             padding: 12px 25px;
@@ -50,11 +49,6 @@
             font-size: 24px;
         }
 
-        .logo-area p {
-            color: #ccc;
-            font-size: 12px;
-        }
-
         .language-selector, .currency-selector {
             display: flex;
             gap: 8px;
@@ -67,7 +61,6 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 12px;
         }
 
         .lang-btn.active, .currency-btn.active {
@@ -75,7 +68,6 @@
             color: #1a1a2e;
         }
 
-        /* Tabs */
         .tabs {
             display: flex;
             background: #2c3e50;
@@ -112,7 +104,6 @@
             to { opacity: 1; }
         }
 
-        /* POS Grid */
         .pos-grid {
             display: grid;
             grid-template-columns: 1fr 1.2fr;
@@ -149,23 +140,6 @@
             border-color: #3498db;
         }
 
-        .product-card h4 {
-            color: #2c3e50;
-            margin-bottom: 8px;
-        }
-
-        .product-details {
-            font-size: 11px;
-            color: #666;
-            margin: 3px 0;
-        }
-
-        .price {
-            color: #27ae60;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
         .form-group {
             margin-bottom: 12px;
         }
@@ -175,7 +149,6 @@
             margin-bottom: 5px;
             font-weight: bold;
             color: #333;
-            font-size: 13px;
         }
 
         input, select {
@@ -203,10 +176,6 @@
             margin: 5px;
         }
 
-        button:hover {
-            transform: translateY(-1px);
-        }
-
         .btn-success {
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
         }
@@ -229,7 +198,6 @@
             margin-top: 15px;
             overflow-x: auto;
             display: block;
-            font-size: 13px;
         }
 
         th, td {
@@ -277,24 +245,6 @@
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
         }
 
-        .loss-card {
-            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-        }
-
-        .action-buttons {
-            margin-top: 15px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .marble-inputs {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-
         .input-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -306,19 +256,27 @@
             margin-bottom: 15px;
         }
 
-        .search-box input {
-            border-radius: 25px;
-            padding: 10px 15px;
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
 
-        @media (max-width: 768px) {
-            .pos-grid {
-                grid-template-columns: 1fr;
-            }
-            .tab-btn {
-                font-size: 11px;
-                padding: 8px;
-            }
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         .toast {
@@ -338,17 +296,10 @@
             to { transform: translateX(0); }
         }
 
-        .invoice-header {
-            text-align: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #333;
-        }
-
-        .invoice-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1a1a2e;
+        @media (max-width: 768px) {
+            .pos-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -357,7 +308,6 @@
         <div class="top-bar">
             <div class="logo-area">
                 <h2>🏛️ TABUK MARBLE</h2>
-                <p>Premium Marble Solutions</p>
             </div>
             <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                 <div class="language-selector">
@@ -366,8 +316,8 @@
                     <button class="lang-btn" onclick="setLanguage('ar')">AR</button>
                 </div>
                 <div class="currency-selector">
-                    <button class="currency-btn active" onclick="setCurrency('SAR')">SAR</button>
-                    <button class="currency-btn" onclick="setCurrency('USD')">USD</button>
+                    <button class="currency-btn active" onclick="setCurrency('SAR')">SAR ﷼</button>
+                    <button class="currency-btn" onclick="setCurrency('USD')">USD $</button>
                 </div>
             </div>
         </div>
@@ -384,24 +334,19 @@
         <div id="pos" class="tab-content active">
             <div class="pos-grid">
                 <div class="products-panel">
-                    <h3>🪨 Products / منتجات</h3>
+                    <h3>🪨 Products</h3>
                     <div class="search-box">
                         <input type="text" id="searchProduct" placeholder="🔍 Search products..." onkeyup="searchProducts()">
                     </div>
                     <div class="product-list" id="productList"></div>
                     
-                    <div class="marble-inputs">
-                        <h4>➕ Add Custom Marble</h4>
-                        <div class="input-row">
-                            <input type="text" id="marbleName" placeholder="Marble Name" autocomplete="off">
-                            <input type="number" id="thickness" placeholder="Thickness (mm)" step="1">
-                            <input type="number" id="width" placeholder="Width (m)" step="0.01">
-                        </div>
-                        <div class="input-row">
-                            <input type="number" id="length" placeholder="Length (m)" step="0.01">
-                            <input type="number" id="marblePrice" placeholder="Selling Price (per sqm)" step="0.01">
-                            <input type="number" id="costPrice" placeholder="Cost Price (per sqm)" step="0.01">
-                        </div>
+                    <div class="input-row" style="margin-top: 20px; background: white; padding: 15px; border-radius: 8px;">
+                        <input type="text" id="marbleName" placeholder="Marble Name" autocomplete="off">
+                        <input type="number" id="thickness" placeholder="Thickness (mm)" step="1">
+                        <input type="number" id="width" placeholder="Width (m)" step="0.01">
+                        <input type="number" id="length" placeholder="Length (m)" step="0.01">
+                        <input type="number" id="marblePrice" placeholder="Selling Price" step="0.01">
+                        <input type="number" id="costPrice" placeholder="Cost Price" step="0.01">
                         <button onclick="addCustomMarble()" class="btn-success">➕ Add to Cart</button>
                     </div>
                 </div>
@@ -422,21 +367,20 @@
                             <thead>
                                 <tr><th>Item</th><th>Thick</th><th>W</th><th>L</th><th>sqm</th><th>Price</th><th>Total</th><th></th></tr>
                             </thead>
-                            <tbody id="cartBody">
-                                <tr><td colspan="8" style="text-align:center">Cart is empty</td></tr>
-                            </tbody>
+                            <tbody id="cartBody"></tbody>
                         </table>
                     </div>
                     
                     <div class="total-box">
-                        <p><strong>Subtotal:</strong> <span id="subtotal">0.00</span></p>
-                        <p><strong>Discount:</strong> <span id="discountPercent">0</span>% (-<span id="discountAmount">0.00</span>)</p>
-                        <h2 style="color:#27ae60"><strong>Grand Total:</strong> <span id="grandTotal">0.00</span></h2>
+                        <p><strong>Subtotal:</strong> <span id="subtotal">﷼ 0.00</span></p>
+                        <p><strong>Discount:</strong> <span id="discountPercent">0</span>% (-<span id="discountAmount">﷼ 0.00</span>)</p>
+                        <h2 style="color:#27ae60"><strong>Grand Total:</strong> <span id="grandTotal">﷼ 0.00</span></h2>
                     </div>
                     
                     <div class="action-buttons">
                         <button onclick="confirmOrder()" class="btn-success">✅ Confirm Order</button>
                         <button onclick="clearCart()" class="btn-danger">🗑️ Clear Cart</button>
+                        <button onclick="undoLastAction()" class="btn-warning">↩️ Undo</button>
                         <button onclick="downloadInvoice()" class="btn-info">📄 Download Invoice</button>
                     </div>
                 </div>
@@ -446,10 +390,9 @@
         <!-- Monthly Report Tab -->
         <div id="monthly" class="tab-content">
             <div class="stats-grid">
-                <div class="stat-card"><h3>Total Sales</h3><div class="value" id="totalSales">0</div></div>
+                <div class="stat-card"><h3>Total Sales</h3><div class="value" id="totalSales">﷼ 0</div></div>
                 <div class="stat-card"><h3>Total Orders</h3><div class="value" id="totalOrders">0</div></div>
-                <div class="stat-card profit-card"><h3>Total Profit</h3><div class="value" id="totalProfit">0</div></div>
-                <div class="stat-card"><h3>Net Revenue</h3><div class="value" id="netRevenue">0</div></div>
+                <div class="stat-card profit-card"><h3>Total Profit</h3><div class="value" id="totalProfit">﷼ 0</div></div>
             </div>
             
             <div class="report-panel">
@@ -461,7 +404,7 @@
                 <div style="overflow-x: auto; max-height: 400px;">
                     <table id="monthlyTable">
                         <thead><tr><th>Date</th><th>Invoice #</th><th>Customer</th><th>Items</th><th>Total</th><th>Profit</th></tr></thead>
-                        <tbody id="monthlyBody"><tr><td colspan="6">Select a month</td></tr></tbody>
+                        <tbody id="monthlyBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -487,19 +430,10 @@
         <!-- Profit & Loss Tab -->
         <div id="profitloss" class="tab-content">
             <div class="stats-grid">
-                <div class="stat-card"><h3>Total Revenue</h3><div class="value" id="revenue">0</div></div>
-                <div class="stat-card loss-card"><h3>Total Cost</h3><div class="value" id="totalCost">0</div></div>
-                <div class="stat-card profit-card"><h3>Net Profit</h3><div class="value" id="netProfit">0</div></div>
+                <div class="stat-card"><h3>Total Revenue</h3><div class="value" id="revenue">﷼ 0</div></div>
+                <div class="stat-card loss-card"><h3>Total Cost</h3><div class="value" id="totalCost">﷼ 0</div></div>
+                <div class="stat-card profit-card"><h3>Net Profit</h3><div class="value" id="netProfit">﷼ 0</div></div>
                 <div class="stat-card"><h3>Profit Margin</h3><div class="value" id="profitMargin">0%</div></div>
-            </div>
-            <div class="report-panel">
-                <h3>📈 Profit & Loss Statement</h3>
-                <div style="overflow-x: auto;">
-                    <table id="plTable">
-                        <thead><tr><th>Month</th><th>Revenue</th><th>Cost</th><th>Profit</th><th>Margin</th></tr></thead>
-                        <tbody id="plBody"></tbody>
-                    </table>
-                </div>
             </div>
         </div>
 
@@ -520,6 +454,16 @@
         </div>
     </div>
 
+    <!-- Invoice View Modal -->
+    <div id="invoiceModal" class="modal">
+        <div class="modal-content">
+            <h3>🧾 Invoice Details</h3>
+            <div id="invoiceDetails"></div>
+            <button onclick="closeModal()" class="btn-info">Close</button>
+            <button onclick="printInvoice()" class="btn-success">Print</button>
+        </div>
+    </div>
+
     <script>
         // Global Variables
         let cart = [];
@@ -527,10 +471,8 @@
         let products = [];
         let currentLanguage = 'en';
         let currentCurrency = 'SAR';
-        let nextInvoiceNumber = 1;
-
-        // Exchange rates (SAR base)
-        const exchangeRates = { SAR: 1, USD: 0.27 };
+        let actionHistory = [];
+        let redoStack = [];
 
         // Initialize data from localStorage
         function initData() {
@@ -557,13 +499,6 @@
                 allOrders = [];
             }
 
-            // Set next invoice number
-            if (allOrders.length > 0) {
-                const lastInvoice = allOrders[allOrders.length - 1].invoiceNo;
-                const num = parseInt(lastInvoice.split('-')[1]);
-                nextInvoiceNumber = num + 1;
-            }
-
             displayProducts();
             updateMonthlyReport();
             updateProfitLoss();
@@ -581,20 +516,39 @@
             displayInvoices();
         }
 
+        function saveCartToHistory() {
+            actionHistory.push(JSON.parse(JSON.stringify(cart)));
+            redoStack = [];
+        }
+
+        function undoLastAction() {
+            if (actionHistory.length > 0) {
+                redoStack.push(JSON.parse(JSON.stringify(cart)));
+                cart = actionHistory.pop();
+                updateCartDisplay();
+                showToast('Undo successful');
+            } else {
+                showToast('Nothing to undo');
+            }
+        }
+
         function displayProducts() {
             const searchTerm = document.getElementById('searchProduct')?.value.toLowerCase() || '';
             const filtered = products.filter(p => p.name.toLowerCase().includes(searchTerm));
             const container = document.getElementById('productList');
             if (!container) return;
             
-            container.innerHTML = filtered.map(p => `
-                <div class="product-card" onclick="addToCart(${p.id})">
-                    <h4>${p.name}</h4>
-                    <div class="product-details">📏 Thick: ${p.thickness}mm | ${p.width}×${p.length}m</div>
-                    <div class="product-details">📐 Area: ${(p.width * p.length).toFixed(2)} sqm</div>
-                    <div class="price">${formatCurrency(p.sellingPrice)}/sqm</div>
-                </div>
-            `).join('');
+            container.innerHTML = filtered.map(p => {
+                const area = (p.width * p.length).toFixed(2);
+                return `
+                    <div class="product-card" onclick="addToCart(${p.id})">
+                        <h4>${p.name}</h4>
+                        <div>📏 ${p.thickness}mm | ${p.width}×${p.length}m</div>
+                        <div>📐 Area: ${area} sqm</div>
+                        <div class="price">${formatCurrency(p.sellingPrice)}/sqm</div>
+                    </div>
+                `;
+            }).join('');
         }
 
         function searchProducts() {
@@ -608,6 +562,7 @@
             const area = (product.width * product.length).toFixed(2);
             const total = parseFloat(area) * product.sellingPrice;
             
+            saveCartToHistory();
             cart.push({
                 id: Date.now(),
                 productId: product.id,
@@ -641,6 +596,7 @@
             const area = (width * length).toFixed(2);
             const total = parseFloat(area) * sellingPrice;
             
+            saveCartToHistory();
             cart.push({
                 id: Date.now(),
                 productId: null,
@@ -673,8 +629,8 @@
             
             if (cart.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="8" style="text-align:center">Cart is empty</td></tr>';
-                document.getElementById('subtotal').innerText = formatCurrency(0);
-                document.getElementById('grandTotal').innerText = formatCurrency(0);
+                document.getElementById('subtotal').innerHTML = formatCurrency(0);
+                document.getElementById('grandTotal').innerHTML = formatCurrency(0);
                 return;
             }
             
@@ -690,20 +646,21 @@
                     <td>${formatCurrency(item.sellingPrice)}</td>
                     <td>${formatCurrency(item.total)}</td>
                     <td><button onclick="removeFromCart(${idx})" class="btn-danger" style="padding:5px 10px">❌</button></td>
-                </tr>`;
+                `;
             }).join('');
             
             const discountPercent = parseFloat(document.getElementById('posDiscount').value) || 0;
             const discountAmount = (subtotal * discountPercent) / 100;
             const grandTotal = subtotal - discountAmount;
             
-            document.getElementById('subtotal').innerText = formatCurrency(subtotal);
+            document.getElementById('subtotal').innerHTML = formatCurrency(subtotal);
             document.getElementById('discountPercent').innerText = discountPercent;
-            document.getElementById('discountAmount').innerText = formatCurrency(discountAmount);
-            document.getElementById('grandTotal').innerText = formatCurrency(grandTotal);
+            document.getElementById('discountAmount').innerHTML = formatCurrency(discountAmount);
+            document.getElementById('grandTotal').innerHTML = formatCurrency(grandTotal);
         }
 
         function removeFromCart(index) {
+            saveCartToHistory();
             cart.splice(index, 1);
             updateCartDisplay();
             showToast('Item removed');
@@ -711,6 +668,7 @@
 
         function clearCart() {
             if (confirm('Clear entire cart?')) {
+                saveCartToHistory();
                 cart = [];
                 updateCartDisplay();
                 showToast('Cart cleared');
@@ -728,10 +686,10 @@
             const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
             const discountAmount = (subtotal * discountPercent) / 100;
             const total = subtotal - discountAmount;
-            const profit = cart.reduce((sum, item) => sum + ((item.sellingPrice - item.costPrice) * item.area), 0);
+            const cost = cart.reduce((sum, item) => sum + (item.costPrice * item.area), 0);
+            const profit = total - cost;
             
-            const invoiceNo = `INV-${String(nextInvoiceNumber).padStart(4, '0')}`;
-            nextInvoiceNumber++;
+            const invoiceNo = `INV-${String(allOrders.length + 1).padStart(4, '0')}`;
             
             const order = {
                 invoiceNo: invoiceNo,
@@ -742,6 +700,7 @@
                 discountPercent: discountPercent,
                 discountAmount: discountAmount,
                 total: total,
+                cost: cost,
                 profit: profit
             };
             
@@ -750,10 +709,9 @@
             
             showToast(`✅ Order Confirmed! Invoice: ${invoiceNo}`);
             
-            // Reset cart and form
+            // Reset cart
             cart = [];
-            document.getElementById('posCustomer').value = 'Walk-in Customer';
-            document.getElementById('posDiscount').value = '0';
+            actionHistory = [];
             updateCartDisplay();
             
             // Refresh all displays
@@ -763,9 +721,9 @@
         }
 
         function formatCurrency(amount) {
-            const symbols = { SAR: 'ر.س', USD: '$' };
-            const rate = exchangeRates[currentCurrency];
-            const converted = (amount * rate).toFixed(2);
+            const symbols = { SAR: '﷼', USD: '$' };
+            const rates = { SAR: 1, USD: 0.27 };
+            const converted = (amount * rates[currentCurrency]).toFixed(2);
             return `${symbols[currentCurrency]} ${converted}`;
         }
 
@@ -777,16 +735,15 @@
             document.getElementById('totalSales').innerHTML = formatCurrency(totalSales);
             document.getElementById('totalOrders').innerHTML = totalOrders;
             document.getElementById('totalProfit').innerHTML = formatCurrency(totalProfit);
-            document.getElementById('netRevenue').innerHTML = formatCurrency(totalSales);
             
-            // Load current month data
             loadMonthlyData();
         }
 
         function loadMonthlyData() {
             const monthPicker = document.getElementById('monthPicker');
             if (!monthPicker.value) {
-                monthPicker.valueAsDate = new Date();
+                const today = new Date();
+                monthPicker.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
             }
             const selectedMonth = monthPicker.value;
             
@@ -806,16 +763,13 @@
                     <td>${o.items.length}</td>
                     <td>${formatCurrency(o.total)}</td>
                     <td style="color:green">${formatCurrency(o.profit)}</td>
-                </tr>
-            `).join('');
+                 `;
+            }).join('');
         }
 
         function updateProfitLoss() {
             const revenue = allOrders.reduce((sum, o) => sum + o.total, 0);
-            const cost = allOrders.reduce((sum, o) => {
-                const orderCost = o.items.reduce((s, item) => s + (item.costPrice * item.area), 0);
-                return sum + orderCost;
-            }, 0);
+            const cost = allOrders.reduce((sum, o) => sum + o.cost, 0);
             const profit = revenue - cost;
             const margin = revenue > 0 ? ((profit / revenue) * 100).toFixed(2) : 0;
             
@@ -823,33 +777,6 @@
             document.getElementById('totalCost').innerHTML = formatCurrency(cost);
             document.getElementById('netProfit').innerHTML = formatCurrency(profit);
             document.getElementById('profitMargin').innerHTML = margin + '%';
-            
-            // Monthly PL
-            const monthlyData = {};
-            allOrders.forEach(o => {
-                const month = o.date.substring(0, 7);
-                if (!monthlyData[month]) {
-                    monthlyData[month] = { revenue: 0, cost: 0 };
-                }
-                monthlyData[month].revenue += o.total;
-                const orderCost = o.items.reduce((s, item) => s + (item.costPrice * item.area), 0);
-                monthlyData[month].cost += orderCost;
-            });
-            
-            const plBody = document.getElementById('plBody');
-            if (plBody) {
-                plBody.innerHTML = Object.entries(monthlyData).sort().reverse().map(([month, data]) => {
-                    const profitMonth = data.revenue - data.cost;
-                    const marginMonth = data.revenue > 0 ? ((profitMonth / data.revenue) * 100).toFixed(2) : 0;
-                    return `<tr>
-                        <td>${month}</td>
-                        <td>${formatCurrency(data.revenue)}</td>
-                        <td>${formatCurrency(data.cost)}</td>
-                        <td style="color:${profitMonth >= 0 ? 'green' : 'red'}">${formatCurrency(profitMonth)}</td>
-                        <td>${marginMonth}%</td>
-                    </tr>`;
-                }).join('');
-            }
         }
 
         function displayInvoices() {
@@ -874,9 +801,12 @@
                     <td>${o.customer}</td>
                     <td>${o.items.length} items</td>
                     <td>${formatCurrency(o.total)}</td>
-                    <td><button onclick="viewInvoiceDetails('${o.invoiceNo}')" class="btn-info" style="padding:5px 10px">View</button></td>
-                </tr>
-            `).join('');
+                    <td>
+                        <button onclick="viewInvoiceDetails('${o.invoiceNo}')" class="btn-info" style="padding:5px 10px">👁️ View</button>
+                        <button onclick="deleteInvoice('${o.invoiceNo}')" class="btn-danger" style="padding:5px 10px">🗑️ Delete</button>
+                    </td>
+                 `;
+            }).join('');
         }
 
         function searchInvoices() {
@@ -887,91 +817,102 @@
             const order = allOrders.find(o => o.invoiceNo === invoiceNo);
             if (!order) return;
             
-            let itemsList = order.items.map(item => 
-                `${item.name}: ${item.area} sqm × ${formatCurrency(item.sellingPrice)} = ${formatCurrency(item.total)}`
-            ).join('\n');
+            const modal = document.getElementById('invoiceModal');
+            const detailsDiv = document.getElementById('invoiceDetails');
             
-            alert(`📄 INVOICE: ${order.invoiceNo}\n📅 Date: ${new Date(order.date).toLocaleString()}\n👤 Customer: ${order.customer}\n\n🪨 ITEMS:\n${itemsList}\n\n💰 Subtotal: ${formatCurrency(order.subtotal)}\n🎁 Discount: ${order.discountPercent}% (-${formatCurrency(order.discountAmount)})\n💵 TOTAL: ${formatCurrency(order.total)}`);
+            let itemsHtml = '<table style="width:100%; margin-top:10px"><tr><th>Item</th><th>Dimensions</th><th>Area</th><th>Price</th><th>Total</th></tr>';
+            order.items.forEach(item => {
+                itemsHtml += `<tr>
+                    <td>${item.name}</td>
+                    <td>${item.thickness}mm, ${item.width}×${item.length}m</td>
+                    <td>${item.area} sqm</td>
+                    <td>${formatCurrency(item.sellingPrice)}</td>
+                    <td>${formatCurrency(item.total)}</td>
+                </tr>`;
+            });
+            itemsHtml += '</table>';
+            
+            detailsDiv.innerHTML = `
+                <div style="text-align:center; margin-bottom:20px">
+                    <h2>TABUK MARBLE</h2>
+                    <p>Premium Marble Solutions</p>
+                </div>
+                <div style="border-top:2px solid #333; padding:10px 0">
+                    <p><strong>Invoice #:</strong> ${order.invoiceNo}</p>
+                    <p><strong>Date:</strong> ${new Date(order.date).toLocaleString()}</p>
+                    <p><strong>Customer:</strong> ${order.customer}</p>
+                </div>
+                ${itemsHtml}
+                <div style="text-align:right; margin-top:15px; padding-top:10px; border-top:2px solid #333">
+                    <p><strong>Subtotal:</strong> ${formatCurrency(order.subtotal)}</p>
+                    <p><strong>Discount:</strong> ${order.discountPercent}% (-${formatCurrency(order.discountAmount)})</p>
+                    <h3 style="color:#27ae60"><strong>Grand Total:</strong> ${formatCurrency(order.total)}</h3>
+                </div>
+                <div style="text-align:center; margin-top:20px; font-size:12px; color:#666">
+                    <p>Thank you for choosing TABUK MARBLE!</p>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            window.currentInvoice = order;
         }
 
-        function downloadInvoice() {
-            if (cart.length === 0) {
-                showToast('Cart is empty! Add items first.');
-                return;
+        function deleteInvoice(invoiceNo) {
+            if (confirm(`Delete invoice ${invoiceNo} permanently? This cannot be undone.`)) {
+                allOrders = allOrders.filter(o => o.invoiceNo !== invoiceNo);
+                saveOrders();
+                displayInvoices();
+                updateMonthlyReport();
+                updateProfitLoss();
+                showToast('Invoice deleted successfully');
             }
+        }
+
+        function closeModal() {
+            document.getElementById('invoiceModal').style.display = 'none';
+        }
+
+        function printInvoice() {
+            const printContent = document.getElementById('invoiceDetails').innerHTML;
+            const originalContent = document.body.innerHTML;
+            document.body.innerHTML = printContent;
+            window.print();
+            document.body.innerHTML = originalContent;
+            location.reload();
+        }
+
+        function loadInventory() {
+            const searchTerm = document.getElementById('inventorySearch')?.value.toLowerCase() || '';
+            const filtered = products.filter(p => p.name.toLowerCase().includes(searchTerm));
+            const tbody = document.getElementById('inventoryBody');
+            if (!tbody) return;
             
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const customer = document.getElementById('posCustomer').value || 'Walk-in Customer';
-            const discountPercent = parseFloat(document.getElementById('posDiscount').value) || 0;
-            const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
-            const discountAmount = (subtotal * discountPercent) / 100;
-            const grandTotal = subtotal - discountAmount;
-            const invoiceNo = `INV-${String(nextInvoiceNumber).padStart(4, '0')}`;
+            tbody.innerHTML = filtered.map(p => `
+                <tr>
+                    <td>${p.name}</td>
+                    <td>${p.thickness}mm</td>
+                    <td>${p.width}m</td>
+                    <td>${p.length}m</td>
+                    <td>${formatCurrency(p.sellingPrice)}</td>
+                    <td>${formatCurrency(p.costPrice)}</td>
+                    <td>
+                        <button onclick="viewProductDetails(${p.id})" class="btn-info" style="padding:5px 10px">👁️ View</button>
+                        <button onclick="deleteProduct(${p.id})" class="btn-danger" style="padding:5px 10px">🗑️ Delete</button>
+                    </td>
+                 `;
+            }).join('');
+        }
+
+        function viewProductDetails(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
             
-            // Professional Invoice Design
-            doc.setFillColor(26, 26, 46);
-            doc.rect(0, 0, 210, 40, 'F');
-            doc.setTextColor(255, 215, 0);
-            doc.setFontSize(24);
-            doc.text('TABUK MARBLE', 105, 20, { align: 'center' });
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(10);
-            doc.text('Premium Marble Solutions', 105, 30, { align: 'center' });
-            
-            doc.setTextColor(0, 0, 0);
-            doc.setFontSize(10);
-            doc.text(`Invoice #: ${invoiceNo}`, 140, 50);
-            doc.text(`Date: ${new Date().toLocaleString()}`, 140, 57);
-            doc.text(`Customer: ${customer}`, 20, 50);
-            
-            // Table Header
-            doc.setFillColor(52, 152, 219);
-            doc.rect(20, 65, 170, 8, 'F');
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(9);
-            doc.text('Item', 25, 71);
-            doc.text('Dimensions', 70, 71);
-            doc.text('Area', 110, 71);
-            doc.text('Price/sqm', 135, 71);
-            doc.text('Total', 165, 71);
-            
-            let y = 78;
-            doc.setTextColor(0, 0, 0);
-            cart.forEach((item, idx) => {
-                if (y > 260) {
-                    doc.addPage();
-                    y = 20;
-                }
-                doc.setFontSize(8);
-                doc.text(item.name.substring(0, 20), 25, y);
-                doc.text(`${item.thickness}mm, ${item.width}×${item.length}m`, 70, y);
-                doc.text(`${item.area} sqm`, 110, y);
-                doc.text(formatCurrency(item.sellingPrice), 135, y);
-                doc.text(formatCurrency(item.total), 165, y);
-                y += 7;
-            });
-            
-            y += 10;
-            doc.setFontSize(10);
-            doc.text(`Subtotal: ${formatCurrency(subtotal)}`, 140, y);
-            y += 7;
-            doc.text(`Discount (${discountPercent}%): -${formatCurrency(discountAmount)}`, 140, y);
-            y += 10;
-            doc.setFillColor(39, 174, 96);
-            doc.rect(120, y - 5, 70, 10, 'F');
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(12);
-            doc.text(`TOTAL: ${formatCurrency(grandTotal)}`, 155, y + 1, { align: 'center' });
-            
-            // Footer
-            doc.setTextColor(100, 100, 100);
-            doc.setFontSize(8);
-            doc.text('Thank you for choosing TABUK MARBLE!', 105, 280, { align: 'center' });
-            doc.text('For inquiries: info@tabukmarble.com | +966 XX XXX XXXX', 105, 287, { align: 'center' });
-            
-            doc.save(`TABUK_MARBLE_${invoiceNo}.pdf`);
-            showToast('Invoice downloaded!');
+            const area = (product.width * product.length).toFixed(2);
+            alert(`📦 PRODUCT DETAILS\n\nName: ${product.name}\nThickness: ${product.thickness}mm\nWidth: ${product.width}m\nLength: ${product.length}m\nArea: ${area} sqm\nSelling Price: ${formatCurrency(product.sellingPrice)}/sqm\nCost Price: ${formatCurrency(product.costPrice)}/sqm\n\nProfit per sqm: ${formatCurrency(product.sellingPrice - product.costPrice)}`);
+        }
+
+        function searchInventory() {
+            loadInventory();
         }
 
         function showAddProductModal() {
@@ -1004,28 +945,8 @@
             showToast('Product added successfully!');
         }
 
-        function loadInventory() {
-            const searchTerm = document.getElementById('inventorySearch')?.value.toLowerCase() || '';
-            const filtered = products.filter(p => p.name.toLowerCase().includes(searchTerm));
-            const tbody = document.getElementById('inventoryBody');
-            if (!tbody) return;
-            
-            tbody.innerHTML = filtered.map(p => `
-                <tr>
-                    <td>${p.name}</td>
-                    <td>${p.thickness}mm</td><td>${p.width}m</td><td>${p.length}m</td>
-                    <td>${formatCurrency(p.sellingPrice)}</td><td>${formatCurrency(p.costPrice)}</td>
-                    <td><button onclick="deleteProduct(${p.id})" class="btn-danger" style="padding:5px 10px">Delete</button></td>
-                </tr>
-            `).join('');
-        }
-
-        function searchInventory() {
-            loadInventory();
-        }
-
         function deleteProduct(id) {
-            if (confirm('Delete this product permanently?')) {
+            if (confirm('Delete this product permanently? This will not affect existing invoices.')) {
                 products = products.filter(p => p.id !== id);
                 saveProducts();
                 displayProducts();
@@ -1064,6 +985,88 @@
             if (tabName === 'profitloss') updateProfitLoss();
         }
 
+        function downloadInvoice() {
+            if (cart.length === 0) {
+                showToast('Cart is empty! Add items first.');
+                return;
+            }
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const customer = document.getElementById('posCustomer').value || 'Walk-in Customer';
+            const discountPercent = parseFloat(document.getElementById('posDiscount').value) || 0;
+            const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
+            const discountAmount = (subtotal * discountPercent) / 100;
+            const grandTotal = subtotal - discountAmount;
+            const invoiceNo = `INV-${String(allOrders.length + 1).padStart(4, '0')}`;
+            
+            // Professional Header
+            doc.setFillColor(26, 26, 46);
+            doc.rect(0, 0, 210, 45, 'F');
+            doc.setTextColor(255, 215, 0);
+            doc.setFontSize(22);
+            doc.text('TABUK MARBLE', 105, 20, { align: 'center' });
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(10);
+            doc.text('Premium Marble Solutions', 105, 30, { align: 'center' });
+            doc.text('Tel: +966 XX XXX XXXX | Email: info@tabukmarble.com', 105, 38, { align: 'center' });
+            
+            // Invoice Details
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(10);
+            doc.text(`Invoice #: ${invoiceNo}`, 140, 55);
+            doc.text(`Date: ${new Date().toLocaleString()}`, 140, 62);
+            doc.text(`Customer: ${customer}`, 20, 55);
+            
+            // Table Header
+            doc.setFillColor(52, 152, 219);
+            doc.rect(20, 72, 170, 8, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(9);
+            doc.text('Item', 25, 78);
+            doc.text('Dimensions (mm × m × m)', 70, 78);
+            doc.text('Area (sqm)', 115, 78);
+            doc.text('Price', 145, 78);
+            doc.text('Total', 170, 78);
+            
+            let y = 85;
+            doc.setTextColor(0, 0, 0);
+            cart.forEach((item) => {
+                if (y > 260) {
+                    doc.addPage();
+                    y = 20;
+                }
+                doc.setFontSize(8);
+                doc.text(item.name.substring(0, 18), 25, y);
+                doc.text(`${item.thickness} × ${item.width} × ${item.length}`, 70, y);
+                doc.text(`${item.area}`, 115, y);
+                doc.text(formatCurrency(item.sellingPrice), 145, y);
+                doc.text(formatCurrency(item.total), 170, y);
+                y += 7;
+            });
+            
+            y += 8;
+            doc.setFontSize(10);
+            doc.text(`Subtotal: ${formatCurrency(subtotal)}`, 140, y);
+            y += 6;
+            doc.text(`Discount (${discountPercent}%): -${formatCurrency(discountAmount)}`, 140, y);
+            y += 8;
+            doc.setFillColor(39, 174, 96);
+            doc.rect(120, y - 5, 70, 10, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(12);
+            doc.text(`TOTAL: ${formatCurrency(grandTotal)}`, 155, y + 1, { align: 'center' });
+            
+            // Footer
+            doc.setTextColor(100, 100, 100);
+            doc.setFontSize(8);
+            doc.text('Thank you for choosing TABUK MARBLE!', 105, 270, { align: 'center' });
+            doc.text('We appreciate your business!', 105, 277, { align: 'center' });
+            
+            doc.save(`TABUK_MARBLE_${invoiceNo}.pdf`);
+            showToast('Invoice downloaded!');
+        }
+
         function showToast(message) {
             const toast = document.createElement('div');
             toast.className = 'toast';
@@ -1072,14 +1075,11 @@
             setTimeout(() => toast.remove(), 2500);
         }
 
-        // Auto-focus on item name after adding
+        // Event Listeners
         document.getElementById('marbleName')?.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('thickness').focus();
-            }
+            if (e.key === 'Enter') document.getElementById('thickness').focus();
         });
         
-        // Set default month picker
         window.addEventListener('DOMContentLoaded', () => {
             initData();
             const monthPicker = document.getElementById('monthPicker');
