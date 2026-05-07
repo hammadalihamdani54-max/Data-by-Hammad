@@ -298,11 +298,13 @@ alert("Restored");
 
 /* PDF */
 function downloadPDF(){
+  
 const jsPDF = window.jspdf.jsPDF;
-  doc.text("Invoice No: " + invoiceNo, 10, 45);
+let doc = new jsPDF();
+doc.text("Invoice No: " + invoiceNo, 10, 45);
 doc.text("Date: " + new Date().toLocaleString(), 10, 52);
 
-let doc = new jsPDF();
+
 
 let customer =
 document.getElementById("customer").value || "Walk-in Customer";
