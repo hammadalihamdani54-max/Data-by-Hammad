@@ -180,7 +180,7 @@
             background: white;
             padding: 25px;
             border-radius: 10px;
-            max-width: 700px;
+            max-width: 800px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
@@ -204,77 +204,6 @@
         }
         @media (max-width: 768px) { .pos-grid { grid-template-columns: 1fr; } }
         .action-group { display: flex; gap: 5px; flex-wrap: wrap; }
-        
-        /* Professional PDF Template Styles */
-        .pdf-invoice-container {
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
-            font-family: 'Segoe UI', Arial, sans-serif;
-        }
-        .pdf-header {
-            background: #1a1a2e;
-            color: #ffd700;
-            padding: 20px;
-            text-align: center;
-            border-radius: 10px 10px 0 0;
-        }
-        .pdf-header h1 {
-            color: #ffd700;
-            font-size: 28px;
-            margin: 0;
-        }
-        .pdf-header p {
-            color: white;
-            margin: 5px 0;
-        }
-        .pdf-info {
-            padding: 15px;
-            border: 1px solid #ddd;
-            margin: 15px 0;
-            border-radius: 5px;
-            background: #f9f9f9;
-        }
-        .pdf-info p {
-            margin: 8px 0;
-        }
-        .pdf-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-        }
-        .pdf-table th {
-            background: #1a1a2e;
-            color: #ffd700;
-            padding: 12px;
-            border: 1px solid #333;
-            text-align: center;
-            font-size: 12px;
-        }
-        .pdf-table td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
-            font-size: 11px;
-        }
-        .pdf-total {
-            text-align: right;
-            margin-top: 20px;
-            padding: 15px;
-            border-top: 2px solid #ffd700;
-        }
-        .pdf-footer {
-            text-align: center;
-            margin-top: 30px;
-            padding: 15px;
-            font-size: 10px;
-            color: #666;
-            border-top: 1px solid #ddd;
-        }
-        .rtl-table th, .rtl-table td {
-            text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -290,7 +219,6 @@
             <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                 <div class="language-selector">
                     <button class="lang-btn active" data-lang="en">English</button>
-                    <button class="lang-btn" data-lang="ur">اردو</button>
                     <button class="lang-btn" data-lang="ar">العربية</button>
                 </div>
                 <div class="currency-selector">
@@ -335,11 +263,15 @@
                         <input type="text" id="posCustomer" value="Walk-in Customer">
                     </div>
                     <div class="form-group">
+                        <label>Customer Phone:</label>
+                        <input type="tel" id="posCustomerPhone" placeholder="05XXXXXXXX">
+                    </div>
+                    <div class="form-group">
                         <label>Discount %:</label>
                         <input type="number" id="posDiscount" value="0" step="1" min="0" max="100">
                     </div>
                     
-                    <div style="overflow-x: auto; max-height: 350px; overflow-y: auto;">
+                    <div style="overflow-x: auto; max-height: 300px; overflow-y: auto;">
                         <table id="cartTable">
                             <thead>
                                 <tr><th>Item</th><th>Thick</th><th>W</th><th>L</th><th>sqm</th><th>Price</th><th>Total</th><th></th></tr>
@@ -378,7 +310,7 @@
                 </div>
                 <div style="overflow-x: auto; max-height: 400px;">
                     <table id="monthlyTable">
-                        <thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Items</th><th>Total</th><th>Profit</th><th>Actions</th></tr></thead>
+                        <thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Profit</th><th>Actions</th></tr></thead>
                         <tbody id="monthlyBody"></tbody>
                     </table>
                 </div>
@@ -418,7 +350,7 @@
                 </div>
                 <div style="overflow-x: auto; max-height: 500px;">
                     <table id="invoicesTable">
-                        <thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Actions</th></tr></thead>
+                        <thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Actions</th></tr></thead>
                         <tbody id="invoicesBody"></tbody>
                     </table>
                 </div>
@@ -432,7 +364,7 @@
             <div style="text-align: center; margin-top: 20px;">
                 <button id="closeModalBtn" class="btn-info">Close</button>
                 <button id="printInvoiceBtn" class="btn-success">Print</button>
-                <button id="shareWhatsAppBtn" class="btn-whatsapp">Share PDF on WhatsApp</button>
+                <button id="shareWhatsAppBtn" class="btn-whatsapp">Send via WhatsApp</button>
             </div>
         </div>
     </div>
@@ -449,71 +381,46 @@
         let deletedInvoicesHistory = [];
         let deletedProductsHistory = [];
 
-        const PHONE_NUMBER = '966598074287';
+        const COMPANY_PHONE = '966598074287';
 
         const translations = {
             en: {
                 pos: "POS System", monthly: "Monthly Report", inventory: "Inventory",
                 profitloss: "Profit & Loss", invoices: "Invoices", products: "Products",
-                shoppingCart: "Shopping Cart", customerName: "Customer Name", discount: "Discount %",
-                confirmOrder: "Confirm Order", clearCart: "Clear Cart", undo: "Undo",
-                downloadInvoice: "Download Invoice", totalSales: "Total Sales", totalOrders: "Total Orders",
-                totalProfit: "Total Profit", addProduct: "Add New Product", search: "Search",
+                shoppingCart: "Shopping Cart", customerName: "Customer Name", customerPhone: "Customer Phone",
+                discount: "Discount %", confirmOrder: "Confirm Order", clearCart: "Clear Cart",
+                undo: "Undo", downloadInvoice: "Download Invoice", totalSales: "Total Sales",
+                totalOrders: "Total Orders", totalProfit: "Total Profit", addProduct: "Add New Product",
                 item: "Item", thick: "Thick(cm)", width: "W(m)", length: "L(m)", area: "Area(sqm)",
-                price: "Price/sqm", total: "Total", actions: "Actions", date: "Date",
-                invoice: "Invoice", customer: "Customer", items: "Items", profit: "Profit",
+                price: "Price/sqm", total: "Total", date: "Date", invoice: "Invoice",
+                customer: "Customer", phone: "Phone", items: "Items", profit: "Profit",
                 revenue: "Total Revenue", cost: "Total Cost", netProfit: "Net Profit",
                 margin: "Profit Margin", thankYou: "Thank you for choosing TABUK MARBLE!",
                 address: "Al Arjan District, Tabuk | Tel: +966 59 807 4287",
                 company: "Premium Marble Solutions", subtotal: "Subtotal", grandTotal: "Grand Total",
                 deleteConfirm: "Are you sure you want to delete this invoice?",
-                deleteSuccess: "Invoice deleted successfully!",
-                undoDelete: "Undo Delete", undoDeleteSuccess: "Invoice restored!",
-                noInvoices: "No invoices found", cartEmpty: "Cart is empty!",
-                orderConfirmed: "Order Confirmed! Invoice: ", productAdded: "added to cart!",
-                view: "View", delete: "Delete", download: "Download", share: "Share PDF"
-            },
-            ur: {
-                pos: "POS سسٹم", monthly: "ماہانہ رپورٹ", inventory: "انوینٹری",
-                profitloss: "منافع اور نقصان", invoices: "انوائسز", products: "پروڈکٹس",
-                shoppingCart: "شاپنگ کارٹ", customerName: "گاہک کا نام", discount: "ڈسکاؤنٹ %",
-                confirmOrder: "آرڈر تصدیق", clearCart: "کارٹ صاف", undo: "کالعدم",
-                downloadInvoice: "انوائس ڈاؤن لوڈ", totalSales: "کل فروخت", totalOrders: "کل آرڈرز",
-                totalProfit: "کل منافع", addProduct: "نیا پروڈکٹ", search: "تلاش کریں",
-                item: "آئٹم", thick: "موٹائی(س م)", width: "چوڑائی(م)", length: "لمبائی(م)", area: "رقبہ",
-                price: "قیمت/مربع", total: "کل", actions: "اعمال", date: "تاریخ",
-                invoice: "انوائس", customer: "گاہک", items: "آئٹمز", profit: "منافع",
-                revenue: "کل آمدنی", cost: "کل لاگت", netProfit: "خالص منافع",
-                margin: "منافع مارجن", thankYou: "تبوک ماربل کا انتخاب کرنے کا شکریہ!",
-                address: "العرجان، تبوک | فون: 966 59 807 4287",
-                company: "پريميئم ماربل سلوشنز", subtotal: "ذیلی کل", grandTotal: "کل کل",
-                deleteConfirm: "کیا آپ واقعی یہ انوائس حذف کرنا چاہتے ہیں؟",
-                deleteSuccess: "انوائس حذف کر دی گئی!",
-                undoDelete: "حذف واپس لیں", undoDeleteSuccess: "انوائس بحال کر دی گئی!",
-                noInvoices: "کوئی انوائس نہیں ملی", cartEmpty: "کارٹ خالی ہے!",
-                orderConfirmed: "آرڈر تصدیق ہوگیا! انوائس: ", productAdded: "کارٹ میں شامل ہوگیا!",
-                view: "دیکھیں", delete: "حذف کریں", download: "ڈاؤن لوڈ", share: "پی ڈی ایف شیئر کریں"
+                deleteSuccess: "Invoice deleted successfully!", noInvoices: "No invoices found",
+                cartEmpty: "Cart is empty!", orderConfirmed: "Order Confirmed! Invoice: ",
+                productAdded: "added to cart!", view: "View", delete: "Delete", download: "Download", share: "WhatsApp"
             },
             ar: {
                 pos: "نظام البيع", monthly: "التقرير الشهري", inventory: "المخزون",
                 profitloss: "الأرباح والخسائر", invoices: "الفواتير", products: "المنتجات",
-                shoppingCart: "سلة التسوق", customerName: "اسم العميل", discount: "الخصم %",
-                confirmOrder: "تأكيد الطلب", clearCart: "مسح السلة", undo: "تراجع",
-                downloadInvoice: "تحميل الفاتورة", totalSales: "إجمالي المبيعات", totalOrders: "إجمالي الطلبات",
-                totalProfit: "إجمالي الربح", addProduct: "إضافة منتج", search: "بحث",
+                shoppingCart: "سلة التسوق", customerName: "اسم العميل", customerPhone: "رقم الجوال",
+                discount: "الخصم %", confirmOrder: "تأكيد الطلب", clearCart: "مسح السلة",
+                undo: "تراجع", downloadInvoice: "تحميل الفاتورة", totalSales: "إجمالي المبيعات",
+                totalOrders: "إجمالي الطلبات", totalProfit: "إجمالي الربح", addProduct: "إضافة منتج",
                 item: "العنصر", thick: "سمك(سم)", width: "عرض(م)", length: "طول(م)", area: "مساحة",
-                price: "السعر/متر", total: "المجموع", actions: "الإجراءات", date: "التاريخ",
-                invoice: "الفاتورة", customer: "العميل", items: "العناصر", profit: "الربح",
+                price: "السعر/متر", total: "المجموع", date: "التاريخ", invoice: "الفاتورة",
+                customer: "العميل", phone: "الجوال", items: "العناصر", profit: "الربح",
                 revenue: "إجمالي الإيرادات", cost: "إجمالي التكلفة", netProfit: "صافي الربح",
                 margin: "هامش الربح", thankYou: "شكرا لاختيارك تابوك ماربل!",
                 address: "العرجان، تبوك | هاتف: 966 59 807 4287",
                 company: "حلول الرخام الفاخرة", subtotal: "المجموع الفرعي", grandTotal: "المجموع الكلي",
                 deleteConfirm: "هل أنت متأكد من حذف هذه الفاتورة؟",
-                deleteSuccess: "تم حذف الفاتورة بنجاح!",
-                undoDelete: "تراجع عن الحذف", undoDeleteSuccess: "تم استعادة الفاتورة!",
-                noInvoices: "لم يتم العثور على فواتير", cartEmpty: "السلة فارغة!",
-                orderConfirmed: "تم تأكيد الطلب! الفاتورة: ", productAdded: "تمت الإضافة إلى السلة!",
-                view: "عرض", delete: "حذف", download: "تحميل", share: "مشاركة PDF"
+                deleteSuccess: "تم حذف الفاتورة بنجاح!", noInvoices: "لم يتم العثور على فواتير",
+                cartEmpty: "السلة فارغة!", orderConfirmed: "تم تأكيد الطلب! الفاتورة: ",
+                productAdded: "تمت الإضافة إلى السلة!", view: "عرض", delete: "حذف", download: "تحميل", share: "واتساب"
             }
         };
 
@@ -660,7 +567,7 @@
             tbody.innerHTML = cart.map((item, idx) => {
                 subtotal += item.total;
                 return `
-                    <tr class="cart-item">
+                    <tr>
                         <td>${item.name}</td>
                         <td>${item.thickness}cm</td>
                         <td>${item.width}m</td>
@@ -723,6 +630,7 @@
             }
             
             const customer = document.getElementById('posCustomer').value || 'Walk-in Customer';
+            const customerPhone = document.getElementById('posCustomerPhone').value || '';
             const discountPercent = parseFloat(document.getElementById('posDiscount').value) || 0;
             const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
             const discountAmount = (subtotal * discountPercent) / 100;
@@ -736,6 +644,7 @@
                 invoiceNo: invoiceNo,
                 date: new Date().toISOString(),
                 customer: customer,
+                customerPhone: customerPhone,
                 items: cart.map(item => ({ ...item })),
                 subtotal: subtotal,
                 discountPercent: discountPercent,
@@ -776,7 +685,7 @@
             const t = translations[currentLanguage];
             
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7">' + getTranslation('noInvoices') + '</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8">' + getTranslation('noInvoices') + '</td></tr>';
                 return;
             }
             
@@ -785,12 +694,12 @@
                     <td>${new Date(o.date).toLocaleDateString()}</td>
                     <td><strong>${o.invoiceNo}</strong></td>
                     <td>${o.customer}</td>
+                    <td>${o.customerPhone || '-'}</td>
                     <td>${o.items.length}</td>
                     <td>${formatCurrency(o.total)}</td>
                     <td style="color:#38ef7d">${formatCurrency(o.profit)}</td>
                     <td class="action-group">
                         <button class="monthly-view-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#3498db; border:none; color:white; cursor:pointer; border-radius:5px">${t.view}</button>
-                        <button class="monthly-download-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#11998e; border:none; color:white; cursor:pointer; border-radius:5px">${t.download}</button>
                         <button class="monthly-share-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#25d366; border:none; color:white; cursor:pointer; border-radius:5px">${t.share}</button>
                     </td>
                 </tr>
@@ -799,11 +708,8 @@
             document.querySelectorAll('.monthly-view-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => { e.stopPropagation(); viewInvoiceDetails(btn.getAttribute('data-invoice')); });
             });
-            document.querySelectorAll('.monthly-download-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => { e.stopPropagation(); downloadSingleInvoice(btn.getAttribute('data-invoice')); });
-            });
             document.querySelectorAll('.monthly-share-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => { e.stopPropagation(); sharePDFOnWhatsApp(btn.getAttribute('data-invoice')); });
+                btn.addEventListener('click', (e) => { e.stopPropagation(); sendWhatsAppToCustomer(btn.getAttribute('data-invoice')); });
             });
             document.querySelectorAll('#monthlyBody .clickable-row').forEach(row => {
                 row.addEventListener('click', () => viewInvoiceDetails(row.getAttribute('data-invoice')));
@@ -834,7 +740,7 @@
             const t = translations[currentLanguage];
             
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6">' + getTranslation('noInvoices') + '<td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7">' + getTranslation('noInvoices') + '</td></tr>';
                 return;
             }
             
@@ -843,13 +749,14 @@
                     <td><strong>${o.invoiceNo}</strong></td>
                     <td>${new Date(o.date).toLocaleDateString()}</td>
                     <td>${o.customer}</td>
-                    <td>${o.items.length} items}_
+                    <td>${o.customerPhone || '-'}</td>
+                    <td>${o.items.length} items）_
                     <td>${formatCurrency(o.total)}}_
                     <td class="action-group">
-                        <button class="view-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#3498db; border:none; color:white; cursor:pointer; border-radius:5px">👁️ ${t.view}</button>
-                        <button class="delete-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">🗑️ ${t.delete}</button>
-                        <button class="download-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#11998e; border:none; color:white; cursor:pointer; border-radius:5px">📄 ${t.download}</button>
-                        <button class="share-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#25d366; border:none; color:white; cursor:pointer; border-radius:5px">📱 ${t.share}</button>
+                        <button class="view-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#3498db; border:none; color:white; cursor:pointer; border-radius:5px">${t.view}</button>
+                        <button class="delete-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">${t.delete}</button>
+                        <button class="download-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#11998e; border:none; color:white; cursor:pointer; border-radius:5px">${t.download}</button>
+                        <button class="share-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#25d366; border:none; color:white; cursor:pointer; border-radius:5px">${t.share}</button>
                     }_
                 </tr>
             `).join('');
@@ -864,46 +771,22 @@
                 btn.addEventListener('click', () => downloadSingleInvoice(btn.getAttribute('data-invoice')));
             });
             document.querySelectorAll('.share-invoice-btn').forEach(btn => {
-                btn.addEventListener('click', () => sharePDFOnWhatsApp(btn.getAttribute('data-invoice')));
+                btn.addEventListener('click', () => sendWhatsAppToCustomer(btn.getAttribute('data-invoice')));
             });
         }
 
         function deleteInvoiceWithConfirm(invoiceNo) {
-            const confirmMsg = getTranslation('deleteConfirm');
-            if (confirm(confirmMsg)) {
-                const deletedInvoice = allOrders.find(o => o.invoiceNo === invoiceNo);
-                if (deletedInvoice) {
-                    deletedInvoicesHistory.push({ ...deletedInvoice, deletedAt: new Date() });
-                    allOrders = allOrders.filter(o => o.invoiceNo !== invoiceNo);
-                    saveOrders();
-                    updateAll();
-                    showToast(getTranslation('deleteSuccess'));
-                    
-                    setTimeout(() => {
-                        if (confirm(getTranslation('undoDelete') + '?')) {
-                            undoDeleteInvoice();
-                        }
-                    }, 1000);
-                }
-            }
-        }
-
-        function undoDeleteInvoice() {
-            if (deletedInvoicesHistory.length > 0) {
-                const lastDeleted = deletedInvoicesHistory.pop();
-                allOrders.push(lastDeleted);
-                allOrders.sort((a, b) => new Date(a.date) - new Date(b.date));
+            if (confirm(getTranslation('deleteConfirm'))) {
+                allOrders = allOrders.filter(o => o.invoiceNo !== invoiceNo);
                 saveOrders();
                 updateAll();
-                showToast(getTranslation('undoDeleteSuccess'));
-            } else {
-                showToast('No deleted invoice to restore');
+                showToast(getTranslation('deleteSuccess'));
             }
         }
 
         function generateProfessionalPDF(order) {
             const t = translations[currentLanguage];
-            const isRTL = (currentLanguage === 'ar' || currentLanguage === 'ur');
+            const isRTL = (currentLanguage === 'ar');
             
             let itemsHtml = '';
             order.items.forEach(item => {
@@ -921,8 +804,9 @@
             });
             
             const rtlStyle = isRTL ? 'direction: rtl; text-align: right;' : 'direction: ltr; text-align: left;';
+            const phoneDisplay = order.customerPhone ? order.customerPhone : '-';
             
-            const htmlContent = `
+            return `
                 <div style="font-family: 'Segoe UI', Arial, sans-serif; width: 100%; max-width: 1000px; margin: 0 auto; background: white; ${rtlStyle}">
                     <div style="background: #1a1a2e; color: #ffd700; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
                         <h1 style="color: #ffd700; margin: 0;">🏛️ TABUK MARBLE</h1>
@@ -934,18 +818,19 @@
                         <p style="margin: 8px 0;"><strong>${t.invoice}:</strong> ${order.invoiceNo}</p>
                         <p style="margin: 8px 0;"><strong>${t.date}:</strong> ${new Date(order.date).toLocaleString()}</p>
                         <p style="margin: 8px 0;"><strong>${t.customer}:</strong> ${order.customer}</p>
+                        <p style="margin: 8px 0;"><strong>${t.phone}:</strong> ${phoneDisplay}</p>
                     </div>
                     
                     <table style="width: 100%; border-collapse: collapse; margin: 15px; width: calc(100% - 30px);">
                         <thead>
                             <tr style="background: #1a1a2e; color: #ffd700;">
-                                <th style="padding: 12px; border: 1px solid #333; text-align: center; font-size: 12px;">${t.item}</th>
-                                <th style="padding: 12px; border: 1px solid #333; text-align: center; font-size: 12px;">${t.thick}</th>
-                                <th style="padding: 12px; border: 1px solid #333; text-align: center; font-size: 12px;">${t.width}</th>
-                                <th style="padding: 12px; border: 1px solid #333; text-align: center; font-size: 12px;">${t.length}</th>
-                                <th style="padding: 12px; border: 1px solid #333; text-align: center; font-size: 12px;">${t.area}</th>
-                                <th style="padding: 12px; border: 1px solid #333; text-align: center; font-size: 12px;">${t.price}</th>
-                                <th style="padding: 12px; border: 1px solid #333; text-align: center; font-size: 12px;">${t.total}</th>
+                                <th style="padding: 12px; border: 1px solid #333; text-align: center;">${t.item}</th>
+                                <th style="padding: 12px; border: 1px solid #333; text-align: center;">${t.thick}</th>
+                                <th style="padding: 12px; border: 1px solid #333; text-align: center;">${t.width}</th>
+                                <th style="padding: 12px; border: 1px solid #333; text-align: center;">${t.length}</th>
+                                <th style="padding: 12px; border: 1px solid #333; text-align: center;">${t.area}</th>
+                                <th style="padding: 12px; border: 1px solid #333; text-align: center;">${t.price}</th>
+                                <th style="padding: 12px; border: 1px solid #333; text-align: center;">${t.total}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -965,8 +850,6 @@
                     </div>
                 </div>
             `;
-            
-            return htmlContent;
         }
 
         function viewInvoiceDetails(invoiceNo) {
@@ -974,18 +857,18 @@
             if (!order) return;
             const modal = document.getElementById('invoiceModal');
             const detailsDiv = document.getElementById('invoiceDetails');
-            
-            const isRTL = (currentLanguage === 'ar' || currentLanguage === 'ur');
+            const t = translations[currentLanguage];
+            const isRTL = (currentLanguage === 'ar');
             const rtlStyle = isRTL ? 'direction: rtl; text-align: right;' : 'direction: ltr; text-align: left;';
             
             let itemsHtml = '<table style="width:100%; border-collapse:collapse; margin-top:10px;"><thead><tr style="background:#1a1a2e; color:#ffd700;">';
-            itemsHtml += `<th style="padding:10px;">${getTranslation('item')}</th>`;
-            itemsHtml += `<th style="padding:10px;">${getTranslation('thick')}</th>`;
-            itemsHtml += `<th style="padding:10px;">${getTranslation('width')}</th>`;
-            itemsHtml += `<th style="padding:10px;">${getTranslation('length')}</th>`;
-            itemsHtml += `<th style="padding:10px;">${getTranslation('area')}</th>`;
-            itemsHtml += `<th style="padding:10px;">${getTranslation('price')}</th>`;
-            itemsHtml += `<th style="padding:10px;">${getTranslation('total')}</th></tr></thead><tbody>`;
+            itemsHtml += `<th style="padding:10px;">${t.item}</th>`;
+            itemsHtml += `<th style="padding:10px;">${t.thick}</th>`;
+            itemsHtml += `<th style="padding:10px;">${t.width}</th>`;
+            itemsHtml += `<th style="padding:10px;">${t.length}</th>`;
+            itemsHtml += `<th style="padding:10px;">${t.area}</th>`;
+            itemsHtml += `<th style="padding:10px;">${t.price}</th>`;
+            itemsHtml += `<th style="padding:10px;">${t.total}</th></tr></thead><tbody>`;
             
             order.items.forEach(item => {
                 itemsHtml += `
@@ -1002,27 +885,30 @@
             });
             itemsHtml += '</tbody></table>';
             
+            const phoneDisplay = order.customerPhone ? order.customerPhone : '-';
+            
             detailsDiv.innerHTML = `
                 <div style="${rtlStyle}">
                     <div style="text-align:center; background:#1a1a2e; color:#ffd700; padding:15px; border-radius:10px; margin-bottom:20px">
                         <h2 style="color:#ffd700;">🏛️ TABUK MARBLE</h2>
-                        <p style="color:white">${getTranslation('company')}</p>
-                        <p style="color:#ccc; font-size:12px">${getTranslation('address')}</p>
+                        <p style="color:white">${t.company}</p>
+                        <p style="color:#ccc; font-size:12px">${t.address}</p>
                     </div>
                     <div style="border-top:2px solid #ffd700; padding:10px 0">
-                        <p><strong>${getTranslation('invoice')}:</strong> ${order.invoiceNo}</p>
-                        <p><strong>${getTranslation('date')}:</strong> ${new Date(order.date).toLocaleString()}</p>
-                        <p><strong>${getTranslation('customer')}:</strong> ${order.customer}</p>
+                        <p><strong>${t.invoice}:</strong> ${order.invoiceNo}</p>
+                        <p><strong>${t.date}:</strong> ${new Date(order.date).toLocaleString()}</p>
+                        <p><strong>${t.customer}:</strong> ${order.customer}</p>
+                        <p><strong>${t.phone}:</strong> ${phoneDisplay}</p>
                     </div>
                     ${itemsHtml}
                     <div style="text-align:right; margin-top:15px; padding-top:10px; border-top:2px solid #ffd700">
-                        <p><strong>${getTranslation('subtotal')}:</strong> ${formatCurrency(order.subtotal)}</p>
-                        <p><strong>${getTranslation('discount')}:</strong> ${order.discountPercent}% (-${formatCurrency(order.discountAmount)})</p>
-                        <h3 style="color:#11998e"><strong>${getTranslation('grandTotal')}:</strong> ${formatCurrency(order.total)}</h3>
+                        <p><strong>${t.subtotal}:</strong> ${formatCurrency(order.subtotal)}</p>
+                        <p><strong>${t.discount}:</strong> ${order.discountPercent}% (-${formatCurrency(order.discountAmount)})</p>
+                        <h3 style="color:#11998e"><strong>${t.grandTotal}:</strong> ${formatCurrency(order.total)}</h3>
                     </div>
                     <div style="text-align:center; margin-top:20px; font-size:11px; color:#666">
-                        <p>${getTranslation('thankYou')}</p>
-                        <p>${getTranslation('address')}</p>
+                        <p>${t.thankYou}</p>
+                        <p>${t.address}</p>
                     </div>
                 </div>
             `;
@@ -1033,124 +919,81 @@
         async function downloadSingleInvoice(invoiceNo) {
             const order = allOrders.find(o => o.invoiceNo === invoiceNo);
             if (!order) return;
-            await generateAndDownloadPDF(order);
-        }
-
-        async function generateAndDownloadPDF(order) {
+            
             const template = document.getElementById('pdfTemplate');
-            const htmlContent = generateProfessionalPDF(order);
-            template.innerHTML = htmlContent;
+            template.innerHTML = generateProfessionalPDF(order);
             
             try {
                 showToast('Generating PDF...');
-                const canvas = await html2canvas(template, {
-                    scale: 2,
-                    backgroundColor: '#ffffff',
-                    logging: false,
-                    useCORS: true
-                });
-                
+                const canvas = await html2canvas(template, { scale: 2, backgroundColor: '#ffffff', logging: false });
                 const imgData = canvas.toDataURL('image/png');
                 const { jsPDF } = window.jspdf;
                 const imgWidth = 190;
-                const pageHeight = 277;
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
                 let doc = new jsPDF('p', 'mm', 'a4');
-                let position = 0;
-                
-                doc.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                
-                if (imgHeight > pageHeight) {
-                    let heightLeft = imgHeight - pageHeight;
-                    position = -(pageHeight);
-                    while (heightLeft > 0) {
-                        doc.addPage();
-                        doc.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                        heightLeft -= pageHeight;
-                        position -= pageHeight;
-                    }
-                }
-                
+                doc.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight);
                 doc.save('TABUK_MARBLE_' + order.invoiceNo + '.pdf');
                 showToast('PDF Downloaded Successfully!');
-                return doc;
             } catch (error) {
-                console.error('PDF Error:', error);
                 showToast('Error generating PDF');
-                return null;
             }
         }
 
-        async function sharePDFOnWhatsApp(invoiceNo) {
+        async function sendWhatsAppToCustomer(invoiceNo) {
             const order = allOrders.find(o => o.invoiceNo === invoiceNo);
-            if (!order) {
-                showToast('Order not found');
+            if (!order) return;
+            
+            let customerPhone = order.customerPhone;
+            if (!customerPhone) {
+                showToast('No phone number found for this customer');
                 return;
             }
             
-            showToast('Generating PDF for WhatsApp...');
+            customerPhone = customerPhone.replace(/\D/g, '');
+            if (customerPhone.startsWith('0')) {
+                customerPhone = '966' + customerPhone.substring(1);
+            }
+            if (!customerPhone.startsWith('966')) {
+                customerPhone = '966' + customerPhone;
+            }
+            
+            const t = translations[currentLanguage];
+            const message = `🏛️ TABUK MARBLE - ${t.invoice} ${order.invoiceNo}%0A`;
+            message += `${t.customer}: ${order.customer}%0A`;
+            message += `${t.date}: ${new Date(order.date).toLocaleString()}%0A`;
+            message += `${t.grandTotal}: ${formatCurrency(order.total)}%0A`;
+            message += `%0A`;
+            message += `${t.thankYou}%0A`;
+            message += `${t.address}`;
             
             const template = document.getElementById('pdfTemplate');
-            const htmlContent = generateProfessionalPDF(order);
-            template.innerHTML = htmlContent;
+            template.innerHTML = generateProfessionalPDF(order);
             
             try {
-                const canvas = await html2canvas(template, {
-                    scale: 2,
-                    backgroundColor: '#ffffff',
-                    logging: false,
-                    useCORS: true
-                });
-                
+                showToast('Generating PDF for WhatsApp...');
+                const canvas = await html2canvas(template, { scale: 2, backgroundColor: '#ffffff', logging: false });
                 const imgData = canvas.toDataURL('image/png');
                 const { jsPDF } = window.jspdf;
                 const imgWidth = 190;
-                const pageHeight = 277;
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
                 let doc = new jsPDF('p', 'mm', 'a4');
-                let position = 0;
-                
-                doc.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                
-                if (imgHeight > pageHeight) {
-                    let heightLeft = imgHeight - pageHeight;
-                    position = -(pageHeight);
-                    while (heightLeft > 0) {
-                        doc.addPage();
-                        doc.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                        heightLeft -= pageHeight;
-                        position -= pageHeight;
-                    }
-                }
+                doc.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight);
                 
                 const pdfBlob = doc.output('blob');
                 const pdfUrl = URL.createObjectURL(pdfBlob);
-                
-                const t = translations[currentLanguage];
-                const message = `🏛️ TABUK MARBLE - ${t.invoice} ${order.invoiceNo}%0A`;
-                message += `${t.customer}: ${order.customer}%0A`;
-                message += `${t.grandTotal}: ${formatCurrency(order.total)}%0A`;
-                message += `%0A`;
-                message += `📄 PDF invoice has been generated and saved to your device.%0A`;
-                message += `Please check your downloads folder and share the PDF file.`;
-                
                 const link = document.createElement('a');
                 link.href = pdfUrl;
                 link.download = `TABUK_MARBLE_${order.invoiceNo}.pdf`;
                 link.click();
                 
                 setTimeout(() => {
-                    const whatsappUrl = `https://wa.me/${PHONE_NUMBER}?text=${message}`;
+                    const whatsappUrl = `https://wa.me/${customerPhone}?text=${message}`;
                     window.open(whatsappUrl, '_blank');
-                    showToast('PDF saved! Opening WhatsApp. Please attach the PDF from your downloads folder.');
+                    showToast('PDF saved! Opening WhatsApp to send to customer.');
                 }, 1000);
                 
-                setTimeout(() => {
-                    URL.revokeObjectURL(pdfUrl);
-                }, 5000);
-                
+                setTimeout(() => URL.revokeObjectURL(pdfUrl), 5000);
             } catch (error) {
-                console.error('PDF Error:', error);
                 showToast('Error generating PDF');
             }
         }
@@ -1162,16 +1005,14 @@
             if (!tbody) return;
             
             tbody.innerHTML = filtered.map(p => `
-                <table>
+                <tr>
                     <td>${p.name}</td>
                     <td>${p.thickness}cm}_
                     <td>${p.width}m}_
                     <td>${p.length}m}_
                     <td>${formatCurrency(p.sellingPrice)}}_
                     <td>${formatCurrency(p.costPrice)}}_
-                    <td class="action-group">
-                        <button class="delete-product-btn" data-id="${p.id}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">Delete</button>
-                    }_
+                    <td><button class="delete-product-btn" data-id="${p.id}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">Delete</button></td>
                 </tr>
             `).join('');
             
@@ -1179,38 +1020,14 @@
                 btn.addEventListener('click', () => {
                     const id = parseInt(btn.getAttribute('data-id'));
                     if (confirm('Delete this product?')) {
-                        const deletedProduct = products.find(p => p.id === id);
-                        if (deletedProduct) {
-                            deletedProductsHistory.push({ ...deletedProduct, deletedAt: new Date() });
-                            products = products.filter(p => p.id !== id);
-                            saveProducts();
-                            displayProducts();
-                            loadInventory();
-                            showToast('Product deleted');
-                            
-                            setTimeout(() => {
-                                if (confirm('Undo delete? Click OK to restore')) {
-                                    undoDeleteProduct();
-                                }
-                            }, 1000);
-                        }
+                        products = products.filter(p => p.id !== id);
+                        saveProducts();
+                        displayProducts();
+                        loadInventory();
+                        showToast('Product deleted');
                     }
                 });
             });
-        }
-
-        function undoDeleteProduct() {
-            if (deletedProductsHistory.length > 0) {
-                const lastDeleted = deletedProductsHistory.pop();
-                products.push(lastDeleted);
-                products.sort((a, b) => a.id - b.id);
-                saveProducts();
-                displayProducts();
-                loadInventory();
-                showToast('Product restored!');
-            } else {
-                showToast('No deleted product to restore');
-            }
         }
 
         function showAddProductModal() {
@@ -1262,7 +1079,8 @@
             if (document.querySelector('.cart-panel h3')) document.querySelector('.cart-panel h3').innerHTML = t.shoppingCart;
             const labels = document.querySelectorAll('.form-group label');
             if (labels[0]) labels[0].innerHTML = t.customerName + ':';
-            if (labels[1]) labels[1].innerHTML = t.discount + ':';
+            if (labels[1]) labels[1].innerHTML = t.customerPhone + ':';
+            if (labels[2]) labels[2].innerHTML = t.discount + ':';
             if (document.getElementById('confirmOrderBtn')) document.getElementById('confirmOrderBtn').innerHTML = t.confirmOrder;
             if (document.getElementById('clearCartBtn')) document.getElementById('clearCartBtn').innerHTML = t.clearCart;
             if (document.getElementById('undoCartBtn')) document.getElementById('undoCartBtn').innerHTML = t.undo;
@@ -1272,19 +1090,15 @@
             if (statHeaders[1]) statHeaders[1].innerHTML = t.totalOrders;
             if (statHeaders[2]) statHeaders[2].innerHTML = t.totalProfit;
             if (document.getElementById('addProductBtn')) document.getElementById('addProductBtn').innerHTML = t.addProduct;
-            if (document.querySelector('#monthlyTab .report-panel h3')) 
-                document.querySelector('#monthlyTab .report-panel h3').innerHTML = t.monthlyTransactions;
-            if (document.querySelector('#invoicesTab .report-panel h3'))
-                document.querySelector('#invoicesTab .report-panel h3').innerHTML = t.allInvoices;
             if (document.getElementById('closeModalBtn')) document.getElementById('closeModalBtn').innerHTML = 'Close';
             if (document.getElementById('printInvoiceBtn')) document.getElementById('printInvoiceBtn').innerHTML = 'Print';
-            if (document.getElementById('shareWhatsAppBtn')) document.getElementById('shareWhatsAppBtn').innerHTML = 'Share PDF on WhatsApp';
+            if (document.getElementById('shareWhatsAppBtn')) document.getElementById('shareWhatsAppBtn').innerHTML = 'Send via WhatsApp';
         }
 
         function setLanguage(lang) {
             currentLanguage = lang;
             updateUILanguage();
-            showToast(lang === 'en' ? 'English selected' : (lang === 'ur' ? 'Urdu selected' : 'تم اختيار العربية'));
+            showToast(lang === 'en' ? 'English selected' : 'تم اختيار العربية');
         }
 
         function switchTab(tabName) {
@@ -1303,6 +1117,7 @@
             }
             
             const customer = document.getElementById('posCustomer').value || 'Walk-in Customer';
+            const customerPhone = document.getElementById('posCustomerPhone').value || '';
             const discountPercent = parseFloat(document.getElementById('posDiscount').value) || 0;
             const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
             const discountAmount = (subtotal * discountPercent) / 100;
@@ -1314,6 +1129,7 @@
                 invoiceNo: invoiceNo,
                 date: new Date().toISOString(),
                 customer: customer,
+                customerPhone: customerPhone,
                 items: cart.map(item => ({ ...item })),
                 subtotal: subtotal,
                 discountPercent: discountPercent,
@@ -1323,7 +1139,23 @@
                 profit: total - cost
             };
             
-            await generateAndDownloadPDF(tempOrder);
+            const template = document.getElementById('pdfTemplate');
+            template.innerHTML = generateProfessionalPDF(tempOrder);
+            
+            try {
+                showToast('Generating PDF...');
+                const canvas = await html2canvas(template, { scale: 2, backgroundColor: '#ffffff', logging: false });
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const imgWidth = 190;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let doc = new jsPDF('p', 'mm', 'a4');
+                doc.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight);
+                doc.save('TABUK_MARBLE_' + invoiceNo + '.pdf');
+                showToast('PDF Downloaded Successfully!');
+            } catch (error) {
+                showToast('Error generating PDF');
+            }
         }
 
         function closeModal() { document.getElementById('invoiceModal').style.display = 'none'; }
@@ -1348,7 +1180,7 @@
         
         function shareCurrentInvoice() {
             if (window.currentInvoice) {
-                sharePDFOnWhatsApp(window.currentInvoice.invoiceNo);
+                sendWhatsAppToCustomer(window.currentInvoice.invoiceNo);
             } else {
                 showToast('No invoice selected');
             }
