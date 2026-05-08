@@ -205,17 +205,76 @@
         @media (max-width: 768px) { .pos-grid { grid-template-columns: 1fr; } }
         .action-group { display: flex; gap: 5px; flex-wrap: wrap; }
         
-        .pdf-invoice-template {
-            position: fixed;
-            top: -9999px;
-            left: -9999px;
-            width: 800px;
+        /* Professional PDF Template Styles */
+        .pdf-invoice-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
             background: white;
-            padding: 30px;
             font-family: 'Segoe UI', Arial, sans-serif;
         }
-        .rtl-mode { direction: rtl; text-align: right; }
-        .ltr-mode { direction: ltr; text-align: left; }
+        .pdf-header {
+            background: #1a1a2e;
+            color: #ffd700;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .pdf-header h1 {
+            color: #ffd700;
+            font-size: 28px;
+            margin: 0;
+        }
+        .pdf-header p {
+            color: white;
+            margin: 5px 0;
+        }
+        .pdf-info {
+            padding: 15px;
+            border: 1px solid #ddd;
+            margin: 15px 0;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .pdf-info p {
+            margin: 8px 0;
+        }
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .pdf-table th {
+            background: #1a1a2e;
+            color: #ffd700;
+            padding: 12px;
+            border: 1px solid #333;
+            text-align: center;
+            font-size: 12px;
+        }
+        .pdf-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+            font-size: 11px;
+        }
+        .pdf-total {
+            text-align: right;
+            margin-top: 20px;
+            padding: 15px;
+            border-top: 2px solid #ffd700;
+        }
+        .pdf-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            font-size: 10px;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+        .rtl-table th, .rtl-table td {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -319,7 +378,7 @@
                 </div>
                 <div style="overflow-x: auto; max-height: 400px;">
                     <table id="monthlyTable">
-                        <thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Items</th><th>Total</th><th>Profit</th><th>Actions</th></td></thead>
+                        <thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Items</th><th>Total</th><th>Profit</th><th>Actions</th></tr></thead>
                         <tbody id="monthlyBody"></tbody>
                     </table>
                 </div>
@@ -378,7 +437,7 @@
         </div>
     </div>
 
-    <div id="pdfTemplate" class="pdf-invoice-template"></div>
+    <div id="pdfTemplate" style="position: fixed; top: -9999px; left: -9999px;"></div>
 
     <script>
         let cart = [];
@@ -400,8 +459,8 @@
                 confirmOrder: "Confirm Order", clearCart: "Clear Cart", undo: "Undo",
                 downloadInvoice: "Download Invoice", totalSales: "Total Sales", totalOrders: "Total Orders",
                 totalProfit: "Total Profit", addProduct: "Add New Product", search: "Search",
-                item: "Item", thick: "Thick(cm)", width: "W(m)", length: "L(m)", area: "sqm",
-                price: "Price", total: "Total", actions: "Actions", date: "Date",
+                item: "Item", thick: "Thick(cm)", width: "W(m)", length: "L(m)", area: "Area(sqm)",
+                price: "Price/sqm", total: "Total", actions: "Actions", date: "Date",
                 invoice: "Invoice", customer: "Customer", items: "Items", profit: "Profit",
                 revenue: "Total Revenue", cost: "Total Cost", netProfit: "Net Profit",
                 margin: "Profit Margin", thankYou: "Thank you for choosing TABUK MARBLE!",
@@ -422,7 +481,7 @@
                 downloadInvoice: "انوائس ڈاؤن لوڈ", totalSales: "کل فروخت", totalOrders: "کل آرڈرز",
                 totalProfit: "کل منافع", addProduct: "نیا پروڈکٹ", search: "تلاش کریں",
                 item: "آئٹم", thick: "موٹائی(س م)", width: "چوڑائی(م)", length: "لمبائی(م)", area: "رقبہ",
-                price: "قیمت", total: "کل", actions: "اعمال", date: "تاریخ",
+                price: "قیمت/مربع", total: "کل", actions: "اعمال", date: "تاریخ",
                 invoice: "انوائس", customer: "گاہک", items: "آئٹمز", profit: "منافع",
                 revenue: "کل آمدنی", cost: "کل لاگت", netProfit: "خالص منافع",
                 margin: "منافع مارجن", thankYou: "تبوک ماربل کا انتخاب کرنے کا شکریہ!",
@@ -443,7 +502,7 @@
                 downloadInvoice: "تحميل الفاتورة", totalSales: "إجمالي المبيعات", totalOrders: "إجمالي الطلبات",
                 totalProfit: "إجمالي الربح", addProduct: "إضافة منتج", search: "بحث",
                 item: "العنصر", thick: "سمك(سم)", width: "عرض(م)", length: "طول(م)", area: "مساحة",
-                price: "السعر", total: "المجموع", actions: "الإجراءات", date: "التاريخ",
+                price: "السعر/متر", total: "المجموع", actions: "الإجراءات", date: "التاريخ",
                 invoice: "الفاتورة", customer: "العميل", items: "العناصر", profit: "الربح",
                 revenue: "إجمالي الإيرادات", cost: "إجمالي التكلفة", netProfit: "صافي الربح",
                 margin: "هامش الربح", thankYou: "شكرا لاختيارك تابوك ماربل!",
@@ -717,7 +776,7 @@
             const t = translations[currentLanguage];
             
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7">' + getTranslation('noInvoices') + '</tr></tr>';
+                tbody.innerHTML = '<tr><td colspan="7">' + getTranslation('noInvoices') + '</td></tr>';
                 return;
             }
             
@@ -775,7 +834,7 @@
             const t = translations[currentLanguage];
             
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6">' + getTranslation('noInvoices') + '</tr></tr>';
+                tbody.innerHTML = '<tr><td colspan="6">' + getTranslation('noInvoices') + '<td></tr>';
                 return;
             }
             
@@ -784,14 +843,14 @@
                     <td><strong>${o.invoiceNo}</strong></td>
                     <td>${new Date(o.date).toLocaleDateString()}</td>
                     <td>${o.customer}</td>
-                    <td>${o.items.length} items</td>
-                    <td>${formatCurrency(o.total)}</td>
+                    <td>${o.items.length} items}_
+                    <td>${formatCurrency(o.total)}}_
                     <td class="action-group">
                         <button class="view-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#3498db; border:none; color:white; cursor:pointer; border-radius:5px">👁️ ${t.view}</button>
                         <button class="delete-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">🗑️ ${t.delete}</button>
                         <button class="download-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#11998e; border:none; color:white; cursor:pointer; border-radius:5px">📄 ${t.download}</button>
                         <button class="share-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#25d366; border:none; color:white; cursor:pointer; border-radius:5px">📱 ${t.share}</button>
-                    </td>
+                    }_
                 </tr>
             `).join('');
             
@@ -842,59 +901,72 @@
             }
         }
 
-        function generateInvoiceHTML(order) {
+        function generateProfessionalPDF(order) {
             const t = translations[currentLanguage];
-            let itemsHtml = `<table style="width:100%; margin-top:10px; border-collapse:collapse">
-                <tr style="background:#1a1a2e; color:#ffd700">
-                    <th style="padding:10px">${t.item}</th>
-                    <th style="padding:10px">${t.thick}</th>
-                    <th style="padding:10px">${t.width}</th>
-                    <th style="padding:10px">${t.length}</th>
-                    <th style="padding:10px">${t.area}</th>
-                    <th style="padding:10px">${t.price}</th>
-                    <th style="padding:10px">${t.total}</th>
-                </tr>`;
+            const isRTL = (currentLanguage === 'ar' || currentLanguage === 'ur');
+            
+            let itemsHtml = '';
             order.items.forEach(item => {
                 itemsHtml += `
-                    <tr style="border-bottom:1px solid #ddd">
-                        <td style="padding:8px">${item.name}</td>
-                        <td style="padding:8px">${item.thickness}cm</td>
-                        <td style="padding:8px">${item.width}m</td>
-                        <td style="padding:8px">${item.length}m</td>
-                        <td style="padding:8px">${item.area} sqm</td>
-                        <td style="padding:8px">${formatCurrency(item.sellingPrice)}</td>
-                        <td style="padding:8px">${formatCurrency(item.total)}</td>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${item.name}</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${item.thickness} cm</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${item.width} m</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${item.length} m</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${item.area} sqm</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${formatCurrency(item.sellingPrice)}</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${formatCurrency(item.total)}</td>
                     </tr>
                 `;
             });
-            itemsHtml += '</table>';
             
-            const dirClass = (currentLanguage === 'ar' || currentLanguage === 'ur') ? 'rtl-mode' : 'ltr-mode';
+            const rtlStyle = isRTL ? 'direction: rtl; text-align: right;' : 'direction: ltr; text-align: left;';
             
-            return `
-                <div class="${dirClass}" style="font-family: 'Segoe UI', Arial, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; padding: 20px;">
-                    <div style="text-align:center; background:#1a1a2e; color:#ffd700; padding:20px; border-radius:10px; margin-bottom:20px">
-                        <h1 style="color:#ffd700; margin:0">🏛️ TABUK MARBLE</h1>
-                        <p style="color:white; margin:5px 0">${t.company}</p>
-                        <p style="color:#ccc; font-size:12px; margin:0">${t.address}</p>
+            const htmlContent = `
+                <div style="font-family: 'Segoe UI', Arial, sans-serif; width: 100%; max-width: 1000px; margin: 0 auto; background: white; ${rtlStyle}">
+                    <div style="background: #1a1a2e; color: #ffd700; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
+                        <h1 style="color: #ffd700; margin: 0;">🏛️ TABUK MARBLE</h1>
+                        <p style="color: white; margin: 5px 0;">${t.company}</p>
+                        <p style="color: #ccc; font-size: 12px; margin: 0;">${t.address}</p>
                     </div>
-                    <div style="border-top:2px solid #ffd700; padding:10px 0; margin:10px 0">
-                        <p><strong>${t.invoice}:</strong> ${order.invoiceNo}</p>
-                        <p><strong>${t.date}:</strong> ${new Date(order.date).toLocaleString()}</p>
-                        <p><strong>${t.customer}:</strong> ${order.customer}</p>
+                    
+                    <div style="padding: 15px; border: 1px solid #ddd; margin: 15px; border-radius: 5px; background: #f9f9f9;">
+                        <p style="margin: 8px 0;"><strong>${t.invoice}:</strong> ${order.invoiceNo}</p>
+                        <p style="margin: 8px 0;"><strong>${t.date}:</strong> ${new Date(order.date).toLocaleString()}</p>
+                        <p style="margin: 8px 0;"><strong>${t.customer}:</strong> ${order.customer}</p>
                     </div>
-                    ${itemsHtml}
-                    <div style="text-align:right; margin-top:20px; padding-top:10px; border-top:2px solid #ffd700">
-                        <p><strong>${t.subtotal}:</strong> ${formatCurrency(order.subtotal)}</p>
-                        <p><strong>${t.discount}:</strong> ${order.discountPercent}% (-${formatCurrency(order.discountAmount)})</p>
-                        <h3 style="color:#11998e; margin:5px 0"><strong>${t.grandTotal}:</strong> ${formatCurrency(order.total)}</h3>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin: 15px; width: calc(100% - 30px);">
+                        <thead>
+                            <tr style="background: #1a1a2e; color: #ffd700;">
+                                <th style="padding: 12px; border: 1px solid #333; text-align: center; font-size: 12px;">${t.item}</th>
+                                <th style="padding: 12px; border: 1px solid #333; text-align: center; font-size: 12px;">${t.thick}</th>
+                                <th style="padding: 12px; border: 1px solid #333; text-align: center; font-size: 12px;">${t.width}</th>
+                                <th style="padding: 12px; border: 1px solid #333; text-align: center; font-size: 12px;">${t.length}</th>
+                                <th style="padding: 12px; border: 1px solid #333; text-align: center; font-size: 12px;">${t.area}</th>
+                                <th style="padding: 12px; border: 1px solid #333; text-align: center; font-size: 12px;">${t.price}</th>
+                                <th style="padding: 12px; border: 1px solid #333; text-align: center; font-size: 12px;">${t.total}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsHtml}
+                        </tbody>
+                    </table>
+                    
+                    <div style="text-align: right; margin: 15px; padding: 15px; border-top: 2px solid #ffd700;">
+                        <p style="margin: 5px 0;"><strong>${t.subtotal}:</strong> ${formatCurrency(order.subtotal)}</p>
+                        <p style="margin: 5px 0;"><strong>${t.discount}:</strong> ${order.discountPercent}% (-${formatCurrency(order.discountAmount)})</p>
+                        <h3 style="color: #11998e; margin: 10px 0;"><strong>${t.grandTotal}:</strong> ${formatCurrency(order.total)}</h3>
                     </div>
-                    <div style="text-align:center; margin-top:30px; font-size:11px; color:#666">
+                    
+                    <div style="text-align: center; margin-top: 30px; padding: 15px; font-size: 10px; color: #666; border-top: 1px solid #ddd;">
                         <p>${t.thankYou}</p>
                         <p>${t.address}</p>
                     </div>
                 </div>
             `;
+            
+            return htmlContent;
         }
 
         function viewInvoiceDetails(invoiceNo) {
@@ -902,7 +974,58 @@
             if (!order) return;
             const modal = document.getElementById('invoiceModal');
             const detailsDiv = document.getElementById('invoiceDetails');
-            detailsDiv.innerHTML = generateInvoiceHTML(order);
+            
+            const isRTL = (currentLanguage === 'ar' || currentLanguage === 'ur');
+            const rtlStyle = isRTL ? 'direction: rtl; text-align: right;' : 'direction: ltr; text-align: left;';
+            
+            let itemsHtml = '<table style="width:100%; border-collapse:collapse; margin-top:10px;"><thead><tr style="background:#1a1a2e; color:#ffd700;">';
+            itemsHtml += `<th style="padding:10px;">${getTranslation('item')}</th>`;
+            itemsHtml += `<th style="padding:10px;">${getTranslation('thick')}</th>`;
+            itemsHtml += `<th style="padding:10px;">${getTranslation('width')}</th>`;
+            itemsHtml += `<th style="padding:10px;">${getTranslation('length')}</th>`;
+            itemsHtml += `<th style="padding:10px;">${getTranslation('area')}</th>`;
+            itemsHtml += `<th style="padding:10px;">${getTranslation('price')}</th>`;
+            itemsHtml += `<th style="padding:10px;">${getTranslation('total')}</th></tr></thead><tbody>`;
+            
+            order.items.forEach(item => {
+                itemsHtml += `
+                    <tr style="border-bottom:1px solid #ddd;">
+                        <td style="padding:8px;">${item.name}</td>
+                        <td style="padding:8px;">${item.thickness}cm</td>
+                        <td style="padding:8px;">${item.width}m</td>
+                        <td style="padding:8px;">${item.length}m</td>
+                        <td style="padding:8px;">${item.area} sqm</td>
+                        <td style="padding:8px;">${formatCurrency(item.sellingPrice)}</td>
+                        <td style="padding:8px;">${formatCurrency(item.total)}</td>
+                    </tr>
+                `;
+            });
+            itemsHtml += '</tbody></table>';
+            
+            detailsDiv.innerHTML = `
+                <div style="${rtlStyle}">
+                    <div style="text-align:center; background:#1a1a2e; color:#ffd700; padding:15px; border-radius:10px; margin-bottom:20px">
+                        <h2 style="color:#ffd700;">🏛️ TABUK MARBLE</h2>
+                        <p style="color:white">${getTranslation('company')}</p>
+                        <p style="color:#ccc; font-size:12px">${getTranslation('address')}</p>
+                    </div>
+                    <div style="border-top:2px solid #ffd700; padding:10px 0">
+                        <p><strong>${getTranslation('invoice')}:</strong> ${order.invoiceNo}</p>
+                        <p><strong>${getTranslation('date')}:</strong> ${new Date(order.date).toLocaleString()}</p>
+                        <p><strong>${getTranslation('customer')}:</strong> ${order.customer}</p>
+                    </div>
+                    ${itemsHtml}
+                    <div style="text-align:right; margin-top:15px; padding-top:10px; border-top:2px solid #ffd700">
+                        <p><strong>${getTranslation('subtotal')}:</strong> ${formatCurrency(order.subtotal)}</p>
+                        <p><strong>${getTranslation('discount')}:</strong> ${order.discountPercent}% (-${formatCurrency(order.discountAmount)})</p>
+                        <h3 style="color:#11998e"><strong>${getTranslation('grandTotal')}:</strong> ${formatCurrency(order.total)}</h3>
+                    </div>
+                    <div style="text-align:center; margin-top:20px; font-size:11px; color:#666">
+                        <p>${getTranslation('thankYou')}</p>
+                        <p>${getTranslation('address')}</p>
+                    </div>
+                </div>
+            `;
             modal.style.display = 'flex';
             window.currentInvoice = order;
         }
@@ -914,59 +1037,9 @@
         }
 
         async function generateAndDownloadPDF(order) {
-            const t = translations[currentLanguage];
             const template = document.getElementById('pdfTemplate');
-            const dirClass = (currentLanguage === 'ar' || currentLanguage === 'ur') ? 'rtl-mode' : 'ltr-mode';
-            
-            let itemsHtml = `<table style="width:100%; margin-top:10px; border-collapse:collapse">
-                <tr style="background:#1a1a2e; color:#ffd700">
-                    <th style="padding:10px">${t.item}</th>
-                    <th style="padding:10px">${t.thick}</th>
-                    <th style="padding:10px">${t.width}</th>
-                    <th style="padding:10px">${t.length}</th>
-                    <th style="padding:10px">${t.area}</th>
-                    <th style="padding:10px">${t.price}</th>
-                    <th style="padding:10px">${t.total}</th>
-                </table>`;
-            order.items.forEach(item => {
-                itemsHtml += `
-                    <tr style="border-bottom:1px solid #ddd">
-                        <td style="padding:8px">${item.name}</td>
-                        <td style="padding:8px">${item.thickness}cm</td>
-                        <td style="padding:8px">${item.width}m</td>
-                        <td style="padding:8px">${item.length}m</td>
-                        <td style="padding:8px">${item.area} sqm</td>
-                        <td style="padding:8px">${formatCurrency(item.sellingPrice)}</td>
-                        <td style="padding:8px">${formatCurrency(item.total)}</td>
-                    </tr>
-                `;
-            });
-            itemsHtml += '</table>';
-            
-            template.innerHTML = `
-                <div class="${dirClass}" style="font-family: 'Segoe UI', Arial, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; padding: 20px; background: white;">
-                    <div style="text-align:center; background:#1a1a2e; color:#ffd700; padding:20px; border-radius:10px; margin-bottom:20px">
-                        <h1 style="color:#ffd700; margin:0">🏛️ TABUK MARBLE</h1>
-                        <p style="color:white; margin:5px 0">${t.company}</p>
-                        <p style="color:#ccc; font-size:12px; margin:0">${t.address}</p>
-                    </div>
-                    <div style="border-top:2px solid #ffd700; padding:10px 0; margin:10px 0">
-                        <p><strong>${t.invoice}:</strong> ${order.invoiceNo}</p>
-                        <p><strong>${t.date}:</strong> ${new Date(order.date).toLocaleString()}</p>
-                        <p><strong>${t.customer}:</strong> ${order.customer}</p>
-                    </div>
-                    ${itemsHtml}
-                    <div style="text-align:right; margin-top:20px; padding-top:10px; border-top:2px solid #ffd700">
-                        <p><strong>${t.subtotal}:</strong> ${formatCurrency(order.subtotal)}</p>
-                        <p><strong>${t.discount}:</strong> ${order.discountPercent}% (-${formatCurrency(order.discountAmount)})</p>
-                        <h3 style="color:#11998e; margin:5px 0"><strong>${t.grandTotal}:</strong> ${formatCurrency(order.total)}</h3>
-                    </div>
-                    <div style="text-align:center; margin-top:30px; font-size:11px; color:#666">
-                        <p>${t.thankYou}</p>
-                        <p>${t.address}</p>
-                    </div>
-                </div>
-            `;
+            const htmlContent = generateProfessionalPDF(order);
+            template.innerHTML = htmlContent;
             
             try {
                 showToast('Generating PDF...');
@@ -999,7 +1072,7 @@
                 }
                 
                 doc.save('TABUK_MARBLE_' + order.invoiceNo + '.pdf');
-                showToast('PDF Downloaded!');
+                showToast('PDF Downloaded Successfully!');
                 return doc;
             } catch (error) {
                 console.error('PDF Error:', error);
@@ -1017,59 +1090,9 @@
             
             showToast('Generating PDF for WhatsApp...');
             
-            const t = translations[currentLanguage];
             const template = document.getElementById('pdfTemplate');
-            const dirClass = (currentLanguage === 'ar' || currentLanguage === 'ur') ? 'rtl-mode' : 'ltr-mode';
-            
-            let itemsHtml = `<table style="width:100%; margin-top:10px; border-collapse:collapse">
-                <tr style="background:#1a1a2e; color:#ffd700">
-                    <th style="padding:10px">${t.item}</th>
-                    <th style="padding:10px">${t.thick}</th>
-                    <th style="padding:10px">${t.width}</th>
-                    <th style="padding:10px">${t.length}</th>
-                    <th style="padding:10px">${t.area}</th>
-                    <th style="padding:10px">${t.price}</th>
-                    <th style="padding:10px">${t.total}</th>
-                </tr>`;
-            order.items.forEach(item => {
-                itemsHtml += `
-                    <tr style="border-bottom:1px solid #ddd">
-                        <td style="padding:8px">${item.name}</td>
-                        <td style="padding:8px">${item.thickness}cm</td>
-                        <td style="padding:8px">${item.width}m</td>
-                        <td style="padding:8px">${item.length}m</td>
-                        <td style="padding:8px">${item.area} sqm</td>
-                        <td style="padding:8px">${formatCurrency(item.sellingPrice)}</td>
-                        <td style="padding:8px">${formatCurrency(item.total)}</td>
-                    </tr>
-                `;
-            });
-            itemsHtml += '</table>';
-            
-            template.innerHTML = `
-                <div class="${dirClass}" style="font-family: 'Segoe UI', Arial, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; padding: 20px; background: white;">
-                    <div style="text-align:center; background:#1a1a2e; color:#ffd700; padding:20px; border-radius:10px; margin-bottom:20px">
-                        <h1 style="color:#ffd700; margin:0">🏛️ TABUK MARBLE</h1>
-                        <p style="color:white; margin:5px 0">${t.company}</p>
-                        <p style="color:#ccc; font-size:12px; margin:0">${t.address}</p>
-                    </div>
-                    <div style="border-top:2px solid #ffd700; padding:10px 0; margin:10px 0">
-                        <p><strong>${t.invoice}:</strong> ${order.invoiceNo}</p>
-                        <p><strong>${t.date}:</strong> ${new Date(order.date).toLocaleString()}</p>
-                        <p><strong>${t.customer}:</strong> ${order.customer}</p>
-                    </div>
-                    ${itemsHtml}
-                    <div style="text-align:right; margin-top:20px; padding-top:10px; border-top:2px solid #ffd700">
-                        <p><strong>${t.subtotal}:</strong> ${formatCurrency(order.subtotal)}</p>
-                        <p><strong>${t.discount}:</strong> ${order.discountPercent}% (-${formatCurrency(order.discountAmount)})</p>
-                        <h3 style="color:#11998e; margin:5px 0"><strong>${t.grandTotal}:</strong> ${formatCurrency(order.total)}</h3>
-                    </div>
-                    <div style="text-align:center; margin-top:30px; font-size:11px; color:#666">
-                        <p>${t.thankYou}</p>
-                        <p>${t.address}</p>
-                    </div>
-                </div>
-            `;
+            const htmlContent = generateProfessionalPDF(order);
+            template.innerHTML = htmlContent;
             
             try {
                 const canvas = await html2canvas(template, {
@@ -1100,25 +1123,17 @@
                     }
                 }
                 
-                // Convert PDF to Blob and create shareable URL
                 const pdfBlob = doc.output('blob');
-                const pdfFile = new File([pdfBlob], `TABUK_MARBLE_${order.invoiceNo}.pdf`, { type: 'application/pdf' });
-                
-                // Create a temporary URL for the PDF
                 const pdfUrl = URL.createObjectURL(pdfBlob);
                 
-                // Create message with PDF link (since WhatsApp Web doesn't support direct file sharing via URL)
-                const message = `🏛️ TABUK MARBLE - Invoice ${order.invoiceNo}%0A`;
+                const t = translations[currentLanguage];
+                const message = `🏛️ TABUK MARBLE - ${t.invoice} ${order.invoiceNo}%0A`;
                 message += `${t.customer}: ${order.customer}%0A`;
                 message += `${t.grandTotal}: ${formatCurrency(order.total)}%0A`;
                 message += `%0A`;
-                message += `📄 PDF Invoice is attached below. Please download and view.%0A`;
-                message += `%0A`;
-                message += `${t.thankYou}%0A`;
-                message += `${t.address}`;
+                message += `📄 PDF invoice has been generated and saved to your device.%0A`;
+                message += `Please check your downloads folder and share the PDF file.`;
                 
-                // For WhatsApp Web/Desktop, we need to use a different approach
-                // Create a download link and inform user
                 const link = document.createElement('a');
                 link.href = pdfUrl;
                 link.download = `TABUK_MARBLE_${order.invoiceNo}.pdf`;
@@ -1127,17 +1142,16 @@
                 setTimeout(() => {
                     const whatsappUrl = `https://wa.me/${PHONE_NUMBER}?text=${message}`;
                     window.open(whatsappUrl, '_blank');
-                    showToast('PDF saved! Opening WhatsApp. Please attach the PDF file from your downloads folder.');
+                    showToast('PDF saved! Opening WhatsApp. Please attach the PDF from your downloads folder.');
                 }, 1000);
                 
-                // Clean up URL object after 5 seconds
                 setTimeout(() => {
                     URL.revokeObjectURL(pdfUrl);
                 }, 5000);
                 
             } catch (error) {
                 console.error('PDF Error:', error);
-                showToast('Error generating PDF for WhatsApp');
+                showToast('Error generating PDF');
             }
         }
 
@@ -1148,16 +1162,16 @@
             if (!tbody) return;
             
             tbody.innerHTML = filtered.map(p => `
-                <tr>
+                <table>
                     <td>${p.name}</td>
-                    <td>${p.thickness}cm</td>
-                    <td>${p.width}m</td>
-                    <td>${p.length}m</td>
-                    <td>${formatCurrency(p.sellingPrice)}</td>
-                    <td>${formatCurrency(p.costPrice)}</td>
+                    <td>${p.thickness}cm}_
+                    <td>${p.width}m}_
+                    <td>${p.length}m}_
+                    <td>${formatCurrency(p.sellingPrice)}}_
+                    <td>${formatCurrency(p.costPrice)}}_
                     <td class="action-group">
                         <button class="delete-product-btn" data-id="${p.id}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">Delete</button>
-                    </td>
+                    }_
                 </tr>
             `).join('');
             
