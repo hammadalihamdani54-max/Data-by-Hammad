@@ -174,9 +174,9 @@
             background: white;
             padding: 25px;
             border-radius: 10px;
-            max-width: 800px;
-            width: 90%;
-            max-height: 80vh;
+            max-width: 900px;
+            width: 95%;
+            max-height: 85vh;
             overflow-y: auto;
         }
         .toast {
@@ -197,7 +197,10 @@
             to { transform: translateX(0); }
         }
         @media (max-width: 768px) { .pos-grid { grid-template-columns: 1fr; } }
-        .action-group { display: flex; gap: 5px; flex-wrap: wrap; }
+        .action-group { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
+        .arabic-number {
+            font-family: 'Noto Sans Arabic', 'Segoe UI', Arial, sans-serif;
+        }
     </style>
 </head>
 <body>
@@ -344,7 +347,7 @@
                 </div>
                 <div style="overflow-x: auto; max-height: 500px;">
                     <table id="invoicesTable">
-                        <thead><td><th>Invoice</th><th>Date</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Actions</th></tr></thead>
+                        <thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Actions</th></tr></thead>
                         <tbody id="invoicesBody"></tbody>
                     </table>
                 </div>
@@ -363,7 +366,7 @@
         </div>
     </div>
 
-    <div id="pdfTemplate" style="position: fixed; top: -9999px; left: -9999px;"></div>
+    <div id="pdfTemplate" style="position: fixed; top: -9999px; left: -9999px; width: 800px; background: white;"></div>
 
     <script>
         let cart = [];
@@ -373,9 +376,43 @@
         let currentLanguage = 'en';
         let actionHistory = [];
 
-        // Correct phone number format
-        const COMPANY_PHONE_DISPLAY = '+966 59 807 4287';
-        const COMPANY_PHONE_RAW = '966598074287';
+        const COMPANY_PHONE = '0598074287';
+        const COMPANY_PHONE_ARABIC = '٠٥٩٨٠٧٤٢٨٧';
+
+        // Convert Western numbers to Arabic numbers
+        function toArabicNumbers(str) {
+            const arabicNumbers = {
+                '0': '٠', '1': '١', '2': '٢', '3': '٣', '4': '٤',
+                '5': '٥', '6': '٦', '7': '٧', '8': '٨', '9': '٩'
+            };
+            return String(str).replace(/[0-9]/g, function(d) {
+                return arabicNumbers[d];
+            });
+        }
+
+        // Format phone number for display
+        function formatPhoneNumber(phone, isArabic) {
+            if (!phone) return '-';
+            let cleaned = phone.replace(/\D/g, '');
+            if (cleaned.length === 10 && cleaned.startsWith('05')) {
+                if (isArabic) {
+                    return toArabicNumbers(cleaned);
+                }
+                return cleaned;
+            }
+            if (isArabic) {
+                return toArabicNumbers(phone);
+            }
+            return phone;
+        }
+
+        function getCompanyAddress() {
+            if (currentLanguage === 'ar') {
+                return "العرجان، تبوك | هاتف: " + COMPANY_PHONE_ARABIC;
+            } else {
+                return "Al Arjan District, Tabuk | Tel: +966 59 807 4287";
+            }
+        }
 
         const translations = {
             en: {
@@ -409,7 +446,7 @@
                 customer: "العميل", phone: "الجوال", items: "العناصر", profit: "الربح",
                 revenue: "إجمالي الإيرادات", cost: "إجمالي التكلفة", netProfit: "صافي الربح",
                 margin: "هامش الربح", thankYou: "شكرا لاختيارك تابوك ماربل!",
-                address: "العرجان، تبوك | هاتف: 966 59 807 4287",
+                address: "العرجان، تبوك | هاتف: " + COMPANY_PHONE_ARABIC,
                 company: "حلول الرخام الفاخرة", subtotal: "المجموع الفرعي", grandTotal: "المجموع الكلي",
                 deleteConfirm: "هل أنت متأكد من حذف هذه الفاتورة؟",
                 deleteSuccess: "تم حذف الفاتورة بنجاح!", noInvoices: "لم يتم العثور على فواتير",
@@ -464,7 +501,10 @@
             if (isNaN(amount)) amount = 0;
             const symbols = { SAR: 'SAR ', USD: '$ ' };
             const rates = { SAR: 1, USD: 0.27 };
-            const converted = (amount * rates[currentCurrency]).toFixed(2);
+            let converted = (amount * rates[currentCurrency]).toFixed(2);
+            if (currentLanguage === 'ar') {
+                converted = toArabicNumbers(converted);
+            }
             return symbols[currentCurrency] + converted;
         }
 
@@ -481,6 +521,7 @@
             container.innerHTML = '';
             filtered.forEach(p => {
                 const area = (p.width * p.length).toFixed(2);
+                const priceDisplay = formatCurrency(p.sellingPrice);
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.setAttribute('data-name', p.name);
@@ -493,7 +534,7 @@
                     <h4>${p.name}</h4>
                     <div>${p.thickness}cm | ${p.width} x ${p.length}m</div>
                     <div>Area: ${area} sqm</div>
-                    <div style="color:#27ae60; font-weight:bold">${formatCurrency(p.sellingPrice)}/sqm</div>
+                    <div style="color:#27ae60; font-weight:bold">${priceDisplay}/sqm</div>
                 `;
                 card.onclick = () => {
                     document.getElementById('marbleName').value = card.getAttribute('data-name');
@@ -676,6 +717,7 @@
             const filtered = allOrders.filter(o => o.date.substring(0, 7) === selectedMonth);
             const tbody = document.getElementById('monthlyBody');
             const t = translations[currentLanguage];
+            const isArabic = (currentLanguage === 'ar');
             
             if (filtered.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="8">' + getTranslation('noInvoices') + '</td></tr>';
@@ -687,13 +729,23 @@
                 const row = tbody.insertRow();
                 row.className = 'clickable-row';
                 row.setAttribute('data-invoice', o.invoiceNo);
-                row.insertCell(0).innerHTML = new Date(o.date).toLocaleDateString();
+                
+                let dateDisplay = new Date(o.date).toLocaleDateString();
+                let phoneDisplay = formatPhoneNumber(o.customerPhone, isArabic);
+                let totalDisplay = formatCurrency(o.total);
+                let profitDisplay = formatCurrency(o.profit);
+                
+                if (isArabic) {
+                    dateDisplay = toArabicNumbers(dateDisplay);
+                }
+                
+                row.insertCell(0).innerHTML = dateDisplay;
                 row.insertCell(1).innerHTML = '<strong>' + o.invoiceNo + '</strong>';
                 row.insertCell(2).innerHTML = o.customer;
-                row.insertCell(3).innerHTML = o.customerPhone || '-';
+                row.insertCell(3).innerHTML = phoneDisplay;
                 row.insertCell(4).innerHTML = o.items.length;
-                row.insertCell(5).innerHTML = formatCurrency(o.total);
-                row.insertCell(6).innerHTML = '<span style="color:#27ae60">' + formatCurrency(o.profit) + '</span>';
+                row.insertCell(5).innerHTML = totalDisplay;
+                row.insertCell(6).innerHTML = '<span style="color:#27ae60">' + profitDisplay + '</span>';
                 
                 const actionCell = row.insertCell(7);
                 actionCell.className = 'action-group';
@@ -703,6 +755,12 @@
                 viewBtn.style.cssText = 'padding:5px 10px; background:#3498db; border:none; color:white; cursor:pointer; border-radius:5px';
                 viewBtn.onclick = (e) => { e.stopPropagation(); viewInvoiceDetails(o.invoiceNo); };
                 actionCell.appendChild(viewBtn);
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = t.delete;
+                deleteBtn.style.cssText = 'padding:5px 10px; background:#e74c3c; border:none; color:white; cursor:pointer; border-radius:5px';
+                deleteBtn.onclick = (e) => { e.stopPropagation(); deleteInvoiceWithConfirm(o.invoiceNo); };
+                actionCell.appendChild(deleteBtn);
                 
                 const shareBtn = document.createElement('button');
                 shareBtn.innerHTML = t.share;
@@ -720,10 +778,19 @@
             const profit = revenue - cost;
             const margin = revenue > 0 ? ((profit / revenue) * 100).toFixed(2) : 0;
             
-            document.getElementById('revenue').innerHTML = formatCurrency(revenue);
-            document.getElementById('totalCost').innerHTML = formatCurrency(cost);
-            document.getElementById('netProfit').innerHTML = formatCurrency(profit);
-            document.getElementById('profitMargin').innerHTML = margin + '%';
+            let revenueDisplay = formatCurrency(revenue);
+            let costDisplay = formatCurrency(cost);
+            let profitDisplay = formatCurrency(profit);
+            let marginDisplay = margin + '%';
+            
+            if (currentLanguage === 'ar') {
+                marginDisplay = toArabicNumbers(margin) + '%';
+            }
+            
+            document.getElementById('revenue').innerHTML = revenueDisplay;
+            document.getElementById('totalCost').innerHTML = costDisplay;
+            document.getElementById('netProfit').innerHTML = profitDisplay;
+            document.getElementById('profitMargin').innerHTML = marginDisplay;
         }
 
         function displayInvoices() {
@@ -736,6 +803,7 @@
             const tbody = document.getElementById('invoicesBody');
             if (!tbody) return;
             const t = translations[currentLanguage];
+            const isArabic = (currentLanguage === 'ar');
             
             if (filtered.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="7">' + getTranslation('noInvoices') + 'NonNull‚';
@@ -745,12 +813,20 @@
             tbody.innerHTML = '';
             filtered.forEach(o => {
                 const row = tbody.insertRow();
+                let dateDisplay = new Date(o.date).toLocaleDateString();
+                let phoneDisplay = formatPhoneNumber(o.customerPhone, isArabic);
+                let totalDisplay = formatCurrency(o.total);
+                
+                if (isArabic) {
+                    dateDisplay = toArabicNumbers(dateDisplay);
+                }
+                
                 row.insertCell(0).innerHTML = '<strong>' + o.invoiceNo + '</strong>';
-                row.insertCell(1).innerHTML = new Date(o.date).toLocaleDateString();
+                row.insertCell(1).innerHTML = dateDisplay;
                 row.insertCell(2).innerHTML = o.customer;
-                row.insertCell(3).innerHTML = o.customerPhone || '-';
+                row.insertCell(3).innerHTML = phoneDisplay;
                 row.insertCell(4).innerHTML = o.items.length + ' items';
-                row.insertCell(5).innerHTML = formatCurrency(o.total);
+                row.insertCell(5).innerHTML = totalDisplay;
                 
                 const actionCell = row.insertCell(6);
                 actionCell.className = 'action-group';
@@ -793,7 +869,7 @@
         function formatPhoneForWhatsApp(phone) {
             if (!phone) return null;
             let cleaned = phone.replace(/\D/g, '');
-            if (cleaned.startsWith('0')) {
+            if (cleaned.length === 10 && cleaned.startsWith('05')) {
                 cleaned = '966' + cleaned.substring(1);
             }
             if (!cleaned.startsWith('966')) {
@@ -802,44 +878,47 @@
             return cleaned;
         }
 
-        // Fixed: Correct phone number display for both English and Arabic
-        function getCompanyAddress() {
-            if (currentLanguage === 'ar') {
-                return "العرجان، تبوك | هاتف: 966 59 807 4287";
-            } else {
-                return "Al Arjan District, Tabuk | Tel: +966 59 807 4287";
-            }
-        }
-
         function generateProfessionalPDF(order) {
             const t = translations[currentLanguage];
-            const phoneDisplay = order.customerPhone || '-';
+            const isArabic = (currentLanguage === 'ar');
+            const phoneDisplay = formatPhoneNumber(order.customerPhone, isArabic);
             const companyAddress = getCompanyAddress();
             
             let itemsHtml = '';
             order.items.forEach(item => {
+                let priceDisplay = formatCurrency(item.sellingPrice);
+                let totalDisplay = formatCurrency(item.total);
                 itemsHtml += '<tr>';
                 itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + item.name + '</td>';
                 itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + item.thickness + ' cm</td>';
                 itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + item.width + ' m</td>';
                 itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + item.length + ' m</td>';
                 itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + item.area + ' sqm</td>';
-                itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + formatCurrency(item.sellingPrice) + '</td>';
-                itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + formatCurrency(item.total) + '</td>';
+                itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + priceDisplay + '</td>';
+                itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + totalDisplay + '</td>';
                 itemsHtml += '</tr>';
             });
+            
+            let subtotalDisplay = formatCurrency(order.subtotal);
+            let discountAmountDisplay = formatCurrency(order.discountAmount);
+            let grandTotalDisplay = formatCurrency(order.total);
+            let dateDisplay = new Date(order.date).toLocaleString();
+            
+            if (isArabic) {
+                dateDisplay = toArabicNumbers(dateDisplay);
+            }
             
             return `
                 <div style="font-family: 'Segoe UI', Arial, sans-serif; width: 100%; max-width: 1000px; margin: 0 auto; background: white;">
                     <div style="background: #1a1a2e; color: #ffd700; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
-                        <h1 style="color: #ffd700; margin: 0;">TABUK MARBLE</h1>
+                        <h1 style="color: #ffd700; margin: 0;">🏛️ TABUK MARBLE</h1>
                         <p style="color: white; margin: 5px 0;">${t.company}</p>
                         <p style="color: #ccc; font-size: 12px; margin: 0;">${companyAddress}</p>
                     </div>
                     
                     <div style="padding: 15px; border: 1px solid #ddd; margin: 15px; border-radius: 5px; background: #f9f9f9;">
                         <p style="margin: 8px 0;"><strong>${t.invoice}:</strong> ${order.invoiceNo}</p>
-                        <p style="margin: 8px 0;"><strong>${t.date}:</strong> ${new Date(order.date).toLocaleString()}</p>
+                        <p style="margin: 8px 0;"><strong>${t.date}:</strong> ${dateDisplay}</p>
                         <p style="margin: 8px 0;"><strong>${t.customer}:</strong> ${order.customer}</p>
                         <p style="margin: 8px 0;"><strong>${t.phone}:</strong> ${phoneDisplay}</p>
                     </div>
@@ -854,7 +933,7 @@
                                 <th style="padding: 12px; border: 1px solid #333; text-align: center;">${t.area}</th>
                                 <th style="padding: 12px; border: 1px solid #333; text-align: center;">${t.price}</th>
                                 <th style="padding: 12px; border: 1px solid #333; text-align: center;">${t.total}</th>
-                            </table>
+                            </tr>
                         </thead>
                         <tbody>
                             ${itemsHtml}
@@ -862,9 +941,9 @@
                     </table>
                     
                     <div style="text-align: right; margin: 15px; padding: 15px; border-top: 2px solid #ffd700;">
-                        <p style="margin: 5px 0;"><strong>${t.subtotal}:</strong> ${formatCurrency(order.subtotal)}</p>
-                        <p style="margin: 5px 0;"><strong>${t.discount}:</strong> ${order.discountPercent}% - ${formatCurrency(order.discountAmount)}</p>
-                        <h3 style="color: #27ae60; margin: 10px 0;"><strong>${t.grandTotal}:</strong> ${formatCurrency(order.total)}</h3>
+                        <p style="margin: 5px 0;"><strong>${t.subtotal}:</strong> ${subtotalDisplay}</p>
+                        <p style="margin: 5px 0;"><strong>${t.discount}:</strong> ${order.discountPercent}% - ${discountAmountDisplay}</p>
+                        <h3 style="color: #27ae60; margin: 10px 0;"><strong>${t.grandTotal}:</strong> ${grandTotalDisplay}</h3>
                     </div>
                     
                     <div style="text-align: center; margin-top: 30px; padding: 15px; font-size: 10px; color: #666; border-top: 1px solid #ddd;">
@@ -881,7 +960,9 @@
             const modal = document.getElementById('invoiceModal');
             const detailsDiv = document.getElementById('invoiceDetails');
             const t = translations[currentLanguage];
+            const isArabic = (currentLanguage === 'ar');
             const companyAddress = getCompanyAddress();
+            const phoneDisplay = formatPhoneNumber(order.customerPhone, isArabic);
             
             let itemsHtml = '<table style="width:100%; border-collapse:collapse; margin-top:10px;"><thead><tr style="background:#1a1a2e; color:#ffd700;">';
             itemsHtml += '<th style="padding:10px;">' + t.item + '</th>';
@@ -894,38 +975,47 @@
             itemsHtml += '</tr></thead><tbody>';
             
             order.items.forEach(item => {
+                let priceDisplay = formatCurrency(item.sellingPrice);
+                let totalDisplay = formatCurrency(item.total);
                 itemsHtml += '<tr style="border-bottom:1px solid #ddd;">';
                 itemsHtml += '<td style="padding:8px;">' + item.name + '</td>';
                 itemsHtml += '<td style="padding:8px;">' + item.thickness + ' cm</td>';
                 itemsHtml += '<td style="padding:8px;">' + item.width + ' m</td>';
                 itemsHtml += '<td style="padding:8px;">' + item.length + ' m</td>';
                 itemsHtml += '<td style="padding:8px;">' + item.area + ' sqm</td>';
-                itemsHtml += '<td style="padding:8px;">' + formatCurrency(item.sellingPrice) + '</td>';
-                itemsHtml += '<td style="padding:8px;">' + formatCurrency(item.total) + '</td>';
+                itemsHtml += '<td style="padding:8px;">' + priceDisplay + '</td>';
+                itemsHtml += '<td style="padding:8px;">' + totalDisplay + '</td>';
                 itemsHtml += '</tr>';
             });
             itemsHtml += '</tbody></table>';
             
-            const phoneDisplay = order.customerPhone || '-';
+            let dateDisplay = new Date(order.date).toLocaleString();
+            let subtotalDisplay = formatCurrency(order.subtotal);
+            let discountAmountDisplay = formatCurrency(order.discountAmount);
+            let grandTotalDisplay = formatCurrency(order.total);
+            
+            if (isArabic) {
+                dateDisplay = toArabicNumbers(dateDisplay);
+            }
             
             detailsDiv.innerHTML = `
                 <div>
                     <div style="text-align:center; background:#1a1a2e; color:#ffd700; padding:15px; border-radius:10px; margin-bottom:20px">
-                        <h2 style="color:#ffd700;">TABUK MARBLE</h2>
+                        <h2 style="color:#ffd700;">🏛️ TABUK MARBLE</h2>
                         <p style="color:white">${t.company}</p>
                         <p style="color:#ccc; font-size:12px">${companyAddress}</p>
                     </div>
                     <div style="border-top:2px solid #ffd700; padding:10px 0">
                         <p><strong>${t.invoice}:</strong> ${order.invoiceNo}</p>
-                        <p><strong>${t.date}:</strong> ${new Date(order.date).toLocaleString()}</p>
+                        <p><strong>${t.date}:</strong> ${dateDisplay}</p>
                         <p><strong>${t.customer}:</strong> ${order.customer}</p>
                         <p><strong>${t.phone}:</strong> ${phoneDisplay}</p>
                     </div>
                     ${itemsHtml}
                     <div style="text-align:right; margin-top:15px; padding-top:10px; border-top:2px solid #ffd700">
-                        <p><strong>${t.subtotal}:</strong> ${formatCurrency(order.subtotal)}</p>
-                        <p><strong>${t.discount}:</strong> ${order.discountPercent}% - ${formatCurrency(order.discountAmount)}</p>
-                        <h3 style="color:#27ae60"><strong>${t.grandTotal}:</strong> ${formatCurrency(order.total)}</h3>
+                        <p><strong>${t.subtotal}:</strong> ${subtotalDisplay}</p>
+                        <p><strong>${t.discount}:</strong> ${order.discountPercent}% - ${discountAmountDisplay}</p>
+                        <h3 style="color:#27ae60"><strong>${t.grandTotal}:</strong> ${grandTotalDisplay}</h3>
                     </div>
                     <div style="text-align:center; margin-top:20px; font-size:11px; color:#666">
                         <p>${t.thankYou}</p>
@@ -977,8 +1067,11 @@
             }
             
             const t = translations[currentLanguage];
-            let message = 'TABUK MARBLE - ' + t.invoice + ' ' + order.invoiceNo + '%0A';
+            const isArabic = (currentLanguage === 'ar');
+            const phoneDisplay = formatPhoneNumber(order.customerPhone, isArabic);
+            let message = '🏛️ TABUK MARBLE - ' + t.invoice + ' ' + order.invoiceNo + '%0A';
             message += t.customer + ': ' + order.customer + '%0A';
+            message += t.phone + ': ' + phoneDisplay + '%0A';
             message += t.date + ': ' + new Date(order.date).toLocaleString() + '%0A';
             message += t.grandTotal + ': ' + formatCurrency(order.total) + '%0A';
             message += '%0A';
@@ -1132,6 +1225,10 @@
         function setLanguage(lang) {
             currentLanguage = lang;
             updateUILanguage();
+            updateCartDisplay();
+            updateAll();
+            displayInvoices();
+            loadInventory();
             showToast(lang === 'en' ? 'English selected' : 'تم اختيار العربية');
         }
 
