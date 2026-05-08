@@ -9,7 +9,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Arial', 'Noto Sans', sans-serif;
+            font-family: 'Segoe UI', Arial, 'Noto Sans', sans-serif;
             background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
             min-height: 100vh;
             padding: 15px;
@@ -197,7 +197,7 @@
             animation: slideIn 0.3s;
         }
         .clickable-row { cursor: pointer; transition: all 0.3s; }
-        .clickable-row:hover { background: #f0f0f0; transform: scale(1.01); }
+        .clickable-row:hover { background: #f0f0f0; }
         @keyframes slideIn {
             from { transform: translateX(100%); }
             to { transform: translateX(0); }
@@ -222,7 +222,7 @@
                     <button class="lang-btn" data-lang="ar">العربية</button>
                 </div>
                 <div class="currency-selector">
-                    <button class="currency-btn active" data-currency="SAR">SAR ﷼</button>
+                    <button class="currency-btn active" data-currency="SAR">SAR ر.س</button>
                     <button class="currency-btn" data-currency="USD">USD $</button>
                 </div>
             </div>
@@ -274,7 +274,7 @@
                     <div style="overflow-x: auto; max-height: 300px; overflow-y: auto;">
                         <table id="cartTable">
                             <thead>
-                                <tr><th>Item</th><th>Thick</th><th>W</th><th>L</th><th>sqm</th><th>Price</th><th>Total</th><th></th></tr>
+                                <tr><th>Item</th><th>Thick(cm)</th><th>W(m)</th><th>L(m)</th><th>Area(sqm)</th><th>Price/sqm</th><th>Total</th><th></th></table>
                             </thead>
                             <tbody id="cartBody"></tbody>
                         </table>
@@ -282,7 +282,7 @@
                     
                     <div class="total-box">
                         <p><strong>Subtotal:</strong> <span id="subtotal">SAR 0.00</span></p>
-                        <p><strong>Discount:</strong> <span id="discountPercent">0</span>% (-<span id="discountAmount">SAR 0.00</span>)</p>
+                        <p><strong>Discount:</strong> <span id="discountPercent">0</span>% -<span id="discountAmount">SAR 0.00</span></p>
                         <h2 style="color:#ffd700"><strong>Grand Total:</strong> <span id="grandTotal">SAR 0.00</span></h2>
                     </div>
                     
@@ -378,8 +378,6 @@
         let currentCurrency = 'SAR';
         let currentLanguage = 'en';
         let actionHistory = [];
-        let deletedInvoicesHistory = [];
-        let deletedProductsHistory = [];
 
         const COMPANY_PHONE = '966598074287';
 
@@ -388,11 +386,11 @@
                 pos: "POS System", monthly: "Monthly Report", inventory: "Inventory",
                 profitloss: "Profit & Loss", invoices: "Invoices", products: "Products",
                 shoppingCart: "Shopping Cart", customerName: "Customer Name", customerPhone: "Customer Phone",
-                discount: "Discount %", confirmOrder: "Confirm Order", clearCart: "Clear Cart",
+                discount: "Discount", confirmOrder: "Confirm Order", clearCart: "Clear Cart",
                 undo: "Undo", downloadInvoice: "Download Invoice", totalSales: "Total Sales",
                 totalOrders: "Total Orders", totalProfit: "Total Profit", addProduct: "Add New Product",
-                item: "Item", thick: "Thick(cm)", width: "W(m)", length: "L(m)", area: "Area(sqm)",
-                price: "Price/sqm", total: "Total", date: "Date", invoice: "Invoice",
+                item: "Item", thick: "Thick", width: "Width", length: "Length", area: "Area",
+                price: "Price", total: "Total", date: "Date", invoice: "Invoice",
                 customer: "Customer", phone: "Phone", items: "Items", profit: "Profit",
                 revenue: "Total Revenue", cost: "Total Cost", netProfit: "Net Profit",
                 margin: "Profit Margin", thankYou: "Thank you for choosing TABUK MARBLE!",
@@ -407,11 +405,11 @@
                 pos: "نظام البيع", monthly: "التقرير الشهري", inventory: "المخزون",
                 profitloss: "الأرباح والخسائر", invoices: "الفواتير", products: "المنتجات",
                 shoppingCart: "سلة التسوق", customerName: "اسم العميل", customerPhone: "رقم الجوال",
-                discount: "الخصم %", confirmOrder: "تأكيد الطلب", clearCart: "مسح السلة",
+                discount: "الخصم", confirmOrder: "تأكيد الطلب", clearCart: "مسح السلة",
                 undo: "تراجع", downloadInvoice: "تحميل الفاتورة", totalSales: "إجمالي المبيعات",
                 totalOrders: "إجمالي الطلبات", totalProfit: "إجمالي الربح", addProduct: "إضافة منتج",
-                item: "العنصر", thick: "سمك(سم)", width: "عرض(م)", length: "طول(م)", area: "مساحة",
-                price: "السعر/متر", total: "المجموع", date: "التاريخ", invoice: "الفاتورة",
+                item: "العنصر", thick: "سمك", width: "عرض", length: "طول", area: "مساحة",
+                price: "السعر", total: "المجموع", date: "التاريخ", invoice: "الفاتورة",
                 customer: "العميل", phone: "الجوال", items: "العناصر", profit: "الربح",
                 revenue: "إجمالي الإيرادات", cost: "إجمالي التكلفة", netProfit: "صافي الربح",
                 margin: "هامش الربح", thankYou: "شكرا لاختيارك تابوك ماربل!",
@@ -567,11 +565,11 @@
             tbody.innerHTML = cart.map((item, idx) => {
                 subtotal += item.total;
                 return `
-                    <tr>
+                    <tr class="cart-item">
                         <td>${item.name}</td>
-                        <td>${item.thickness}cm</td>
-                        <td>${item.width}m</td>
-                        <td>${item.length}m</td>
+                        <td>${item.thickness} cm</td>
+                        <td>${item.width} m</td>
+                        <td>${item.length} m</td>
                         <td>${item.area} sqm</td>
                         <td>${formatCurrency(item.sellingPrice)}</td>
                         <td>${formatCurrency(item.total)}</td>
@@ -750,14 +748,14 @@
                     <td>${new Date(o.date).toLocaleDateString()}</td>
                     <td>${o.customer}</td>
                     <td>${o.customerPhone || '-'}</td>
-                    <td>${o.items.length} items）_
+                    <td>${o.items.length} items}_
                     <td>${formatCurrency(o.total)}}_
                     <td class="action-group">
                         <button class="view-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#3498db; border:none; color:white; cursor:pointer; border-radius:5px">${t.view}</button>
                         <button class="delete-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">${t.delete}</button>
                         <button class="download-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#11998e; border:none; color:white; cursor:pointer; border-radius:5px">${t.download}</button>
                         <button class="share-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#25d366; border:none; color:white; cursor:pointer; border-radius:5px">${t.share}</button>
-                    }_
+                    </td>
                 </tr>
             `).join('');
             
@@ -784,6 +782,30 @@
             }
         }
 
+        function formatPhoneNumber(phone) {
+            if (!phone) return '-';
+            let cleaned = phone.replace(/\D/g, '');
+            if (cleaned.startsWith('0')) {
+                cleaned = '966' + cleaned.substring(1);
+            }
+            if (!cleaned.startsWith('966')) {
+                cleaned = '966' + cleaned;
+            }
+            if (cleaned.length === 12) {
+                return cleaned;
+            }
+            return phone;
+        }
+
+        function displayPhoneNumber(phone) {
+            if (!phone) return '-';
+            let cleaned = phone.replace(/\D/g, '');
+            if (cleaned.length === 10 && cleaned.startsWith('05')) {
+                return cleaned;
+            }
+            return phone;
+        }
+
         function generateProfessionalPDF(order) {
             const t = translations[currentLanguage];
             const isRTL = (currentLanguage === 'ar');
@@ -804,12 +826,12 @@
             });
             
             const rtlStyle = isRTL ? 'direction: rtl; text-align: right;' : 'direction: ltr; text-align: left;';
-            const phoneDisplay = order.customerPhone ? order.customerPhone : '-';
+            const phoneDisplay = order.customerPhone ? displayPhoneNumber(order.customerPhone) : '-';
             
             return `
                 <div style="font-family: 'Segoe UI', Arial, sans-serif; width: 100%; max-width: 1000px; margin: 0 auto; background: white; ${rtlStyle}">
                     <div style="background: #1a1a2e; color: #ffd700; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
-                        <h1 style="color: #ffd700; margin: 0;">🏛️ TABUK MARBLE</h1>
+                        <h1 style="color: #ffd700; margin: 0;">TABUK MARBLE</h1>
                         <p style="color: white; margin: 5px 0;">${t.company}</p>
                         <p style="color: #ccc; font-size: 12px; margin: 0;">${t.address}</p>
                     </div>
@@ -840,7 +862,7 @@
                     
                     <div style="text-align: right; margin: 15px; padding: 15px; border-top: 2px solid #ffd700;">
                         <p style="margin: 5px 0;"><strong>${t.subtotal}:</strong> ${formatCurrency(order.subtotal)}</p>
-                        <p style="margin: 5px 0;"><strong>${t.discount}:</strong> ${order.discountPercent}% (-${formatCurrency(order.discountAmount)})</p>
+                        <p style="margin: 5px 0;"><strong>${t.discount}:</strong> ${order.discountPercent}% -${formatCurrency(order.discountAmount)}</p>
                         <h3 style="color: #11998e; margin: 10px 0;"><strong>${t.grandTotal}:</strong> ${formatCurrency(order.total)}</h3>
                     </div>
                     
@@ -868,15 +890,16 @@
             itemsHtml += `<th style="padding:10px;">${t.length}</th>`;
             itemsHtml += `<th style="padding:10px;">${t.area}</th>`;
             itemsHtml += `<th style="padding:10px;">${t.price}</th>`;
-            itemsHtml += `<th style="padding:10px;">${t.total}</th></tr></thead><tbody>`;
+            itemsHtml += `<th style="padding:10px;">${t.total}</th>`;
+            itemsHtml += `</tr></thead><tbody>`;
             
             order.items.forEach(item => {
                 itemsHtml += `
                     <tr style="border-bottom:1px solid #ddd;">
                         <td style="padding:8px;">${item.name}</td>
-                        <td style="padding:8px;">${item.thickness}cm</td>
-                        <td style="padding:8px;">${item.width}m</td>
-                        <td style="padding:8px;">${item.length}m</td>
+                        <td style="padding:8px;">${item.thickness} cm</td>
+                        <td style="padding:8px;">${item.width} m</td>
+                        <td style="padding:8px;">${item.length} m</td>
                         <td style="padding:8px;">${item.area} sqm</td>
                         <td style="padding:8px;">${formatCurrency(item.sellingPrice)}</td>
                         <td style="padding:8px;">${formatCurrency(item.total)}</td>
@@ -885,12 +908,12 @@
             });
             itemsHtml += '</tbody></table>';
             
-            const phoneDisplay = order.customerPhone ? order.customerPhone : '-';
+            const phoneDisplay = order.customerPhone ? displayPhoneNumber(order.customerPhone) : '-';
             
             detailsDiv.innerHTML = `
                 <div style="${rtlStyle}">
                     <div style="text-align:center; background:#1a1a2e; color:#ffd700; padding:15px; border-radius:10px; margin-bottom:20px">
-                        <h2 style="color:#ffd700;">🏛️ TABUK MARBLE</h2>
+                        <h2 style="color:#ffd700;">TABUK MARBLE</h2>
                         <p style="color:white">${t.company}</p>
                         <p style="color:#ccc; font-size:12px">${t.address}</p>
                     </div>
@@ -903,7 +926,7 @@
                     ${itemsHtml}
                     <div style="text-align:right; margin-top:15px; padding-top:10px; border-top:2px solid #ffd700">
                         <p><strong>${t.subtotal}:</strong> ${formatCurrency(order.subtotal)}</p>
-                        <p><strong>${t.discount}:</strong> ${order.discountPercent}% (-${formatCurrency(order.discountAmount)})</p>
+                        <p><strong>${t.discount}:</strong> ${order.discountPercent}% -${formatCurrency(order.discountAmount)}</p>
                         <h3 style="color:#11998e"><strong>${t.grandTotal}:</strong> ${formatCurrency(order.total)}</h3>
                     </div>
                     <div style="text-align:center; margin-top:20px; font-size:11px; color:#666">
@@ -949,16 +972,10 @@
                 return;
             }
             
-            customerPhone = customerPhone.replace(/\D/g, '');
-            if (customerPhone.startsWith('0')) {
-                customerPhone = '966' + customerPhone.substring(1);
-            }
-            if (!customerPhone.startsWith('966')) {
-                customerPhone = '966' + customerPhone;
-            }
+            customerPhone = formatPhoneNumber(customerPhone);
             
             const t = translations[currentLanguage];
-            const message = `🏛️ TABUK MARBLE - ${t.invoice} ${order.invoiceNo}%0A`;
+            const message = `TABUK MARBLE - ${t.invoice} ${order.invoiceNo}%0A`;
             message += `${t.customer}: ${order.customer}%0A`;
             message += `${t.date}: ${new Date(order.date).toLocaleString()}%0A`;
             message += `${t.grandTotal}: ${formatCurrency(order.total)}%0A`;
@@ -1007,11 +1024,11 @@
             tbody.innerHTML = filtered.map(p => `
                 <tr>
                     <td>${p.name}</td>
-                    <td>${p.thickness}cm}_
-                    <td>${p.width}m}_
-                    <td>${p.length}m}_
-                    <td>${formatCurrency(p.sellingPrice)}}_
-                    <td>${formatCurrency(p.costPrice)}}_
+                    <td>${p.thickness} cm</td>
+                    <td>${p.width} m</td>
+                    <td>${p.length} m</td>
+                    <td>${formatCurrency(p.sellingPrice)}</td>
+                    <td>${formatCurrency(p.costPrice)}</td>
                     <td><button class="delete-product-btn" data-id="${p.id}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">Delete</button></td>
                 </tr>
             `).join('');
@@ -1066,7 +1083,7 @@
             updateCartDisplay();
             updateAll();
             loadInventory();
-            showToast('Currency: ' + (currency === 'SAR' ? 'Saudi Riyal' : 'US Dollar'));
+            showToast('Currency changed to ' + (currency === 'SAR' ? 'Saudi Riyal' : 'US Dollar'));
         }
 
         function updateUILanguage() {
