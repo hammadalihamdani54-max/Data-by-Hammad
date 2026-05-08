@@ -9,7 +9,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, 'Noto Sans', sans-serif;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
             padding: 15px;
@@ -344,7 +344,7 @@
                 </div>
                 <div style="overflow-x: auto; max-height: 500px;">
                     <table id="invoicesTable">
-                        <thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Actions</th></tr></thead>
+                        <thead><td><th>Invoice</th><th>Date</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Actions</th></tr></thead>
                         <tbody id="invoicesBody"></tbody>
                     </table>
                 </div>
@@ -372,6 +372,10 @@
         let currentCurrency = 'SAR';
         let currentLanguage = 'en';
         let actionHistory = [];
+
+        // Correct phone number format
+        const COMPANY_PHONE_DISPLAY = '+966 59 807 4287';
+        const COMPANY_PHONE_RAW = '966598074287';
 
         const translations = {
             en: {
@@ -734,7 +738,7 @@
             const t = translations[currentLanguage];
             
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7">' + getTranslation('noInvoices') + '</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7">' + getTranslation('noInvoices') + 'NonNull‚';
                 return;
             }
             
@@ -798,9 +802,19 @@
             return cleaned;
         }
 
+        // Fixed: Correct phone number display for both English and Arabic
+        function getCompanyAddress() {
+            if (currentLanguage === 'ar') {
+                return "العرجان، تبوك | هاتف: 966 59 807 4287";
+            } else {
+                return "Al Arjan District, Tabuk | Tel: +966 59 807 4287";
+            }
+        }
+
         function generateProfessionalPDF(order) {
             const t = translations[currentLanguage];
             const phoneDisplay = order.customerPhone || '-';
+            const companyAddress = getCompanyAddress();
             
             let itemsHtml = '';
             order.items.forEach(item => {
@@ -820,7 +834,7 @@
                     <div style="background: #1a1a2e; color: #ffd700; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
                         <h1 style="color: #ffd700; margin: 0;">TABUK MARBLE</h1>
                         <p style="color: white; margin: 5px 0;">${t.company}</p>
-                        <p style="color: #ccc; font-size: 12px; margin: 0;">${t.address}</p>
+                        <p style="color: #ccc; font-size: 12px; margin: 0;">${companyAddress}</p>
                     </div>
                     
                     <div style="padding: 15px; border: 1px solid #ddd; margin: 15px; border-radius: 5px; background: #f9f9f9;">
@@ -840,7 +854,7 @@
                                 <th style="padding: 12px; border: 1px solid #333; text-align: center;">${t.area}</th>
                                 <th style="padding: 12px; border: 1px solid #333; text-align: center;">${t.price}</th>
                                 <th style="padding: 12px; border: 1px solid #333; text-align: center;">${t.total}</th>
-                            </tr>
+                            </table>
                         </thead>
                         <tbody>
                             ${itemsHtml}
@@ -855,7 +869,7 @@
                     
                     <div style="text-align: center; margin-top: 30px; padding: 15px; font-size: 10px; color: #666; border-top: 1px solid #ddd;">
                         <p>${t.thankYou}</p>
-                        <p>${t.address}</p>
+                        <p>${companyAddress}</p>
                     </div>
                 </div>
             `;
@@ -867,6 +881,7 @@
             const modal = document.getElementById('invoiceModal');
             const detailsDiv = document.getElementById('invoiceDetails');
             const t = translations[currentLanguage];
+            const companyAddress = getCompanyAddress();
             
             let itemsHtml = '<table style="width:100%; border-collapse:collapse; margin-top:10px;"><thead><tr style="background:#1a1a2e; color:#ffd700;">';
             itemsHtml += '<th style="padding:10px;">' + t.item + '</th>';
@@ -898,7 +913,7 @@
                     <div style="text-align:center; background:#1a1a2e; color:#ffd700; padding:15px; border-radius:10px; margin-bottom:20px">
                         <h2 style="color:#ffd700;">TABUK MARBLE</h2>
                         <p style="color:white">${t.company}</p>
-                        <p style="color:#ccc; font-size:12px">${t.address}</p>
+                        <p style="color:#ccc; font-size:12px">${companyAddress}</p>
                     </div>
                     <div style="border-top:2px solid #ffd700; padding:10px 0">
                         <p><strong>${t.invoice}:</strong> ${order.invoiceNo}</p>
@@ -914,7 +929,7 @@
                     </div>
                     <div style="text-align:center; margin-top:20px; font-size:11px; color:#666">
                         <p>${t.thankYou}</p>
-                        <p>${t.address}</p>
+                        <p>${companyAddress}</p>
                     </div>
                 </div>
             `;
@@ -968,7 +983,7 @@
             message += t.grandTotal + ': ' + formatCurrency(order.total) + '%0A';
             message += '%0A';
             message += t.thankYou + '%0A';
-            message += t.address;
+            message += getCompanyAddress();
             
             const template = document.getElementById('pdfTemplate');
             template.innerHTML = generateProfessionalPDF(order);
