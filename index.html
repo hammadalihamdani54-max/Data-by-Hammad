@@ -319,7 +319,7 @@
                 </div>
                 <div style="overflow-x: auto; max-height: 400px;">
                     <table id="monthlyTable">
-                        <thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Items</th><th>Total</th><th>Profit</th><th>Actions</th></tr></thead>
+                        <thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Items</th><th>Total</th><th>Profit</th><th>Actions</th></td></thead>
                         <tbody id="monthlyBody"></tbody>
                     </table>
                 </div>
@@ -426,7 +426,7 @@
                 invoice: "انوائس", customer: "گاہک", items: "آئٹمز", profit: "منافع",
                 revenue: "کل آمدنی", cost: "کل لاگت", netProfit: "خالص منافع",
                 margin: "منافع مارجن", thankYou: "تبوک ماربل کا انتخاب کرنے کا شکریہ!",
-                address: "العرجان، تبوک | فون: 966 59 807 4287+",
+                address: "العرجان، تبوک | فون: 966 59 807 4287",
                 company: "پريميئم ماربل سلوشنز", subtotal: "ذیلی کل", grandTotal: "کل کل",
                 deleteConfirm: "کیا آپ واقعی یہ انوائس حذف کرنا چاہتے ہیں؟",
                 deleteSuccess: "انوائس حذف کر دی گئی!",
@@ -447,7 +447,7 @@
                 invoice: "الفاتورة", customer: "العميل", items: "العناصر", profit: "الربح",
                 revenue: "إجمالي الإيرادات", cost: "إجمالي التكلفة", netProfit: "صافي الربح",
                 margin: "هامش الربح", thankYou: "شكرا لاختيارك تابوك ماربل!",
-                address: "العرجان، تبوك | هاتف: 966 59 807 4287+",
+                address: "العرجان، تبوك | هاتف: 966 59 807 4287",
                 company: "حلول الرخام الفاخرة", subtotal: "المجموع الفرعي", grandTotal: "المجموع الكلي",
                 deleteConfirm: "هل أنت متأكد من حذف هذه الفاتورة؟",
                 deleteSuccess: "تم حذف الفاتورة بنجاح!",
@@ -523,7 +523,7 @@
                 return `
                     <div class="product-card" data-name="${p.name}" data-thickness="${p.thickness}" data-width="${p.width}" data-length="${p.length}" data-price="${p.sellingPrice}" data-cost="${p.costPrice}">
                         <h4>${p.name}</h4>
-                        <div>${p.thickness}cm | ${p.width}x${p.length}m</div>
+                        <div>${p.thickness}cm | ${p.width} x ${p.length}m</div>
                         <div>Area: ${area} sqm</div>
                         <div style="color:#11998e; font-weight:bold">${formatCurrency(p.sellingPrice)}/sqm</div>
                     </div>
@@ -591,7 +591,7 @@
             if (!tbody) return;
             
             if (cart.length === 0) {
-                tbody.innerHTML = '<table><td colspan="8" style="text-align:center">Cart is empty</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center">Cart is empty</td></tr>';
                 document.getElementById('subtotal').innerHTML = formatCurrency(0);
                 document.getElementById('grandTotal').innerHTML = formatCurrency(0);
                 return;
@@ -717,7 +717,7 @@
             const t = translations[currentLanguage];
             
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7">' + getTranslation('noInvoices') + 'NonNull‚';
+                tbody.innerHTML = '<tr><td colspan="7">' + getTranslation('noInvoices') + '</tr></tr>';
                 return;
             }
             
@@ -775,7 +775,7 @@
             const t = translations[currentLanguage];
             
             if (filtered.length === 0) {
-                tbody.innerHTML = '<｜｜▁pad▁｜｜><td colspan="6">' + getTranslation('noInvoices') + 'NonNull‚';
+                tbody.innerHTML = '<tr><td colspan="6">' + getTranslation('noInvoices') + '</tr></tr>';
                 return;
             }
             
@@ -784,14 +784,14 @@
                     <td><strong>${o.invoiceNo}</strong></td>
                     <td>${new Date(o.date).toLocaleDateString()}</td>
                     <td>${o.customer}</td>
-                    <td>${o.items.length} items}_
-                    <td>${formatCurrency(o.total)}}_
+                    <td>${o.items.length} items</td>
+                    <td>${formatCurrency(o.total)}</td>
                     <td class="action-group">
                         <button class="view-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#3498db; border:none; color:white; cursor:pointer; border-radius:5px">👁️ ${t.view}</button>
                         <button class="delete-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">🗑️ ${t.delete}</button>
                         <button class="download-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#11998e; border:none; color:white; cursor:pointer; border-radius:5px">📄 ${t.download}</button>
                         <button class="share-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#25d366; border:none; color:white; cursor:pointer; border-radius:5px">📱 ${t.share}</button>
-                    }_
+                    </td>
                 </tr>
             `).join('');
             
@@ -927,7 +927,7 @@
                     <th style="padding:10px">${t.area}</th>
                     <th style="padding:10px">${t.price}</th>
                     <th style="padding:10px">${t.total}</th>
-                </tr>`;
+                </table>`;
             order.items.forEach(item => {
                 itemsHtml += `
                     <tr style="border-bottom:1px solid #ddd">
@@ -1100,23 +1100,40 @@
                     }
                 }
                 
+                // Convert PDF to Blob and create shareable URL
                 const pdfBlob = doc.output('blob');
                 const pdfFile = new File([pdfBlob], `TABUK_MARBLE_${order.invoiceNo}.pdf`, { type: 'application/pdf' });
                 
-                // Create WhatsApp share link with file
-                // Note: Due to WhatsApp Web limitations, we need to use a different approach
-                // We'll save the file first and then open WhatsApp
+                // Create a temporary URL for the PDF
+                const pdfUrl = URL.createObjectURL(pdfBlob);
+                
+                // Create message with PDF link (since WhatsApp Web doesn't support direct file sharing via URL)
+                const message = `🏛️ TABUK MARBLE - Invoice ${order.invoiceNo}%0A`;
+                message += `${t.customer}: ${order.customer}%0A`;
+                message += `${t.grandTotal}: ${formatCurrency(order.total)}%0A`;
+                message += `%0A`;
+                message += `📄 PDF Invoice is attached below. Please download and view.%0A`;
+                message += `%0A`;
+                message += `${t.thankYou}%0A`;
+                message += `${t.address}`;
+                
+                // For WhatsApp Web/Desktop, we need to use a different approach
+                // Create a download link and inform user
                 const link = document.createElement('a');
-                link.href = URL.createObjectURL(pdfBlob);
+                link.href = pdfUrl;
                 link.download = `TABUK_MARBLE_${order.invoiceNo}.pdf`;
                 link.click();
                 
                 setTimeout(() => {
-                    const message = `🏛️ TABUK MARBLE - Invoice ${order.invoiceNo}\nCustomer: ${order.customer}\nTotal: ${formatCurrency(order.total)}\n\nPDF has been downloaded. Please share it manually on WhatsApp.`;
-                    const encodedMessage = encodeURIComponent(message);
-                    window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodedMessage}`, '_blank');
-                    showToast('PDF Downloaded! Opening WhatsApp...');
+                    const whatsappUrl = `https://wa.me/${PHONE_NUMBER}?text=${message}`;
+                    window.open(whatsappUrl, '_blank');
+                    showToast('PDF saved! Opening WhatsApp. Please attach the PDF file from your downloads folder.');
                 }, 1000);
+                
+                // Clean up URL object after 5 seconds
+                setTimeout(() => {
+                    URL.revokeObjectURL(pdfUrl);
+                }, 5000);
                 
             } catch (error) {
                 console.error('PDF Error:', error);
@@ -1133,14 +1150,14 @@
             tbody.innerHTML = filtered.map(p => `
                 <tr>
                     <td>${p.name}</td>
-                    <td>${p.thickness}cm}_
-                    <td>${p.width}m}_
-                    <td>${p.length}m}_
-                    <td>${formatCurrency(p.sellingPrice)}}_
-                    <td>${formatCurrency(p.costPrice)}}_
+                    <td>${p.thickness}cm</td>
+                    <td>${p.width}m</td>
+                    <td>${p.length}m</td>
+                    <td>${formatCurrency(p.sellingPrice)}</td>
+                    <td>${formatCurrency(p.costPrice)}</td>
                     <td class="action-group">
                         <button class="delete-product-btn" data-id="${p.id}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">Delete</button>
-                    }_
+                    </td>
                 </tr>
             `).join('');
             
