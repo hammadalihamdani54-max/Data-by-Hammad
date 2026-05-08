@@ -9,15 +9,15 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Arial, 'Noto Sans', sans-serif;
-            background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
             padding: 15px;
         }
         .container {
             max-width: 1600px;
             margin: 0 auto;
-            background: rgba(255,255,255,0.95);
+            background: white;
             border-radius: 15px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
@@ -33,8 +33,8 @@
         }
         .logo-area { display: flex; align-items: center; gap: 10px; }
         .logo-icon { font-size: 40px; }
-        .logo-area h2 { color: #ffd700; font-size: 24px; letter-spacing: 2px; }
-        .logo-area p { color: #ccc; font-size: 11px; margin-top: 5px; }
+        .logo-area h2 { color: #ffd700; font-size: 24px; }
+        .logo-area p { color: #ccc; font-size: 11px; }
         .language-selector, .currency-selector { display: flex; gap: 8px; }
         .lang-btn, .currency-btn {
             padding: 6px 12px;
@@ -44,7 +44,6 @@
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.3s;
         }
         .lang-btn.active, .currency-btn.active { background: #ffd700; color: #1a1a2e; }
         .tabs { display: flex; background: #2c3e50; flex-wrap: wrap; }
@@ -54,10 +53,8 @@
             color: white;
             border: none;
             padding: 12px 20px;
-            font-size: 14px;
             cursor: pointer;
             min-width: 100px;
-            transition: all 0.3s;
         }
         .tab-btn.active { background: #ffd700; color: #1a1a2e; }
         .tab-content { display: none; padding: 25px; animation: fadeIn 0.3s; }
@@ -91,7 +88,7 @@
         }
         .product-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
             border-color: #ffd700;
         }
         .form-group { margin-bottom: 12px; }
@@ -114,14 +111,13 @@
             font-size: 14px;
             font-weight: bold;
             margin: 5px;
-            transition: all 0.3s;
         }
-        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .btn-success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-        .btn-danger { background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%); }
-        .btn-warning { background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%); }
-        .btn-info { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); }
-        .btn-whatsapp { background: linear-gradient(135deg, #25d366 0%, #128C7E 100%); }
+        button:hover { transform: translateY(-2px); opacity: 0.9; }
+        .btn-success { background: #27ae60; }
+        .btn-danger { background: #e74c3c; }
+        .btn-warning { background: #f39c12; }
+        .btn-info { background: #3498db; }
+        .btn-whatsapp { background: #25d366; }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -130,7 +126,7 @@
             display: block;
         }
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background: #1a1a2e; color: #ffd700; position: sticky; top: 0; }
+        th { background: #1a1a2e; color: #ffd700; }
         .total-box {
             margin-top: 20px;
             padding: 15px;
@@ -152,11 +148,9 @@
             border-radius: 10px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
         }
-        .stat-card:hover { transform: translateY(-3px); }
         .stat-card .value { font-size: 28px; font-weight: bold; color: #ffd700; }
-        .profit-card { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .profit-card { background: #27ae60; }
         .input-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -196,7 +190,7 @@
             z-index: 1000;
             animation: slideIn 0.3s;
         }
-        .clickable-row { cursor: pointer; transition: all 0.3s; }
+        .clickable-row { cursor: pointer; }
         .clickable-row:hover { background: #f0f0f0; }
         @keyframes slideIn {
             from { transform: translateX(100%); }
@@ -274,7 +268,7 @@
                     <div style="overflow-x: auto; max-height: 300px; overflow-y: auto;">
                         <table id="cartTable">
                             <thead>
-                                <tr><th>Item</th><th>Thick(cm)</th><th>W(m)</th><th>L(m)</th><th>Area(sqm)</th><th>Price/sqm</th><th>Total</th><th></th></table>
+                                <tr><th>Item</th><th>Thick(cm)</th><th>W(m)</th><th>L(m)</th><th>Area(sqm)</th><th>Price/sqm</th><th>Total</th><th></th></tr>
                             </thead>
                             <tbody id="cartBody"></tbody>
                         </table>
@@ -282,7 +276,7 @@
                     
                     <div class="total-box">
                         <p><strong>Subtotal:</strong> <span id="subtotal">SAR 0.00</span></p>
-                        <p><strong>Discount:</strong> <span id="discountPercent">0</span>% -<span id="discountAmount">SAR 0.00</span></p>
+                        <p><strong>Discount:</strong> <span id="discountPercent">0</span>% - <span id="discountAmount">SAR 0.00</span></p>
                         <h2 style="color:#ffd700"><strong>Grand Total:</strong> <span id="grandTotal">SAR 0.00</span></h2>
                     </div>
                     
@@ -336,7 +330,7 @@
         <div id="profitlossTab" class="tab-content">
             <div class="stats-grid">
                 <div class="stat-card"><h3>Total Revenue</h3><div class="value" id="revenue">SAR 0</div></div>
-                <div class="stat-card loss-card"><h3>Total Cost</h3><div class="value" id="totalCost">SAR 0</div></div>
+                <div class="stat-card"><h3>Total Cost</h3><div class="value" id="totalCost">SAR 0</div></div>
                 <div class="stat-card profit-card"><h3>Net Profit</h3><div class="value" id="netProfit">SAR 0</div></div>
                 <div class="stat-card"><h3>Profit Margin</h3><div class="value" id="profitMargin">0%</div></div>
             </div>
@@ -378,8 +372,6 @@
         let currentCurrency = 'SAR';
         let currentLanguage = 'en';
         let actionHistory = [];
-
-        const COMPANY_PHONE = '966598074287';
 
         const translations = {
             en: {
@@ -469,7 +461,7 @@
             const symbols = { SAR: 'SAR ', USD: '$ ' };
             const rates = { SAR: 1, USD: 0.27 };
             const converted = (amount * rates[currentCurrency]).toFixed(2);
-            return `${symbols[currentCurrency]}${converted}`;
+            return symbols[currentCurrency] + converted;
         }
 
         function getTranslation(key) {
@@ -477,25 +469,29 @@
         }
 
         function displayProducts() {
-            const searchTerm = document.getElementById('searchProduct')?.value.toLowerCase() || '';
+            const searchTerm = document.getElementById('searchProduct').value.toLowerCase();
             const filtered = products.filter(p => p.name.toLowerCase().includes(searchTerm));
             const container = document.getElementById('productList');
             if (!container) return;
             
-            container.innerHTML = filtered.map(p => {
+            container.innerHTML = '';
+            filtered.forEach(p => {
                 const area = (p.width * p.length).toFixed(2);
-                return `
-                    <div class="product-card" data-name="${p.name}" data-thickness="${p.thickness}" data-width="${p.width}" data-length="${p.length}" data-price="${p.sellingPrice}" data-cost="${p.costPrice}">
-                        <h4>${p.name}</h4>
-                        <div>${p.thickness}cm | ${p.width} x ${p.length}m</div>
-                        <div>Area: ${area} sqm</div>
-                        <div style="color:#11998e; font-weight:bold">${formatCurrency(p.sellingPrice)}/sqm</div>
-                    </div>
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.setAttribute('data-name', p.name);
+                card.setAttribute('data-thickness', p.thickness);
+                card.setAttribute('data-width', p.width);
+                card.setAttribute('data-length', p.length);
+                card.setAttribute('data-price', p.sellingPrice);
+                card.setAttribute('data-cost', p.costPrice);
+                card.innerHTML = `
+                    <h4>${p.name}</h4>
+                    <div>${p.thickness}cm | ${p.width} x ${p.length}m</div>
+                    <div>Area: ${area} sqm</div>
+                    <div style="color:#27ae60; font-weight:bold">${formatCurrency(p.sellingPrice)}/sqm</div>
                 `;
-            }).join('');
-            
-            document.querySelectorAll('.product-card').forEach(card => {
-                card.addEventListener('click', () => {
+                card.onclick = () => {
                     document.getElementById('marbleName').value = card.getAttribute('data-name');
                     document.getElementById('thickness').value = card.getAttribute('data-thickness');
                     document.getElementById('width').value = card.getAttribute('data-width');
@@ -504,7 +500,8 @@
                     document.getElementById('costPrice').value = card.getAttribute('data-cost');
                     document.getElementById('marbleName').focus();
                     showToast('Product loaded, click Add to Cart');
-                });
+                };
+                container.appendChild(card);
             });
         }
 
@@ -562,27 +559,23 @@
             }
             
             let subtotal = 0;
-            tbody.innerHTML = cart.map((item, idx) => {
+            tbody.innerHTML = '';
+            cart.forEach((item, idx) => {
                 subtotal += item.total;
-                return `
-                    <tr class="cart-item">
-                        <td>${item.name}</td>
-                        <td>${item.thickness} cm</td>
-                        <td>${item.width} m</td>
-                        <td>${item.length} m</td>
-                        <td>${item.area} sqm</td>
-                        <td>${formatCurrency(item.sellingPrice)}</td>
-                        <td>${formatCurrency(item.total)}</td>
-                        <td><button class="remove-item-btn" data-index="${idx}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">X</button></td>
-                    </tr>
-                `;
-            }).join('');
-            
-            document.querySelectorAll('.remove-item-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const index = parseInt(btn.getAttribute('data-index'));
-                    removeFromCart(index);
-                });
+                const row = tbody.insertRow();
+                row.insertCell(0).innerHTML = item.name;
+                row.insertCell(1).innerHTML = item.thickness + ' cm';
+                row.insertCell(2).innerHTML = item.width + ' m';
+                row.insertCell(3).innerHTML = item.length + ' m';
+                row.insertCell(4).innerHTML = item.area + ' sqm';
+                row.insertCell(5).innerHTML = formatCurrency(item.sellingPrice);
+                row.insertCell(6).innerHTML = formatCurrency(item.total);
+                const delCell = row.insertCell(7);
+                const delBtn = document.createElement('button');
+                delBtn.innerHTML = 'X';
+                delBtn.style.cssText = 'padding:5px 10px; background:#e74c3c; border:none; color:white; cursor:pointer; border-radius:5px';
+                delBtn.onclick = () => removeFromCart(idx);
+                delCell.appendChild(delBtn);
             });
             
             const discountPercent = parseFloat(document.getElementById('posDiscount').value) || 0;
@@ -635,7 +628,6 @@
             const total = subtotal - discountAmount;
             const cost = cart.reduce((sum, item) => sum + (item.costPrice * item.area), 0);
             const profit = total - cost;
-            
             const invoiceNo = 'INV-' + String(allOrders.length + 1).padStart(4, '0');
             
             const order = {
@@ -654,7 +646,6 @@
             
             allOrders.push(order);
             saveOrders();
-            
             showToast(getTranslation('orderConfirmed') + invoiceNo);
             
             cart = [];
@@ -687,30 +678,35 @@
                 return;
             }
             
-            tbody.innerHTML = filtered.map(o => `
-                <tr class="clickable-row" data-invoice="${o.invoiceNo}" style="cursor:pointer">
-                    <td>${new Date(o.date).toLocaleDateString()}</td>
-                    <td><strong>${o.invoiceNo}</strong></td>
-                    <td>${o.customer}</td>
-                    <td>${o.customerPhone || '-'}</td>
-                    <td>${o.items.length}</td>
-                    <td>${formatCurrency(o.total)}</td>
-                    <td style="color:#38ef7d">${formatCurrency(o.profit)}</td>
-                    <td class="action-group">
-                        <button class="monthly-view-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#3498db; border:none; color:white; cursor:pointer; border-radius:5px">${t.view}</button>
-                        <button class="monthly-share-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#25d366; border:none; color:white; cursor:pointer; border-radius:5px">${t.share}</button>
-                    </td>
-                </tr>
-            `).join('');
-            
-            document.querySelectorAll('.monthly-view-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => { e.stopPropagation(); viewInvoiceDetails(btn.getAttribute('data-invoice')); });
-            });
-            document.querySelectorAll('.monthly-share-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => { e.stopPropagation(); sendWhatsAppToCustomer(btn.getAttribute('data-invoice')); });
-            });
-            document.querySelectorAll('#monthlyBody .clickable-row').forEach(row => {
-                row.addEventListener('click', () => viewInvoiceDetails(row.getAttribute('data-invoice')));
+            tbody.innerHTML = '';
+            filtered.forEach(o => {
+                const row = tbody.insertRow();
+                row.className = 'clickable-row';
+                row.setAttribute('data-invoice', o.invoiceNo);
+                row.insertCell(0).innerHTML = new Date(o.date).toLocaleDateString();
+                row.insertCell(1).innerHTML = '<strong>' + o.invoiceNo + '</strong>';
+                row.insertCell(2).innerHTML = o.customer;
+                row.insertCell(3).innerHTML = o.customerPhone || '-';
+                row.insertCell(4).innerHTML = o.items.length;
+                row.insertCell(5).innerHTML = formatCurrency(o.total);
+                row.insertCell(6).innerHTML = '<span style="color:#27ae60">' + formatCurrency(o.profit) + '</span>';
+                
+                const actionCell = row.insertCell(7);
+                actionCell.className = 'action-group';
+                
+                const viewBtn = document.createElement('button');
+                viewBtn.innerHTML = t.view;
+                viewBtn.style.cssText = 'padding:5px 10px; background:#3498db; border:none; color:white; cursor:pointer; border-radius:5px';
+                viewBtn.onclick = (e) => { e.stopPropagation(); viewInvoiceDetails(o.invoiceNo); };
+                actionCell.appendChild(viewBtn);
+                
+                const shareBtn = document.createElement('button');
+                shareBtn.innerHTML = t.share;
+                shareBtn.style.cssText = 'padding:5px 10px; background:#25d366; border:none; color:white; cursor:pointer; border-radius:5px';
+                shareBtn.onclick = (e) => { e.stopPropagation(); sendWhatsAppToCustomer(o.invoiceNo); };
+                actionCell.appendChild(shareBtn);
+                
+                row.onclick = () => viewInvoiceDetails(o.invoiceNo);
             });
         }
 
@@ -727,7 +723,7 @@
         }
 
         function displayInvoices() {
-            const searchTerm = document.getElementById('invoiceSearch')?.value.toLowerCase() || '';
+            const searchTerm = document.getElementById('invoiceSearch').value.toLowerCase();
             const filtered = allOrders.filter(o => 
                 o.invoiceNo.toLowerCase().includes(searchTerm) || 
                 o.customer.toLowerCase().includes(searchTerm)
@@ -742,34 +738,42 @@
                 return;
             }
             
-            tbody.innerHTML = filtered.map(o => `
-                <tr>
-                    <td><strong>${o.invoiceNo}</strong></td>
-                    <td>${new Date(o.date).toLocaleDateString()}</td>
-                    <td>${o.customer}</td>
-                    <td>${o.customerPhone || '-'}</td>
-                    <td>${o.items.length} items}_
-                    <td>${formatCurrency(o.total)}}_
-                    <td class="action-group">
-                        <button class="view-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#3498db; border:none; color:white; cursor:pointer; border-radius:5px">${t.view}</button>
-                        <button class="delete-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">${t.delete}</button>
-                        <button class="download-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#11998e; border:none; color:white; cursor:pointer; border-radius:5px">${t.download}</button>
-                        <button class="share-invoice-btn" data-invoice="${o.invoiceNo}" style="padding:5px 10px; background:#25d366; border:none; color:white; cursor:pointer; border-radius:5px">${t.share}</button>
-                    </td>
-                </tr>
-            `).join('');
-            
-            document.querySelectorAll('.view-invoice-btn').forEach(btn => {
-                btn.addEventListener('click', () => viewInvoiceDetails(btn.getAttribute('data-invoice')));
-            });
-            document.querySelectorAll('.delete-invoice-btn').forEach(btn => {
-                btn.addEventListener('click', () => deleteInvoiceWithConfirm(btn.getAttribute('data-invoice')));
-            });
-            document.querySelectorAll('.download-invoice-btn').forEach(btn => {
-                btn.addEventListener('click', () => downloadSingleInvoice(btn.getAttribute('data-invoice')));
-            });
-            document.querySelectorAll('.share-invoice-btn').forEach(btn => {
-                btn.addEventListener('click', () => sendWhatsAppToCustomer(btn.getAttribute('data-invoice')));
+            tbody.innerHTML = '';
+            filtered.forEach(o => {
+                const row = tbody.insertRow();
+                row.insertCell(0).innerHTML = '<strong>' + o.invoiceNo + '</strong>';
+                row.insertCell(1).innerHTML = new Date(o.date).toLocaleDateString();
+                row.insertCell(2).innerHTML = o.customer;
+                row.insertCell(3).innerHTML = o.customerPhone || '-';
+                row.insertCell(4).innerHTML = o.items.length + ' items';
+                row.insertCell(5).innerHTML = formatCurrency(o.total);
+                
+                const actionCell = row.insertCell(6);
+                actionCell.className = 'action-group';
+                
+                const viewBtn = document.createElement('button');
+                viewBtn.innerHTML = t.view;
+                viewBtn.style.cssText = 'padding:5px 10px; background:#3498db; border:none; color:white; cursor:pointer; border-radius:5px';
+                viewBtn.onclick = () => viewInvoiceDetails(o.invoiceNo);
+                actionCell.appendChild(viewBtn);
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = t.delete;
+                deleteBtn.style.cssText = 'padding:5px 10px; background:#e74c3c; border:none; color:white; cursor:pointer; border-radius:5px';
+                deleteBtn.onclick = () => deleteInvoiceWithConfirm(o.invoiceNo);
+                actionCell.appendChild(deleteBtn);
+                
+                const downloadBtn = document.createElement('button');
+                downloadBtn.innerHTML = t.download;
+                downloadBtn.style.cssText = 'padding:5px 10px; background:#27ae60; border:none; color:white; cursor:pointer; border-radius:5px';
+                downloadBtn.onclick = () => downloadSingleInvoice(o.invoiceNo);
+                actionCell.appendChild(downloadBtn);
+                
+                const shareBtn = document.createElement('button');
+                shareBtn.innerHTML = t.share;
+                shareBtn.style.cssText = 'padding:5px 10px; background:#25d366; border:none; color:white; cursor:pointer; border-radius:5px';
+                shareBtn.onclick = () => sendWhatsAppToCustomer(o.invoiceNo);
+                actionCell.appendChild(shareBtn);
             });
         }
 
@@ -782,8 +786,8 @@
             }
         }
 
-        function formatPhoneNumber(phone) {
-            if (!phone) return '-';
+        function formatPhoneForWhatsApp(phone) {
+            if (!phone) return null;
             let cleaned = phone.replace(/\D/g, '');
             if (cleaned.startsWith('0')) {
                 cleaned = '966' + cleaned.substring(1);
@@ -791,45 +795,28 @@
             if (!cleaned.startsWith('966')) {
                 cleaned = '966' + cleaned;
             }
-            if (cleaned.length === 12) {
-                return cleaned;
-            }
-            return phone;
-        }
-
-        function displayPhoneNumber(phone) {
-            if (!phone) return '-';
-            let cleaned = phone.replace(/\D/g, '');
-            if (cleaned.length === 10 && cleaned.startsWith('05')) {
-                return cleaned;
-            }
-            return phone;
+            return cleaned;
         }
 
         function generateProfessionalPDF(order) {
             const t = translations[currentLanguage];
-            const isRTL = (currentLanguage === 'ar');
+            const phoneDisplay = order.customerPhone || '-';
             
             let itemsHtml = '';
             order.items.forEach(item => {
-                itemsHtml += `
-                    <tr>
-                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${item.name}</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${item.thickness} cm</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${item.width} m</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${item.length} m</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${item.area} sqm</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${formatCurrency(item.sellingPrice)}</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${formatCurrency(item.total)}</td>
-                    </tr>
-                `;
+                itemsHtml += '<tr>';
+                itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + item.name + '</td>';
+                itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + item.thickness + ' cm</td>';
+                itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + item.width + ' m</td>';
+                itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + item.length + ' m</td>';
+                itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + item.area + ' sqm</td>';
+                itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + formatCurrency(item.sellingPrice) + '</td>';
+                itemsHtml += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + formatCurrency(item.total) + '</td>';
+                itemsHtml += '</tr>';
             });
             
-            const rtlStyle = isRTL ? 'direction: rtl; text-align: right;' : 'direction: ltr; text-align: left;';
-            const phoneDisplay = order.customerPhone ? displayPhoneNumber(order.customerPhone) : '-';
-            
             return `
-                <div style="font-family: 'Segoe UI', Arial, sans-serif; width: 100%; max-width: 1000px; margin: 0 auto; background: white; ${rtlStyle}">
+                <div style="font-family: 'Segoe UI', Arial, sans-serif; width: 100%; max-width: 1000px; margin: 0 auto; background: white;">
                     <div style="background: #1a1a2e; color: #ffd700; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
                         <h1 style="color: #ffd700; margin: 0;">TABUK MARBLE</h1>
                         <p style="color: white; margin: 5px 0;">${t.company}</p>
@@ -862,8 +849,8 @@
                     
                     <div style="text-align: right; margin: 15px; padding: 15px; border-top: 2px solid #ffd700;">
                         <p style="margin: 5px 0;"><strong>${t.subtotal}:</strong> ${formatCurrency(order.subtotal)}</p>
-                        <p style="margin: 5px 0;"><strong>${t.discount}:</strong> ${order.discountPercent}% -${formatCurrency(order.discountAmount)}</p>
-                        <h3 style="color: #11998e; margin: 10px 0;"><strong>${t.grandTotal}:</strong> ${formatCurrency(order.total)}</h3>
+                        <p style="margin: 5px 0;"><strong>${t.discount}:</strong> ${order.discountPercent}% - ${formatCurrency(order.discountAmount)}</p>
+                        <h3 style="color: #27ae60; margin: 10px 0;"><strong>${t.grandTotal}:</strong> ${formatCurrency(order.total)}</h3>
                     </div>
                     
                     <div style="text-align: center; margin-top: 30px; padding: 15px; font-size: 10px; color: #666; border-top: 1px solid #ddd;">
@@ -880,38 +867,34 @@
             const modal = document.getElementById('invoiceModal');
             const detailsDiv = document.getElementById('invoiceDetails');
             const t = translations[currentLanguage];
-            const isRTL = (currentLanguage === 'ar');
-            const rtlStyle = isRTL ? 'direction: rtl; text-align: right;' : 'direction: ltr; text-align: left;';
             
             let itemsHtml = '<table style="width:100%; border-collapse:collapse; margin-top:10px;"><thead><tr style="background:#1a1a2e; color:#ffd700;">';
-            itemsHtml += `<th style="padding:10px;">${t.item}</th>`;
-            itemsHtml += `<th style="padding:10px;">${t.thick}</th>`;
-            itemsHtml += `<th style="padding:10px;">${t.width}</th>`;
-            itemsHtml += `<th style="padding:10px;">${t.length}</th>`;
-            itemsHtml += `<th style="padding:10px;">${t.area}</th>`;
-            itemsHtml += `<th style="padding:10px;">${t.price}</th>`;
-            itemsHtml += `<th style="padding:10px;">${t.total}</th>`;
-            itemsHtml += `</tr></thead><tbody>`;
+            itemsHtml += '<th style="padding:10px;">' + t.item + '</th>';
+            itemsHtml += '<th style="padding:10px;">' + t.thick + '</th>';
+            itemsHtml += '<th style="padding:10px;">' + t.width + '</th>';
+            itemsHtml += '<th style="padding:10px;">' + t.length + '</th>';
+            itemsHtml += '<th style="padding:10px;">' + t.area + '</th>';
+            itemsHtml += '<th style="padding:10px;">' + t.price + '</th>';
+            itemsHtml += '<th style="padding:10px;">' + t.total + '</th>';
+            itemsHtml += '</tr></thead><tbody>';
             
             order.items.forEach(item => {
-                itemsHtml += `
-                    <tr style="border-bottom:1px solid #ddd;">
-                        <td style="padding:8px;">${item.name}</td>
-                        <td style="padding:8px;">${item.thickness} cm</td>
-                        <td style="padding:8px;">${item.width} m</td>
-                        <td style="padding:8px;">${item.length} m</td>
-                        <td style="padding:8px;">${item.area} sqm</td>
-                        <td style="padding:8px;">${formatCurrency(item.sellingPrice)}</td>
-                        <td style="padding:8px;">${formatCurrency(item.total)}</td>
-                    </tr>
-                `;
+                itemsHtml += '<tr style="border-bottom:1px solid #ddd;">';
+                itemsHtml += '<td style="padding:8px;">' + item.name + '</td>';
+                itemsHtml += '<td style="padding:8px;">' + item.thickness + ' cm</td>';
+                itemsHtml += '<td style="padding:8px;">' + item.width + ' m</td>';
+                itemsHtml += '<td style="padding:8px;">' + item.length + ' m</td>';
+                itemsHtml += '<td style="padding:8px;">' + item.area + ' sqm</td>';
+                itemsHtml += '<td style="padding:8px;">' + formatCurrency(item.sellingPrice) + '</td>';
+                itemsHtml += '<td style="padding:8px;">' + formatCurrency(item.total) + '</td>';
+                itemsHtml += '</tr>';
             });
             itemsHtml += '</tbody></table>';
             
-            const phoneDisplay = order.customerPhone ? displayPhoneNumber(order.customerPhone) : '-';
+            const phoneDisplay = order.customerPhone || '-';
             
             detailsDiv.innerHTML = `
-                <div style="${rtlStyle}">
+                <div>
                     <div style="text-align:center; background:#1a1a2e; color:#ffd700; padding:15px; border-radius:10px; margin-bottom:20px">
                         <h2 style="color:#ffd700;">TABUK MARBLE</h2>
                         <p style="color:white">${t.company}</p>
@@ -926,8 +909,8 @@
                     ${itemsHtml}
                     <div style="text-align:right; margin-top:15px; padding-top:10px; border-top:2px solid #ffd700">
                         <p><strong>${t.subtotal}:</strong> ${formatCurrency(order.subtotal)}</p>
-                        <p><strong>${t.discount}:</strong> ${order.discountPercent}% -${formatCurrency(order.discountAmount)}</p>
-                        <h3 style="color:#11998e"><strong>${t.grandTotal}:</strong> ${formatCurrency(order.total)}</h3>
+                        <p><strong>${t.discount}:</strong> ${order.discountPercent}% - ${formatCurrency(order.discountAmount)}</p>
+                        <h3 style="color:#27ae60"><strong>${t.grandTotal}:</strong> ${formatCurrency(order.total)}</h3>
                     </div>
                     <div style="text-align:center; margin-top:20px; font-size:11px; color:#666">
                         <p>${t.thankYou}</p>
@@ -972,22 +955,26 @@
                 return;
             }
             
-            customerPhone = formatPhoneNumber(customerPhone);
+            const whatsappPhone = formatPhoneForWhatsApp(customerPhone);
+            if (!whatsappPhone) {
+                showToast('Invalid phone number');
+                return;
+            }
             
             const t = translations[currentLanguage];
-            const message = `TABUK MARBLE - ${t.invoice} ${order.invoiceNo}%0A`;
-            message += `${t.customer}: ${order.customer}%0A`;
-            message += `${t.date}: ${new Date(order.date).toLocaleString()}%0A`;
-            message += `${t.grandTotal}: ${formatCurrency(order.total)}%0A`;
-            message += `%0A`;
-            message += `${t.thankYou}%0A`;
-            message += `${t.address}`;
+            let message = 'TABUK MARBLE - ' + t.invoice + ' ' + order.invoiceNo + '%0A';
+            message += t.customer + ': ' + order.customer + '%0A';
+            message += t.date + ': ' + new Date(order.date).toLocaleString() + '%0A';
+            message += t.grandTotal + ': ' + formatCurrency(order.total) + '%0A';
+            message += '%0A';
+            message += t.thankYou + '%0A';
+            message += t.address;
             
             const template = document.getElementById('pdfTemplate');
             template.innerHTML = generateProfessionalPDF(order);
             
             try {
-                showToast('Generating PDF for WhatsApp...');
+                showToast('Generating PDF. Please wait...');
                 const canvas = await html2canvas(template, { scale: 2, backgroundColor: '#ffffff', logging: false });
                 const imgData = canvas.toDataURL('image/png');
                 const { jsPDF } = window.jspdf;
@@ -1000,11 +987,11 @@
                 const pdfUrl = URL.createObjectURL(pdfBlob);
                 const link = document.createElement('a');
                 link.href = pdfUrl;
-                link.download = `TABUK_MARBLE_${order.invoiceNo}.pdf`;
+                link.download = 'TABUK_MARBLE_' + order.invoiceNo + '.pdf';
                 link.click();
                 
                 setTimeout(() => {
-                    const whatsappUrl = `https://wa.me/${customerPhone}?text=${message}`;
+                    const whatsappUrl = 'https://wa.me/' + whatsappPhone + '?text=' + message;
                     window.open(whatsappUrl, '_blank');
                     showToast('PDF saved! Opening WhatsApp to send to customer.');
                 }, 1000);
@@ -1016,34 +1003,35 @@
         }
 
         function loadInventory() {
-            const searchTerm = document.getElementById('inventorySearch')?.value.toLowerCase() || '';
+            const searchTerm = document.getElementById('inventorySearch').value.toLowerCase();
             const filtered = products.filter(p => p.name.toLowerCase().includes(searchTerm));
             const tbody = document.getElementById('inventoryBody');
             if (!tbody) return;
             
-            tbody.innerHTML = filtered.map(p => `
-                <tr>
-                    <td>${p.name}</td>
-                    <td>${p.thickness} cm</td>
-                    <td>${p.width} m</td>
-                    <td>${p.length} m</td>
-                    <td>${formatCurrency(p.sellingPrice)}</td>
-                    <td>${formatCurrency(p.costPrice)}</td>
-                    <td><button class="delete-product-btn" data-id="${p.id}" style="padding:5px 10px; background:#eb3349; border:none; color:white; cursor:pointer; border-radius:5px">Delete</button></td>
-                </tr>
-            `).join('');
-            
-            document.querySelectorAll('.delete-product-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = parseInt(btn.getAttribute('data-id'));
+            tbody.innerHTML = '';
+            filtered.forEach(p => {
+                const row = tbody.insertRow();
+                row.insertCell(0).innerHTML = p.name;
+                row.insertCell(1).innerHTML = p.thickness + ' cm';
+                row.insertCell(2).innerHTML = p.width + ' m';
+                row.insertCell(3).innerHTML = p.length + ' m';
+                row.insertCell(4).innerHTML = formatCurrency(p.sellingPrice);
+                row.insertCell(5).innerHTML = formatCurrency(p.costPrice);
+                
+                const actionCell = row.insertCell(6);
+                const delBtn = document.createElement('button');
+                delBtn.innerHTML = 'Delete';
+                delBtn.style.cssText = 'padding:5px 10px; background:#e74c3c; border:none; color:white; cursor:pointer; border-radius:5px';
+                delBtn.onclick = () => {
                     if (confirm('Delete this product?')) {
-                        products = products.filter(p => p.id !== id);
+                        products = products.filter(prod => prod.id !== p.id);
                         saveProducts();
                         displayProducts();
                         loadInventory();
                         showToast('Product deleted');
                     }
-                });
+                };
+                actionCell.appendChild(delBtn);
             });
         }
 
@@ -1092,24 +1080,38 @@
                 const tabName = btn.getAttribute('data-tab');
                 if (t[tabName]) btn.innerHTML = t[tabName];
             });
-            if (document.querySelector('.products-panel h3')) document.querySelector('.products-panel h3').innerHTML = t.products;
-            if (document.querySelector('.cart-panel h3')) document.querySelector('.cart-panel h3').innerHTML = t.shoppingCart;
+            const productsH3 = document.querySelector('.products-panel h3');
+            if (productsH3) productsH3.innerHTML = t.products;
+            const cartH3 = document.querySelector('.cart-panel h3');
+            if (cartH3) cartH3.innerHTML = t.shoppingCart;
             const labels = document.querySelectorAll('.form-group label');
             if (labels[0]) labels[0].innerHTML = t.customerName + ':';
             if (labels[1]) labels[1].innerHTML = t.customerPhone + ':';
             if (labels[2]) labels[2].innerHTML = t.discount + ':';
-            if (document.getElementById('confirmOrderBtn')) document.getElementById('confirmOrderBtn').innerHTML = t.confirmOrder;
-            if (document.getElementById('clearCartBtn')) document.getElementById('clearCartBtn').innerHTML = t.clearCart;
-            if (document.getElementById('undoCartBtn')) document.getElementById('undoCartBtn').innerHTML = t.undo;
-            if (document.getElementById('downloadInvoiceBtn')) document.getElementById('downloadInvoiceBtn').innerHTML = t.downloadInvoice;
+            
+            const confirmBtn = document.getElementById('confirmOrderBtn');
+            if (confirmBtn) confirmBtn.innerHTML = t.confirmOrder;
+            const clearBtn = document.getElementById('clearCartBtn');
+            if (clearBtn) clearBtn.innerHTML = t.clearCart;
+            const undoBtn = document.getElementById('undoCartBtn');
+            if (undoBtn) undoBtn.innerHTML = t.undo;
+            const downloadBtn = document.getElementById('downloadInvoiceBtn');
+            if (downloadBtn) downloadBtn.innerHTML = t.downloadInvoice;
+            
             const statHeaders = document.querySelectorAll('.stat-card h3');
             if (statHeaders[0]) statHeaders[0].innerHTML = t.totalSales;
             if (statHeaders[1]) statHeaders[1].innerHTML = t.totalOrders;
             if (statHeaders[2]) statHeaders[2].innerHTML = t.totalProfit;
-            if (document.getElementById('addProductBtn')) document.getElementById('addProductBtn').innerHTML = t.addProduct;
-            if (document.getElementById('closeModalBtn')) document.getElementById('closeModalBtn').innerHTML = 'Close';
-            if (document.getElementById('printInvoiceBtn')) document.getElementById('printInvoiceBtn').innerHTML = 'Print';
-            if (document.getElementById('shareWhatsAppBtn')) document.getElementById('shareWhatsAppBtn').innerHTML = 'Send via WhatsApp';
+            
+            const addProductBtn = document.getElementById('addProductBtn');
+            if (addProductBtn) addProductBtn.innerHTML = t.addProduct;
+            
+            const closeBtn = document.getElementById('closeModalBtn');
+            if (closeBtn) closeBtn.innerHTML = 'Close';
+            const printBtn = document.getElementById('printInvoiceBtn');
+            if (printBtn) printBtn.innerHTML = 'Print';
+            const shareBtn = document.getElementById('shareWhatsAppBtn');
+            if (shareBtn) shareBtn.innerHTML = 'Send via WhatsApp';
         }
 
         function setLanguage(lang) {
@@ -1122,7 +1124,7 @@
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById(tabName + 'Tab').classList.add('active');
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
+            document.querySelector('.tab-btn[data-tab="' + tabName + '"]').classList.add('active');
             if (tabName === 'inventory') loadInventory();
             if (tabName === 'monthly') loadMonthlyData();
         }
@@ -1229,20 +1231,48 @@
                     setCurrency(btn.getAttribute('data-currency'));
                 });
             });
-            document.getElementById('addCustomMarbleBtn')?.addEventListener('click', addCustomMarble);
-            document.getElementById('confirmOrderBtn')?.addEventListener('click', confirmOrder);
-            document.getElementById('clearCartBtn')?.addEventListener('click', clearCart);
-            document.getElementById('undoCartBtn')?.addEventListener('click', undoLastAction);
-            document.getElementById('downloadInvoiceBtn')?.addEventListener('click', downloadInvoice);
-            document.getElementById('searchProduct')?.addEventListener('keyup', displayProducts);
-            document.getElementById('inventorySearch')?.addEventListener('keyup', loadInventory);
-            document.getElementById('invoiceSearch')?.addEventListener('keyup', displayInvoices);
-            document.getElementById('monthPicker')?.addEventListener('change', loadMonthlyData);
-            document.getElementById('posDiscount')?.addEventListener('input', updateCartDisplay);
-            document.getElementById('addProductBtn')?.addEventListener('click', showAddProductModal);
-            document.getElementById('closeModalBtn')?.addEventListener('click', closeModal);
-            document.getElementById('printInvoiceBtn')?.addEventListener('click', printInvoice);
-            document.getElementById('shareWhatsAppBtn')?.addEventListener('click', shareCurrentInvoice);
+            
+            const addBtn = document.getElementById('addCustomMarbleBtn');
+            if (addBtn) addBtn.addEventListener('click', addCustomMarble);
+            
+            const confirmBtn = document.getElementById('confirmOrderBtn');
+            if (confirmBtn) confirmBtn.addEventListener('click', confirmOrder);
+            
+            const clearBtn = document.getElementById('clearCartBtn');
+            if (clearBtn) clearBtn.addEventListener('click', clearCart);
+            
+            const undoBtn = document.getElementById('undoCartBtn');
+            if (undoBtn) undoBtn.addEventListener('click', undoLastAction);
+            
+            const downloadBtn = document.getElementById('downloadInvoiceBtn');
+            if (downloadBtn) downloadBtn.addEventListener('click', downloadInvoice);
+            
+            const searchProduct = document.getElementById('searchProduct');
+            if (searchProduct) searchProduct.addEventListener('keyup', displayProducts);
+            
+            const inventorySearch = document.getElementById('inventorySearch');
+            if (inventorySearch) inventorySearch.addEventListener('keyup', loadInventory);
+            
+            const invoiceSearch = document.getElementById('invoiceSearch');
+            if (invoiceSearch) invoiceSearch.addEventListener('keyup', displayInvoices);
+            
+            const monthPicker = document.getElementById('monthPicker');
+            if (monthPicker) monthPicker.addEventListener('change', loadMonthlyData);
+            
+            const discountInput = document.getElementById('posDiscount');
+            if (discountInput) discountInput.addEventListener('input', updateCartDisplay);
+            
+            const addProductBtn = document.getElementById('addProductBtn');
+            if (addProductBtn) addProductBtn.addEventListener('click', showAddProductModal);
+            
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+            
+            const printBtn = document.getElementById('printInvoiceBtn');
+            if (printBtn) printBtn.addEventListener('click', printInvoice);
+            
+            const shareBtn = document.getElementById('shareWhatsAppBtn');
+            if (shareBtn) shareBtn.addEventListener('click', shareCurrentInvoice);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
