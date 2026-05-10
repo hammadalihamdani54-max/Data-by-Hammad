@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>TABUK MARBLE - Complete Business Management System</title>
+    <title>TABUK MARBLE - Professional Business Management System</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
@@ -171,10 +171,19 @@
         .stat-card .value { font-size: 28px; font-weight: bold; color: #ffd700; }
         .profit-card { background: #27ae60; }
         .input-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
             gap: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            align-items: center;
+        }
+        .input-row input, .input-row button {
+            flex: 1;
+            min-width: 120px;
+            margin: 0;
         }
         .search-box { margin-bottom: 15px; }
         .modal {
@@ -210,8 +219,8 @@
             animation: slideIn 0.3s;
         }
         .action-group { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
-        .unit-selector { display: flex; gap: 10px; margin-bottom: 15px; }
-        .unit-btn { flex: 1; background: #ecf0f1; color: #2c3e50; }
+        .unit-selector { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        .unit-btn { flex: 1; background: #ecf0f1; color: #2c3e50; padding: 8px 12px; }
         .unit-btn.active { background: #ffd700; color: #1a1a2e; }
         .settings-grid {
             display: grid;
@@ -248,8 +257,22 @@
         .group-mwad { background: #3498db; color: white; }
         .group-mojali { background: #e67e22; color: white; }
         .group-mosnafar { background: #27ae60; color: white; }
+        .sqm-fields, .pieces-fields {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            flex: 3;
+        }
+        .sqm-fields input, .pieces-fields input {
+            flex: 1;
+            min-width: 100px;
+        }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        @media (max-width: 768px) { .pos-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .pos-grid { grid-template-columns: 1fr; }
+            .input-row { flex-direction: column; }
+            .sqm-fields, .pieces-fields { width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -299,24 +322,10 @@
 
                 <div class="cart-panel">
                     <h3>Shopping Cart</h3>
-                    <div class="unit-selector">
-                        <button class="unit-btn active" data-unit="sqm">Square Meter (m²)</button>
-                        <button class="unit-btn" data-unit="pieces">Pieces (Units)</button>
-                    </div>
                     
-                    <div class="input-row" style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                        <input type="text" id="itemName" placeholder="Item Name">
-                        <div id="sqmFields">
-                            <input type="number" id="thickness" placeholder="Thickness cm" step="0.1">
-                            <input type="number" id="width" placeholder="Width m" step="0.01">
-                            <input type="number" id="length" placeholder="Length m" step="0.01">
-                            <input type="number" id="sqmPrice" placeholder="Price per sqm" step="0.01">
-                        </div>
-                        <div id="piecesFields" style="display:none;">
-                            <input type="text" id="pieceSize" placeholder="Size (e.g., 3*40*80)">
-                            <input type="number" id="piecesCount" placeholder="Number of Pieces" step="1" min="1" value="1">
-                            <input type="number" id="pieceUnitPrice" placeholder="Price per Piece" step="0.01">
-                        </div>
+                    <div class="input-row" id="cartInputRow">
+                        <input type="text" id="itemName" placeholder="Item Name" style="flex:2">
+                        <div id="dynamicFields"></div>
                         <input type="number" id="costPriceItem" placeholder="Cost Price" step="0.01">
                         <button id="addToCartBtn" class="btn-success">Add to Cart</button>
                     </div>
@@ -326,7 +335,7 @@
                     <div class="form-group"><label>Discount %:</label><input type="number" id="posDiscount" value="0" step="1" min="0" max="100"></div>
                     
                     <div style="overflow-x: auto; max-height: 300px; overflow-y: auto;">
-                        <table id="cartTable"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Unit Price</th><th>Total</th><th>Actions</th></tr></thead>
+                        <table id="cartTable"><thead><tr><th>Item</th><th>Size/Details</th><th>Qty/Area</th><th>Unit Price</th><th>Total</th><th>Actions</th></tr></thead>
                         <tbody id="cartBody"></tbody></table>
                     </div>
                     
@@ -459,151 +468,150 @@
         let currentCurrency = 'SAR';
         let currentLanguage = 'en';
         let actionHistory = [];
-        let currentUnit = 'sqm';
         let currentProductGroup = 'all';
         let currentInventoryGroup = 'all';
+        let selectedItemType = 'pieces'; // 'sqm' or 'pieces'
 
         let companySettings = { name: 'TABUK MARBLE', logo: '🏛️', tagline: 'Premium Marble Solutions | Since 2018', address: 'Al Arjan District, Tabuk | Tel: +966 59 807 4287', phone: '0598074287' };
         let taxSettings = { enabled: true, rate: 15, name: 'VAT' };
         let invoiceSettings = { footer: 'Thank you for choosing TABUK MARBLE!', notes: '' };
 
-        // ==================== COMPLETE PRODUCTS DATABASE ====================
+        // Complete products database
         const defaultProducts = [
-            // ===== مواد بناء GROUP (36 items) =====
-            { id: 1, name: 'زاویہ اپ ڈاون', size: '4*4*3mm', group: 'mwad', sellingPrice: 5, costPrice: 3, stock: 2000, type: 'pieces' },
-            { id: 2, name: 'زاویہ اپ ڈاون', size: '4*4*2mm', group: 'mwad', sellingPrice: 4.5, costPrice: 2.7, stock: 2000, type: 'pieces' },
-            { id: 3, name: 'زاویہ اپ ڈاون', size: '4*3*3mm', group: 'mwad', sellingPrice: 4.5, costPrice: 2.7, stock: 2000, type: 'pieces' },
-            { id: 4, name: 'زاویہ اپ ڈاون', size: '4*3*2mm', group: 'mwad', sellingPrice: 4, costPrice: 2.4, stock: 2000, type: 'pieces' },
-            { id: 5, name: 'زاویہ اپ ڈاون', size: '4*5*3mm', group: 'mwad', sellingPrice: 6, costPrice: 3.6, stock: 2000, type: 'pieces' },
-            { id: 6, name: 'زاویہ اپ ڈاون', size: '4*6*3mm', group: 'mwad', sellingPrice: 7, costPrice: 4.2, stock: 2000, type: 'pieces' },
-            { id: 7, name: 'زاویہ اپ ڈاون', size: '4*8*3mm', group: 'mwad', sellingPrice: 8, costPrice: 4.8, stock: 2000, type: 'pieces' },
-            { id: 8, name: 'زاویہ اپ ڈاون', size: '4*10*3mm', group: 'mwad', sellingPrice: 10, costPrice: 6, stock: 2000, type: 'pieces' },
-            { id: 9, name: 'زاویہ اپ ڈاون', size: '5*5*3mm', group: 'mwad', sellingPrice: 7, costPrice: 4.2, stock: 2000, type: 'pieces' },
-            { id: 10, name: 'زاویہ اپ ڈاون', size: '4*4*3mm (مط)', group: 'mwad', sellingPrice: 5, costPrice: 3, stock: 2000, type: 'pieces' },
-            { id: 11, name: 'مسمار مغلوب', size: '10*40', group: 'mwad', sellingPrice: 2, costPrice: 1.2, stock: 2000, type: 'pieces' },
-            { id: 12, name: 'مسمار مغلوب', size: '10*50', group: 'mwad', sellingPrice: 2.5, costPrice: 1.5, stock: 2000, type: 'pieces' },
-            { id: 13, name: 'مسمار مغلوب', size: '10*60', group: 'mwad', sellingPrice: 3, costPrice: 1.8, stock: 2000, type: 'pieces' },
-            { id: 14, name: 'مسمار مغلوب', size: '10*80', group: 'mwad', sellingPrice: 3.5, costPrice: 2.1, stock: 2000, type: 'pieces' },
-            { id: 15, name: 'مسمار مغلوب', size: '10*100', group: 'mwad', sellingPrice: 4, costPrice: 2.4, stock: 2000, type: 'pieces' },
-            { id: 16, name: 'براغی سقف', size: '10*72', group: 'mwad', sellingPrice: 3, costPrice: 1.8, stock: 2000, type: 'pieces' },
-            { id: 17, name: 'براغی سقف', size: '10*92', group: 'mwad', sellingPrice: 3.5, costPrice: 2.1, stock: 2000, type: 'pieces' },
-            { id: 18, name: 'براغی سقف', size: '10*112', group: 'mwad', sellingPrice: 4, costPrice: 2.4, stock: 2000, type: 'pieces' },
-            { id: 19, name: 'براغی سقف', size: '10*115', group: 'mwad', sellingPrice: 4, costPrice: 2.4, stock: 2000, type: 'pieces' },
-            { id: 20, name: 'براغی سقف', size: '10*202', group: 'mwad', sellingPrice: 6, costPrice: 3.6, stock: 2000, type: 'pieces' },
-            { id: 21, name: 'جولی ابو جمل', size: 'Standard', group: 'mwad', sellingPrice: 25, costPrice: 15, stock: 2000, type: 'pieces' },
-            { id: 22, name: 'جولی گلیڈتیر', size: 'Standard', group: 'mwad', sellingPrice: 25, costPrice: 15, stock: 2000, type: 'pieces' },
-            { id: 23, name: 'دسک حجر احمر اے ایس', size: '7 بوسہ', group: 'mwad', sellingPrice: 45, costPrice: 27, stock: 2000, type: 'pieces' },
-            { id: 24, name: 'دسک حجر احمر اے ایس', size: '4.50 بوسہ', group: 'mwad', sellingPrice: 30, costPrice: 18, stock: 2000, type: 'pieces' },
-            { id: 25, name: 'دسک جرانیت ایے وا', size: '7 بوسہ', group: 'mwad', sellingPrice: 50, costPrice: 30, stock: 2000, type: 'pieces' },
-            { id: 26, name: 'دسک بوش', size: '9 بوسہ', group: 'mwad', sellingPrice: 55, costPrice: 33, stock: 2000, type: 'pieces' },
-            { id: 27, name: 'دسک حجر احمر اے ایس', size: '9 بوسہ', group: 'mwad', sellingPrice: 55, costPrice: 33, stock: 2000, type: 'pieces' },
-            { id: 28, name: 'ریشہ ہلتی', size: '20cm', group: 'mwad', sellingPrice: 8, costPrice: 4.8, stock: 2000, type: 'pieces' },
-            { id: 29, name: 'ریشہ ہلتی', size: '15cm', group: 'mwad', sellingPrice: 6, costPrice: 3.6, stock: 2000, type: 'pieces' },
-            { id: 30, name: 'ریشہ ہلتی', size: '10cm', group: 'mwad', sellingPrice: 4, costPrice: 2.4, stock: 2000, type: 'pieces' },
-            { id: 31, name: 'ریشہ دریل', size: '4mm', group: 'mwad', sellingPrice: 10, costPrice: 6, stock: 2000, type: 'pieces' },
-            { id: 32, name: 'ریشہ دریل', size: '6mm', group: 'mwad', sellingPrice: 12, costPrice: 7.2, stock: 2000, type: 'pieces' },
-            { id: 33, name: 'ریشہ دریل', size: '10mm', group: 'mwad', sellingPrice: 15, costPrice: 9, stock: 2000, type: 'pieces' },
-            { id: 34, name: 'گمتا چوڑی', size: 'Standard', group: 'mwad', sellingPrice: 30, costPrice: 18, stock: 2000, type: 'pieces' },
-            { id: 35, name: 'گمتا سادہ', size: 'Standard', group: 'mwad', sellingPrice: 25, costPrice: 15, stock: 2000, type: 'pieces' },
-            { id: 36, name: 'بکرا', size: 'Standard', group: 'mwad', sellingPrice: 35, costPrice: 21, stock: 2000, type: 'pieces' },
+            // ===== مواد بناء GROUP - Pieces Mode (prices aap khud set karein) =====
+            { id: 1, name: 'زاویہ اپ ڈاون', size: '4*4*3mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 2, name: 'زاویہ اپ ڈاون', size: '4*4*2mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 3, name: 'زاویہ اپ ڈاون', size: '4*3*3mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 4, name: 'زاویہ اپ ڈاون', size: '4*3*2mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 5, name: 'زاویہ اپ ڈاون', size: '4*5*3mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 6, name: 'زاویہ اپ ڈاون', size: '4*6*3mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 7, name: 'زاویہ اپ ڈاون', size: '4*8*3mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 8, name: 'زاویہ اپ ڈاون', size: '4*10*3mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 9, name: 'زاویہ اپ ڈاون', size: '5*5*3mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 10, name: 'زاویہ اپ ڈاون', size: '4*4*3mm (مط)', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 11, name: 'مسمار مغلوب', size: '10*40', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 12, name: 'مسمار مغلوب', size: '10*50', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 13, name: 'مسمار مغلوب', size: '10*60', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 14, name: 'مسمار مغلوب', size: '10*80', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 15, name: 'مسمار مغلوب', size: '10*100', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 16, name: 'براغی سقف', size: '10*72', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 17, name: 'براغی سقف', size: '10*92', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 18, name: 'براغی سقف', size: '10*112', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 19, name: 'براغی سقف', size: '10*115', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 20, name: 'براغی سقف', size: '10*202', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 21, name: 'جولی ابو جمل', size: 'Standard', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 22, name: 'جولی گلیڈتیر', size: 'Standard', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 23, name: 'دسک حجر احمر اے ایس', size: '7 بوسہ', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 24, name: 'دسک حجر احمر اے ایس', size: '4.50 بوسہ', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 25, name: 'دسک جرانیت ایے وا', size: '7 بوسہ', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 26, name: 'دسک بوش', size: '9 بوسہ', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 27, name: 'دسک حجر احمر اے ایس', size: '9 بوسہ', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 28, name: 'ریشہ ہلتی', size: '20cm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 29, name: 'ریشہ ہلتی', size: '15cm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 30, name: 'ریشہ ہلتی', size: '10cm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 31, name: 'ریشہ دریل', size: '4mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 32, name: 'ریشہ دریل', size: '6mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 33, name: 'ریشہ دریل', size: '10mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 34, name: 'گمتا چوڑی', size: 'Standard', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 35, name: 'گمتا سادہ', size: 'Standard', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 36, name: 'بکرا', size: 'Standard', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
             
-            // ===== حجر مصنفر GROUP =====
-            { id: 101, name: 'ابیض مصنفر فرزا 1*2', size: '3*40*80', group: 'mosnafar', sellingPrice: 45, costPrice: 28, stock: 2000, type: 'pieces' },
-            { id: 102, name: 'ابیض مصنفر فرزا C', size: '3*40*60', group: 'mosnafar', sellingPrice: 42, costPrice: 26, stock: 2000, type: 'pieces' },
-            { id: 103, name: 'ابیض مصنفر فرزا B', size: '3*50*100', group: 'mosnafar', sellingPrice: 55, costPrice: 34, stock: 2000, type: 'pieces' },
-            { id: 104, name: 'ابیض مصنفر فرزا B', size: '3*40*..', group: 'mosnafar', sellingPrice: 40, costPrice: 25, stock: 2000, type: 'pieces' },
-            { id: 105, name: 'ابیض مصنفر فرزتین B', size: '3*40*80', group: 'mosnafar', sellingPrice: 48, costPrice: 30, stock: 2000, type: 'pieces' },
-            { id: 106, name: 'ابیض مصنفر فرزا', size: '3*40*100', group: 'mosnafar', sellingPrice: 50, costPrice: 31, stock: 2000, type: 'pieces' },
-            { id: 107, name: 'ایضض مصنفر مبروم', size: '4*7*..', group: 'mosnafar', sellingPrice: 18, costPrice: 11, stock: 2000, type: 'pieces' },
-            { id: 108, name: 'ایضض مصنفر مبروم', size: '5*7*..', group: 'mosnafar', sellingPrice: 22, costPrice: 14, stock: 2000, type: 'pieces' },
-            { id: 109, name: 'ایضض مصنفر مبروم', size: '3*7*..', group: 'mosnafar', sellingPrice: 15, costPrice: 9, stock: 2000, type: 'pieces' },
-            { id: 110, name: 'ایضض مصنفر مبروم', size: '3*10*..', group: 'mosnafar', sellingPrice: 18, costPrice: 11, stock: 2000, type: 'pieces' },
-            { id: 111, name: 'ایضض مصنفر مبروم', size: '3*15*..', group: 'mosnafar', sellingPrice: 22, costPrice: 14, stock: 2000, type: 'pieces' },
-            { id: 112, name: 'ایضض مصنفر مبروم', size: '3*18*..', group: 'mosnafar', sellingPrice: 25, costPrice: 16, stock: 2000, type: 'pieces' },
-            { id: 113, name: 'ایضض مصنفر مبروم', size: '3*20*..', group: 'mosnafar', sellingPrice: 28, costPrice: 18, stock: 2000, type: 'pieces' },
-            { id: 114, name: 'ایضض مصنفر مبروم', size: '3*25*..', group: 'mosnafar', sellingPrice: 32, costPrice: 20, stock: 2000, type: 'pieces' },
-            { id: 115, name: 'ایضض مصنفر مبروم', size: '3*27*..', group: 'mosnafar', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
-            { id: 116, name: 'ایضض مصنفر مبروم', size: '3*30*..', group: 'mosnafar', sellingPrice: 38, costPrice: 24, stock: 2000, type: 'pieces' },
-            { id: 117, name: 'ایضض مصنفر مبروم', size: '3*32*..', group: 'mosnafar', sellingPrice: 40, costPrice: 25, stock: 2000, type: 'pieces' },
-            { id: 118, name: 'ایضض مصنفر مبروم', size: '3*35*..', group: 'mosnafar', sellingPrice: 42, costPrice: 26, stock: 2000, type: 'pieces' },
-            { id: 119, name: 'ایضض مصنفر مبروم', size: '3*37*..', group: 'mosnafar', sellingPrice: 44, costPrice: 28, stock: 2000, type: 'pieces' },
-            { id: 120, name: 'ایضض مصنفر مبروم B', size: '3*40*..', group: 'mosnafar', sellingPrice: 46, costPrice: 29, stock: 2000, type: 'pieces' },
-            { id: 121, name: 'ایضض مصنفر مبروم', size: '3*50*..', group: 'mosnafar', sellingPrice: 52, costPrice: 33, stock: 2000, type: 'pieces' },
-            { id: 122, name: 'ایضض مصنفر مبروم', size: '3*60*..', group: 'mosnafar', sellingPrice: 58, costPrice: 36, stock: 2000, type: 'pieces' },
-            { id: 123, name: 'ابیض مصنفر سادہ', size: '3*7*..', group: 'mosnafar', sellingPrice: 12, costPrice: 7.5, stock: 2000, type: 'pieces' },
-            { id: 124, name: 'ابیض مصنفر سادہ', size: '3*10*..', group: 'mosnafar', sellingPrice: 15, costPrice: 9, stock: 2000, type: 'pieces' },
-            { id: 125, name: 'ابیض مصنفر سادہ', size: '3*15*..', group: 'mosnafar', sellingPrice: 20, costPrice: 12.5, stock: 2000, type: 'pieces' },
-            { id: 126, name: 'ابیض مصنفر سادہ', size: '3*18*..', group: 'mosnafar', sellingPrice: 22, costPrice: 14, stock: 2000, type: 'pieces' },
-            { id: 127, name: 'ابیض مصنفر سادہ', size: '3*20*..', group: 'mosnafar', sellingPrice: 25, costPrice: 16, stock: 2000, type: 'pieces' },
-            { id: 128, name: 'ابیض مصنفر سادہ', size: '3*25*..', group: 'mosnafar', sellingPrice: 30, costPrice: 19, stock: 2000, type: 'pieces' },
-            { id: 129, name: 'ابیض مصنفر سادہ', size: '2*27*..', group: 'mosnafar', sellingPrice: 25, costPrice: 16, stock: 2000, type: 'pieces' },
-            { id: 130, name: 'ابیض مصنفر سادہ', size: '3*30*..', group: 'mosnafar', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
-            { id: 131, name: 'ابیض مصنفر سادہ B', size: '3*40*..', group: 'mosnafar', sellingPrice: 42, costPrice: 26, stock: 2000, type: 'pieces' },
-            { id: 132, name: 'ابیض مصنفر سادہ', size: '3*50*..', group: 'mosnafar', sellingPrice: 48, costPrice: 30, stock: 2000, type: 'pieces' },
-            { id: 133, name: 'ایضض مصنفر', size: '3*60*..', group: 'mosnafar', sellingPrice: 55, costPrice: 34, stock: 2000, type: 'pieces' },
-            { id: 134, name: 'ایضض مصنفر مشطوف', size: '3*30*..', group: 'mosnafar', sellingPrice: 38, costPrice: 24, stock: 2000, type: 'pieces' },
-            { id: 135, name: 'ابیض مصنفر غرفہ رومانی', size: '3*15*..', group: 'mosnafar', sellingPrice: 22, costPrice: 14, stock: 2000, type: 'pieces' },
-            { id: 136, name: 'ابیض مصنفر غرفہ رومانی', size: '3*20*..', group: 'mosnafar', sellingPrice: 26, costPrice: 16, stock: 2000, type: 'pieces' },
-            { id: 137, name: 'ابیض مصنفر غرفہ رومانی', size: '3*25*..', group: 'mosnafar', sellingPrice: 30, costPrice: 19, stock: 2000, type: 'pieces' },
-            { id: 138, name: 'ابیض مصنفر غرفہ رومانی', size: '3*30*..', group: 'mosnafar', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
-            { id: 139, name: 'ابیض مصنفر غرفہ رومانی', size: '3*35*..', group: 'mosnafar', sellingPrice: 40, costPrice: 25, stock: 2000, type: 'pieces' },
-            { id: 140, name: 'ابیض مصنفر غرفہ رومانی', size: '3*40*..', group: 'mosnafar', sellingPrice: 44, costPrice: 28, stock: 2000, type: 'pieces' },
-            { id: 141, name: 'ابیض مصنفر غرفہ رومانی', size: '3*50*..', group: 'mosnafar', sellingPrice: 50, costPrice: 31, stock: 2000, type: 'pieces' },
-            { id: 142, name: 'ابیض مصنفر مبروم مفروز', size: '3*25*..', group: 'mosnafar', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
-            { id: 143, name: 'پیانو ابیض مصنفر', size: '3*20*50', group: 'mosnafar', sellingPrice: 28, costPrice: 18, stock: 2000, type: 'pieces' },
-            { id: 144, name: 'پیانو ابیض مصنفر', size: '3*25*50', group: 'mosnafar', sellingPrice: 32, costPrice: 20, stock: 2000, type: 'pieces' },
-            { id: 145, name: 'پیانو ابیض مصنفر', size: '3*30*60', group: 'mosnafar', sellingPrice: 38, costPrice: 24, stock: 2000, type: 'pieces' },
-            { id: 146, name: 'پیانو ابیض مصنفر', size: '5*25*50', group: 'mosnafar', sellingPrice: 45, costPrice: 28, stock: 2000, type: 'pieces' },
+            // ===== حجر مصنفر GROUP - SQM Mode (Marble) Cost:50, Selling:60 =====
+            { id: 101, name: 'ابیض مصنفر فرزا 1*2', size: '3*40*80', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
+            { id: 102, name: 'ابیض مصنفر فرزا C', size: '3*40*60', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.6 },
+            { id: 103, name: 'ابیض مصنفر فرزا B', size: '3*50*100', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 1.0 },
+            { id: 104, name: 'ابیض مصنفر فرزا B', size: '3*40*..', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
+            { id: 105, name: 'ابیض مصنفر فرزتین B', size: '3*40*80', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
+            { id: 106, name: 'ایضض مصنفر مبروم', size: '4*7', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 4, width: 0.07, length: 0.07 },
+            { id: 107, name: 'ایضض مصنفر مبروم', size: '5*7', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 5, width: 0.07, length: 0.07 },
+            { id: 108, name: 'ایضض مصنفر مبروم', size: '3*7', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.07, length: 0.07 },
+            { id: 109, name: 'ایضض مصنفر مبروم', size: '3*10', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.1, length: 0.1 },
+            { id: 110, name: 'ایضض مصنفر مبروم', size: '3*15', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.15, length: 0.15 },
+            { id: 111, name: 'ایضض مصنفر مبروم', size: '3*18', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.18, length: 0.18 },
+            { id: 112, name: 'ایضض مصنفر مبروم', size: '3*20', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.2 },
+            { id: 113, name: 'ایضض مصنفر مبروم', size: '3*25', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.25 },
+            { id: 114, name: 'ایضض مصنفر مبروم', size: '3*27', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.27, length: 0.27 },
+            { id: 115, name: 'ایضض مصنفر مبروم', size: '3*30', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
+            { id: 116, name: 'ایضض مصنفر مبروم', size: '3*32', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.32, length: 0.32 },
+            { id: 117, name: 'ایضض مصنفر مبروم', size: '3*35', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.35, length: 0.35 },
+            { id: 118, name: 'ایضض مصنفر مبروم', size: '3*37', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.37, length: 0.37 },
+            { id: 119, name: 'ایضض مصنفر مبروم B', size: '3*40', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
+            { id: 120, name: 'ایضض مصنفر مبروم', size: '3*50', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 0.5 },
+            { id: 121, name: 'ایضض مصنفر مبروم', size: '3*60', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.6, length: 0.6 },
+            { id: 122, name: 'ابیض مصنفر سادہ', size: '3*7', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.07, length: 0.07 },
+            { id: 123, name: 'ابیض مصنفر سادہ', size: '3*10', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.1, length: 0.1 },
+            { id: 124, name: 'ابیض مصنفر سادہ', size: '3*15', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.15, length: 0.15 },
+            { id: 125, name: 'ابیض مصنفر سادہ', size: '3*18', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.18, length: 0.18 },
+            { id: 126, name: 'ابیض مصنفر سادہ', size: '3*20', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.2 },
+            { id: 127, name: 'ابیض مصنفر سادہ', size: '3*25', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.25 },
+            { id: 128, name: 'ابیض مصنفر سادہ', size: '2*27', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 2, width: 0.27, length: 0.27 },
+            { id: 129, name: 'ابیض مصنفر سادہ', size: '3*30', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
+            { id: 130, name: 'ابیض مصنفر سادہ B', size: '3*40', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
+            { id: 131, name: 'ابیض مصنفر سادہ', size: '3*50', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 0.5 },
+            { id: 132, name: 'ایضض مصنفر', size: '3*60', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.6, length: 0.6 },
+            { id: 133, name: 'ایضض مصنفر مشطوف', size: '3*30', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
+            { id: 134, name: 'ابیض مصنفر غرفہ رومانی', size: '3*15', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.15, length: 0.15 },
+            { id: 135, name: 'ابیض مصنفر غرفہ رومانی', size: '3*20', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.2 },
+            { id: 136, name: 'ابیض مصنفر غرفہ رومانی', size: '3*25', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.25 },
+            { id: 137, name: 'ابیض مصنفر غرفہ رومانی', size: '3*30', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
+            { id: 138, name: 'ابیض مصنفر غرفہ رومانی', size: '3*35', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.35, length: 0.35 },
+            { id: 139, name: 'ابیض مصنفر غرفہ رومانی', size: '3*40', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
+            { id: 140, name: 'ابیض مصنفر غرفہ رومانی', size: '3*50', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 0.5 },
+            { id: 141, name: 'ابیض مصنفر مبروم مفروز', size: '3*25', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.25 },
+            { id: 142, name: 'پیانو ابیض مصنفر', size: '3*20*50', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.5 },
+            { id: 143, name: 'پیانو ابیض مصنفر', size: '3*25*50', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.5 },
+            { id: 144, name: 'پیانو ابیض مصنفر', size: '3*30*60', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.6 },
+            { id: 145, name: 'پیانو ابیض مصنفر', size: '5*25*50', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 5, width: 0.25, length: 0.5 },
             
-            // ===== حجر مجلی GROUP =====
-            { id: 201, name: 'ابیض مجلی فرزا A', size: '3*40*80', group: 'mojali', sellingPrice: 50, costPrice: 32, stock: 2000, type: 'pieces' },
-            { id: 202, name: 'ابیض مجلی فرزا C', size: '3*40*60', group: 'mojali', sellingPrice: 45, costPrice: 28, stock: 2000, type: 'pieces' },
-            { id: 203, name: 'ابیض مجلی فرزا B', size: '3*40*80', group: 'mojali', sellingPrice: 50, costPrice: 32, stock: 2000, type: 'pieces' },
-            { id: 204, name: 'ابیض مجلی فرزا A', size: '3*30*30', group: 'mojali', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
-            { id: 205, name: 'ایضض مجلی مبروم', size: '3*7*..', group: 'mojali', sellingPrice: 18, costPrice: 11, stock: 2000, type: 'pieces' },
-            { id: 206, name: 'ایضض مجلی مبروم', size: '3*10*..', group: 'mojali', sellingPrice: 22, costPrice: 14, stock: 2000, type: 'pieces' },
-            { id: 207, name: 'ایضض مجلی مبروم', size: '3*15*..', group: 'mojali', sellingPrice: 28, costPrice: 18, stock: 2000, type: 'pieces' },
-            { id: 208, name: 'ایضض مجلی مبروم', size: '3*18*..', group: 'mojali', sellingPrice: 32, costPrice: 20, stock: 2000, type: 'pieces' },
-            { id: 209, name: 'ایضض مجلی مبروم', size: '3*20*..', group: 'mojali', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
-            { id: 210, name: 'ایضض مجلی مبروم', size: '3*25*..', group: 'mojali', sellingPrice: 38, costPrice: 24, stock: 2000, type: 'pieces' },
-            { id: 211, name: 'ایضض مجلی مبروم', size: '3*27*..', group: 'mojali', sellingPrice: 40, costPrice: 25, stock: 2000, type: 'pieces' },
-            { id: 212, name: 'ایضض مجلی مبروم', size: '3*30*..', group: 'mojali', sellingPrice: 42, costPrice: 26, stock: 2000, type: 'pieces' },
-            { id: 213, name: 'ایضض مجلی مبروم', size: '3*32*..', group: 'mojali', sellingPrice: 44, costPrice: 28, stock: 2000, type: 'pieces' },
-            { id: 214, name: 'ایضض مجلی مبروم', size: '3*35*..', group: 'mojali', sellingPrice: 46, costPrice: 29, stock: 2000, type: 'pieces' },
-            { id: 215, name: 'ایضض مجلی مبروم', size: '3*37*..', group: 'mojali', sellingPrice: 48, costPrice: 30, stock: 2000, type: 'pieces' },
-            { id: 216, name: 'ایضض مجلی مبروم', size: '3*40*..', group: 'mojali', sellingPrice: 50, costPrice: 32, stock: 2000, type: 'pieces' },
-            { id: 217, name: 'ایضض مجلی مبروم', size: '3*50*..', group: 'mojali', sellingPrice: 55, costPrice: 35, stock: 2000, type: 'pieces' },
-            { id: 218, name: 'ایضض مجلی مبروم', size: '3*60*..', group: 'mojali', sellingPrice: 60, costPrice: 38, stock: 2000, type: 'pieces' },
-            { id: 219, name: 'ابیض مجلی مشطوف', size: '3*30*..', group: 'mojali', sellingPrice: 42, costPrice: 26, stock: 2000, type: 'pieces' },
-            { id: 220, name: 'ابیض مجلی سادہ', size: '3*10*..', group: 'mojali', sellingPrice: 18, costPrice: 11, stock: 2000, type: 'pieces' },
-            { id: 221, name: 'ابیض مجلی سادہ', size: '3*15*..', group: 'mojali', sellingPrice: 22, costPrice: 14, stock: 2000, type: 'pieces' },
-            { id: 222, name: 'ابیض مجلی سادہ', size: '3*18*..', group: 'mojali', sellingPrice: 25, costPrice: 16, stock: 2000, type: 'pieces' },
-            { id: 223, name: 'ابیض مجلی سادہ', size: '3*20*..', group: 'mojali', sellingPrice: 28, costPrice: 18, stock: 2000, type: 'pieces' },
-            { id: 224, name: 'ابیض مجلی سادہ B', size: '3*25*..', group: 'mojali', sellingPrice: 32, costPrice: 20, stock: 2000, type: 'pieces' },
-            { id: 225, name: 'ابیض مجلی سادہ A', size: '2*25*..', group: 'mojali', sellingPrice: 25, costPrice: 16, stock: 2000, type: 'pieces' },
-            { id: 226, name: 'ابیض مجلی سادہ B', size: '3*30*..', group: 'mojali', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
-            { id: 227, name: 'ابیض مجلی سادہ A', size: '3*30*..', group: 'mojali', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
-            { id: 228, name: 'ابیض مجلی سادہ', size: '3*40*..', group: 'mojali', sellingPrice: 42, costPrice: 26, stock: 2000, type: 'pieces' },
-            { id: 229, name: 'ابیض مجلی سادہ', size: '3*50*..', group: 'mojali', sellingPrice: 48, costPrice: 30, stock: 2000, type: 'pieces' },
-            { id: 230, name: 'ابیض مجلی غرفہ رومانی', size: '3*15*..', group: 'mojali', sellingPrice: 25, costPrice: 16, stock: 2000, type: 'pieces' },
-            { id: 231, name: 'ابیض مجلی غرفہ رومانی', size: '3*20*..', group: 'mojali', sellingPrice: 28, costPrice: 18, stock: 2000, type: 'pieces' },
-            { id: 232, name: 'ابیض مجلی غرفہ رومانی', size: '3*25*..', group: 'mojali', sellingPrice: 32, costPrice: 20, stock: 2000, type: 'pieces' },
-            { id: 233, name: 'ابیض مجلی غرفہ رومانی', size: '3*30*..', group: 'mojali', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
-            { id: 234, name: 'ابیض مجلی غرفہ رومانی', size: '3*35*..', group: 'mojali', sellingPrice: 38, costPrice: 24, stock: 2000, type: 'pieces' },
-            { id: 235, name: 'ابیض مجلی غرفہ رومانی', size: '3*40*..', group: 'mojali', sellingPrice: 42, costPrice: 26, stock: 2000, type: 'pieces' },
-            { id: 236, name: 'ابیض مجلی غرفہ رومانی', size: '3*50*..', group: 'mojali', sellingPrice: 48, costPrice: 30, stock: 2000, type: 'pieces' },
-            { id: 237, name: 'ابیض بشارتہ فرزا', size: '3*40*80', group: 'mojali', sellingPrice: 55, costPrice: 35, stock: 2000, type: 'pieces' },
-            { id: 238, name: 'ابیض بشارتہ فرزا', size: '3*40*60', group: 'mojali', sellingPrice: 50, costPrice: 32, stock: 2000, type: 'pieces' },
-            { id: 239, name: 'ابیض بشارتہ فرزا', size: '3*30*60', group: 'mojali', sellingPrice: 45, costPrice: 28, stock: 2000, type: 'pieces' },
-            { id: 240, name: 'ابیض بشارتہ فرزا B', size: '3*40*..', group: 'mojali', sellingPrice: 48, costPrice: 30, stock: 2000, type: 'pieces' },
-            { id: 241, name: 'ابیض بشارتہ مشطوف B', size: '3*30*60', group: 'mojali', sellingPrice: 48, costPrice: 30, stock: 2000, type: 'pieces' },
-            { id: 242, name: 'ابیض بشارتہ A', size: '3*40*80', group: 'mojali', sellingPrice: 55, costPrice: 35, stock: 2000, type: 'pieces' },
-            { id: 243, name: 'KAREEMI HJAR SADA', size: '3*40*..', group: 'mojali', sellingPrice: 40, costPrice: 25, stock: 2000, type: 'pieces' },
-            { id: 244, name: 'ابیض بشارتہ مشطوف C', size: '3*40*60', group: 'mojali', sellingPrice: 50, costPrice: 32, stock: 2000, type: 'pieces' },
-            { id: 245, name: 'ابیض بشارتہ مشطوف C', size: '3*50*50', group: 'mojali', sellingPrice: 55, costPrice: 35, stock: 2000, type: 'pieces' },
-            { id: 246, name: 'ابیض بشارتہ A', size: '4*6*75', group: 'mojali', sellingPrice: 60, costPrice: 38, stock: 2000, type: 'pieces' },
-            { id: 247, name: 'MNHOOD ABIAZ', size: '3*20*1.20', group: 'mojali', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
-            { id: 248, name: 'MNHOOD ABIAZ', size: '3*15*1.20', group: 'mojali', sellingPrice: 30, costPrice: 19, stock: 2000, type: 'pieces' },
+            // ===== حجر مجلی GROUP - SQM Mode (Marble) Cost:60, Selling:70 =====
+            { id: 201, name: 'ابیض مجلی فرزا A', size: '3*40*80', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
+            { id: 202, name: 'ابیض مجلی فرزا C', size: '3*40*60', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.6 },
+            { id: 203, name: 'ابیض مجلی فرزا B', size: '3*40*80', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
+            { id: 204, name: 'ابیض مجلی فرزا A', size: '3*30*30', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
+            { id: 205, name: 'ایضض مجلی مبروم', size: '3*7', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.07, length: 0.07 },
+            { id: 206, name: 'ایضض مجلی مبروم', size: '3*10', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.1, length: 0.1 },
+            { id: 207, name: 'ایضض مجلی مبروم', size: '3*15', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.15, length: 0.15 },
+            { id: 208, name: 'ایضض مجلی مبروم', size: '3*18', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.18, length: 0.18 },
+            { id: 209, name: 'ایضض مجلی مبروم', size: '3*20', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.2 },
+            { id: 210, name: 'ایضض مجلی مبروم', size: '3*25', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.25 },
+            { id: 211, name: 'ایضض مجلی مبروم', size: '3*27', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.27, length: 0.27 },
+            { id: 212, name: 'ایضض مجلی مبروم', size: '3*30', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
+            { id: 213, name: 'ایضض مجلی مبروم', size: '3*32', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.32, length: 0.32 },
+            { id: 214, name: 'ایضض مجلی مبروم', size: '3*35', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.35, length: 0.35 },
+            { id: 215, name: 'ایضض مجلی مبروم', size: '3*37', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.37, length: 0.37 },
+            { id: 216, name: 'ایضض مجلی مبروم', size: '3*40', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
+            { id: 217, name: 'ایضض مجلی مبروم', size: '3*50', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 0.5 },
+            { id: 218, name: 'ایضض مجلی مبروم', size: '3*60', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.6, length: 0.6 },
+            { id: 219, name: 'ابیض مجلی مشطوف', size: '3*30', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
+            { id: 220, name: 'ابیض مجلی سادہ', size: '3*10', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.1, length: 0.1 },
+            { id: 221, name: 'ابیض مجلی سادہ', size: '3*15', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.15, length: 0.15 },
+            { id: 222, name: 'ابیض مجلی سادہ', size: '3*18', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.18, length: 0.18 },
+            { id: 223, name: 'ابیض مجلی سادہ', size: '3*20', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.2 },
+            { id: 224, name: 'ابیض مجلی سادہ B', size: '3*25', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.25 },
+            { id: 225, name: 'ابیض مجلی سادہ A', size: '2*25', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 2, width: 0.25, length: 0.25 },
+            { id: 226, name: 'ابیض مجلی سادہ B', size: '3*30', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
+            { id: 227, name: 'ابیض مجلی سادہ A', size: '3*30', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
+            { id: 228, name: 'ابیض مجلی سادہ', size: '3*40', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
+            { id: 229, name: 'ابیض مجلی سادہ', size: '3*50', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 0.5 },
+            { id: 230, name: 'ابیض مجلی غرفہ رومانی', size: '3*15', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.15, length: 0.15 },
+            { id: 231, name: 'ابیض مجلی غرفہ رومانی', size: '3*20', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.2 },
+            { id: 232, name: 'ابیض مجلی غرفہ رومانی', size: '3*25', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.25 },
+            { id: 233, name: 'ابیض مجلی غرفہ رومانی', size: '3*30', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
+            { id: 234, name: 'ابیض مجلی غرفہ رومانی', size: '3*35', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.35, length: 0.35 },
+            { id: 235, name: 'ابیض مجلی غرفہ رومانی', size: '3*40', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
+            { id: 236, name: 'ابیض مجلی غرفہ رومانی', size: '3*50', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 0.5 },
+            { id: 237, name: 'ابیض بشارتہ فرزا', size: '3*40*80', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
+            { id: 238, name: 'ابیض بشارتہ فرزا', size: '3*40*60', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.6 },
+            { id: 239, name: 'ابیض بشارتہ فرزا', size: '3*30*60', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.6 },
+            { id: 240, name: 'ابیض بشارتہ فرزا B', size: '3*40', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
+            { id: 241, name: 'ابیض بشارتہ مشطوف B', size: '3*30*60', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.6 },
+            { id: 242, name: 'ابیض بشارتہ A', size: '3*40*80', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
+            { id: 243, name: 'KAREEMI HJAR SADA', size: '3*40', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
+            { id: 244, name: 'ابیض بشارتہ مشطوف C', size: '3*40*60', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.6 },
+            { id: 245, name: 'ابیض بشارتہ مشطوف C', size: '3*50*50', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 0.5 },
+            { id: 246, name: 'ابیض بشارتہ A', size: '4*6*75', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 4, width: 0.6, length: 0.75 },
+            { id: 247, name: 'MNHOOD ABIAZ', size: '3*20*1.20', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 1.2 },
+            { id: 248, name: 'MNHOOD ABIAZ', size: '3*15*1.20', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.15, length: 1.2 },
         ];
 
         function toArabicNumbers(str) {
@@ -624,7 +632,7 @@
 
         function getCompanyAddress() {
             if (currentLanguage === 'ar') {
-                return companySettings.address.replace('Al Arjan District, Tabuk | Tel: +966 59 807 4287', 'العرجان، تبوك | هاتف: ' + toArabicNumbers(companySettings.phone));
+                return companySettings.address;
             }
             return companySettings.address;
         }
@@ -687,24 +695,18 @@
         function getTranslation(key) { return translations[currentLanguage][key] || key; }
 
         function resetAndLoadData() {
-            // Clear old localStorage data
             localStorage.removeItem('tabuk_products');
             localStorage.removeItem('tabuk_orders');
-            
-            // Load fresh products
             products = JSON.parse(JSON.stringify(defaultProducts));
             saveProducts();
-            
             allOrders = [];
             saveOrders();
-            
             loadAllSettings();
             displayProducts();
             loadInventory();
             updateCartDisplay();
             updateAll();
-            
-            showToast('✅ All products loaded successfully! Total ' + products.length + ' items added.');
+            showToast('✅ All products loaded! ' + products.length + ' items added.');
         }
 
         function initData() {
@@ -712,7 +714,6 @@
             if (savedProducts && JSON.parse(savedProducts).length > 0) {
                 products = JSON.parse(savedProducts);
             } else {
-                // Force reset if empty or invalid
                 products = JSON.parse(JSON.stringify(defaultProducts));
                 saveProducts();
             }
@@ -732,13 +733,41 @@
             const monthPicker = document.getElementById('monthPicker');
             if (monthPicker) monthPicker.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
             
-            setupUnitSelector();
             setupGroupFilters();
+            setupDynamicFields();
             
-            console.log('Products loaded:', products.length);
             if(products.length === 0) {
                 resetAndLoadData();
             }
+        }
+        
+        function setupDynamicFields() {
+            const dynamicFields = document.getElementById('dynamicFields');
+            // Create SQM fields
+            const sqmDiv = document.createElement('div');
+            sqmDiv.className = 'sqm-fields';
+            sqmDiv.id = 'sqmFields';
+            sqmDiv.style.display = 'none';
+            sqmDiv.innerHTML = `
+                <input type="number" id="thickness" placeholder="Thickness cm" step="0.1">
+                <input type="number" id="width" placeholder="Width m" step="0.01">
+                <input type="number" id="length" placeholder="Length m" step="0.01">
+                <input type="number" id="sqmPrice" placeholder="Price per sqm" step="0.01">
+            `;
+            
+            // Create Pieces fields
+            const piecesDiv = document.createElement('div');
+            piecesDiv.className = 'pieces-fields';
+            piecesDiv.id = 'piecesFields';
+            piecesDiv.style.display = 'flex';
+            piecesDiv.innerHTML = `
+                <input type="text" id="pieceSize" placeholder="Size (e.g., 4*4*3mm)" style="flex:2">
+                <input type="number" id="piecesCount" placeholder="Qty" step="1" min="1" value="1" style="flex:1">
+                <input type="number" id="pieceUnitPrice" placeholder="Price per piece" step="0.01" style="flex:1">
+            `;
+            
+            dynamicFields.appendChild(sqmDiv);
+            dynamicFields.appendChild(piecesDiv);
         }
 
         function setupGroupFilters() {
@@ -756,25 +785,6 @@
                     btn.classList.add('active');
                     currentInventoryGroup = btn.getAttribute('data-group');
                     loadInventory();
-                });
-            });
-        }
-
-        function setupUnitSelector() {
-            const sqmFields = document.getElementById('sqmFields');
-            const piecesFields = document.getElementById('piecesFields');
-            document.querySelectorAll('.unit-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentUnit = btn.getAttribute('data-unit');
-                    if (currentUnit === 'sqm') {
-                        sqmFields.style.display = 'grid';
-                        piecesFields.style.display = 'none';
-                    } else {
-                        sqmFields.style.display = 'none';
-                        piecesFields.style.display = 'block';
-                    }
                 });
             });
         }
@@ -801,17 +811,32 @@
                 card.className = 'product-card';
                 const groupClass = p.group === 'mwad' ? 'group-mwad' : (p.group === 'mojali' ? 'group-mojali' : 'group-mosnafar');
                 const groupName = getGroupName(p.group);
+                const priceDisplay = p.sellingPrice > 0 ? formatCurrency(p.sellingPrice) : 'Set Price';
+                const unitText = p.type === 'sqm' ? '/sqm' : '/pc';
                 card.innerHTML = `<div><span class="group-badge ${groupClass}">${groupName}</span></div>
                     <h4>${p.name}</h4><div>Size: ${p.size}</div>
-                    <div style="color:#27ae60;font-weight:bold">${formatCurrency(p.sellingPrice)}/pc</div>
+                    <div style="color:#27ae60;font-weight:bold">${priceDisplay}${unitText}</div>
                     <div style="font-size:11px">Stock: ${p.stock}</div>`;
                 card.onclick = () => {
                     document.getElementById('itemName').value = p.name;
                     document.getElementById('costPriceItem').value = p.costPrice;
-                    document.querySelector('.unit-btn[data-unit="pieces"]').click();
-                    document.getElementById('pieceSize').value = p.size;
-                    document.getElementById('pieceUnitPrice').value = p.sellingPrice;
-                    document.getElementById('piecesCount').value = 1;
+                    
+                    if (p.type === 'sqm') {
+                        // Show SQM fields, hide pieces fields
+                        document.getElementById('sqmFields').style.display = 'flex';
+                        document.getElementById('piecesFields').style.display = 'none';
+                        document.getElementById('thickness').value = p.thickness || 3;
+                        document.getElementById('width').value = p.width || 0.4;
+                        document.getElementById('length').value = p.length || 0.8;
+                        document.getElementById('sqmPrice').value = p.sellingPrice;
+                    } else {
+                        // Show pieces fields, hide SQM fields
+                        document.getElementById('sqmFields').style.display = 'none';
+                        document.getElementById('piecesFields').style.display = 'flex';
+                        document.getElementById('pieceSize').value = p.size;
+                        document.getElementById('pieceUnitPrice').value = p.sellingPrice;
+                        document.getElementById('piecesCount').value = 1;
+                    }
                     showToast(p.name + ' loaded');
                 };
                 container.appendChild(card);
@@ -821,19 +846,32 @@
         function addToCart() {
             const name = document.getElementById('itemName').value.trim();
             const costPrice = parseFloat(document.getElementById('costPriceItem').value);
-            if (!name) { showToast('Please enter item name!'); return; }
+            if (!name) { showToast('Please select an item first!'); return; }
             
-            if (currentUnit === 'sqm') {
+            // Check if SQM fields are visible or Pieces fields
+            const sqmFields = document.getElementById('sqmFields');
+            const isSqmMode = sqmFields.style.display === 'flex';
+            
+            if (isSqmMode) {
                 const thickness = parseFloat(document.getElementById('thickness').value);
                 const width = parseFloat(document.getElementById('width').value);
                 const length = parseFloat(document.getElementById('length').value);
                 const price = parseFloat(document.getElementById('sqmPrice').value);
-                if (!thickness || !width || !length || !price) { showToast('Please fill all dimensions!'); return; }
+                if (!thickness || !width || !length || !price) { showToast('Please fill all SQM fields!'); return; }
                 const area = width * length;
                 const total = area * price;
                 actionHistory.push(JSON.parse(JSON.stringify(cart)));
-                cart.push({ id: Date.now(), name: name, type: 'sqm', size: `${width}x${length}m`, qty: area.toFixed(2) + ' sqm', sellingPrice: price, costPrice: costPrice || price * 0.6, total: total });
-                showToast(name + ' ' + getTranslation('productAdded'));
+                cart.push({ 
+                    id: Date.now(), 
+                    name: name, 
+                    type: 'sqm', 
+                    size: `${width}m x ${length}m (${thickness}cm)`, 
+                    qty: area.toFixed(2) + ' sqm', 
+                    sellingPrice: price, 
+                    costPrice: costPrice || price * 0.8, 
+                    total: total 
+                });
+                showToast(name + ' added to cart');
             } else {
                 const size = document.getElementById('pieceSize').value;
                 const piecesCount = parseFloat(document.getElementById('piecesCount').value);
@@ -841,20 +879,25 @@
                 if (!size || !piecesCount || !piecePrice) { showToast('Please fill all fields!'); return; }
                 const total = piecesCount * piecePrice;
                 actionHistory.push(JSON.parse(JSON.stringify(cart)));
-                cart.push({ id: Date.now(), name: name, type: 'pieces', size: size, qty: piecesCount + ' pcs', sellingPrice: piecePrice, costPrice: costPrice || piecePrice * 0.6, total: total });
-                showToast(name + ' ' + getTranslation('productAdded'));
+                cart.push({ 
+                    id: Date.now(), 
+                    name: name, 
+                    type: 'pieces', 
+                    size: size, 
+                    qty: piecesCount + ' pcs', 
+                    sellingPrice: piecePrice, 
+                    costPrice: costPrice || piecePrice * 0.6, 
+                    total: total 
+                });
+                showToast(name + ' added to cart');
             }
             
-            document.getElementById('itemName').value = '';
+            // Clear fields but keep product loaded
             document.getElementById('costPriceItem').value = '';
-            if (currentUnit === 'sqm') {
-                document.getElementById('thickness').value = '';
-                document.getElementById('width').value = '';
-                document.getElementById('length').value = '';
+            if (isSqmMode) {
                 document.getElementById('sqmPrice').value = '';
             } else {
-                document.getElementById('pieceSize').value = '';
-                document.getElementById('piecesCount').value = '';
+                document.getElementById('piecesCount').value = 1;
                 document.getElementById('pieceUnitPrice').value = '';
             }
             updateCartDisplay();
@@ -916,6 +959,7 @@
             const profit = total - cost;
             const invoiceNo = 'INV-' + String(allOrders.length + 1).padStart(4, '0');
             
+            // Update stock
             cart.forEach(item => {
                 const product = products.find(p => p.name === item.name && p.size === item.size);
                 if (product && product.stock) {
@@ -992,7 +1036,7 @@
             if (!month) return;
             const filtered = allOrders.filter(o => o.date.substring(0,7) === month);
             const tbody = document.getElementById('monthlyBody');
-            if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="8">No invoices</td></tr>'; return; }
+            if (filtered.length === 0) { tbody.innerHTML = '<table><td colspan="8">No invoices</td></tr>'; return; }
             tbody.innerHTML = '';
             filtered.forEach(o => {
                 const row = tbody.insertRow();
@@ -1085,6 +1129,7 @@
             let groupName = 'mwad';
             if (group === '2') groupName = 'mojali';
             else if (group === '3') groupName = 'mosnafar';
+            const type = confirm('Marble/SQM (OK) or Fitting/Pieces (Cancel)?') ? 'sqm' : 'pieces';
             const name = prompt('Product name:');
             if (!name) return;
             const size = prompt('Size/Dimensions:');
@@ -1092,7 +1137,13 @@
             const cost = parseFloat(prompt('Cost price:')) || price*0.6;
             const stock = parseInt(prompt('Stock quantity:')) || 2000;
             const newId = Math.max(...products.map(p=>p.id),0)+1;
-            products.push({ id: newId, name, size, group: groupName, sellingPrice: price, costPrice: cost, stock, type: 'pieces' });
+            const newProduct = { id: newId, name, size, group: groupName, sellingPrice: price, costPrice: cost, stock, type };
+            if (type === 'sqm') {
+                newProduct.thickness = parseFloat(prompt('Thickness (cm):')) || 3;
+                newProduct.width = parseFloat(prompt('Width (m):')) || 0.4;
+                newProduct.length = parseFloat(prompt('Length (m):')) || 0.8;
+            }
+            products.push(newProduct);
             saveProducts(); displayProducts(); loadInventory(); showToast('Product added!');
         }
         
@@ -1137,7 +1188,6 @@
             initData(); 
             setupEventListeners(); 
             updateUILanguage();
-            // Force check if products are empty
             if(products.length === 0) {
                 resetAndLoadData();
             }
