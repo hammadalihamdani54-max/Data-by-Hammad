@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>TABUK MARBLE - Professional Business Management System</title>
+    <title>TABUK MARBLE - Complete Business System</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Arial, 'Noto Sans', sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
             padding: 15px;
@@ -106,10 +106,7 @@
             cursor: pointer;
             font-weight: bold;
         }
-        .group-btn.active {
-            background: #ffd700;
-            color: #1a1a2e;
-        }
+        .group-btn.active { background: #ffd700; color: #1a1a2e; }
         .form-group { margin-bottom: 12px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
         input, select, textarea {
@@ -137,13 +134,7 @@
         .btn-warning { background: #f39c12; }
         .btn-info { background: #3498db; }
         .btn-whatsapp { background: #25d366; }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            overflow-x: auto;
-            display: block;
-        }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; overflow-x: auto; display: block; }
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
         th { background: #1a1a2e; color: #ffd700; }
         .total-box {
@@ -170,21 +161,6 @@
         }
         .stat-card .value { font-size: 28px; font-weight: bold; color: #ffd700; }
         .profit-card { background: #27ae60; }
-        .input-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 15px;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            align-items: center;
-        }
-        .input-row input, .input-row button {
-            flex: 1;
-            min-width: 120px;
-            margin: 0;
-        }
         .search-box { margin-bottom: 15px; }
         .modal {
             display: none;
@@ -219,9 +195,17 @@
             animation: slideIn 0.3s;
         }
         .action-group { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
-        .unit-selector { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-        .unit-btn { flex: 1; background: #ecf0f1; color: #2c3e50; padding: 8px 12px; }
-        .unit-btn.active { background: #ffd700; color: #1a1a2e; }
+        .input-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            align-items: center;
+        }
+        .input-row input, .input-row button { flex: 1; min-width: 100px; margin: 0; }
         .settings-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -257,22 +241,10 @@
         .group-mwad { background: #3498db; color: white; }
         .group-mojali { background: #e67e22; color: white; }
         .group-mosnafar { background: #27ae60; color: white; }
-        .sqm-fields, .pieces-fields {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            flex: 3;
-        }
-        .sqm-fields input, .pieces-fields input {
-            flex: 1;
-            min-width: 100px;
-        }
+        .sqm-fields, .pieces-fields { display: flex; flex-wrap: wrap; gap: 10px; flex: 3; }
+        .sqm-fields input, .pieces-fields input { flex: 1; min-width: 100px; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        @media (max-width: 768px) { 
-            .pos-grid { grid-template-columns: 1fr; }
-            .input-row { flex-direction: column; }
-            .sqm-fields, .pieces-fields { width: 100%; }
-        }
+        @media (max-width: 768px) { .pos-grid { grid-template-columns: 1fr; } .input-row { flex-direction: column; } }
     </style>
 </head>
 <body>
@@ -280,10 +252,7 @@
         <div class="top-bar">
             <div class="logo-area">
                 <div class="logo-icon" id="companyLogoDisplay">🏛️</div>
-                <div>
-                    <h2 id="companyNameDisplay">TABUK MARBLE</h2>
-                    <p id="companyTaglineDisplay">Premium Marble Solutions | Since 2018</p>
-                </div>
+                <div><h2 id="companyNameDisplay">TABUK MARBLE</h2><p id="companyTaglineDisplay">Premium Marble Solutions</p></div>
             </div>
             <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                 <div class="language-selector">
@@ -311,18 +280,17 @@
                 <div class="products-panel">
                     <h3>Products</h3>
                     <div class="group-filter" id="productGroupFilter">
-                        <button class="group-btn active" data-group="all">All Products</button>
+                        <button class="group-btn active" data-group="all">All</button>
                         <button class="group-btn" data-group="mwad">مواد بناء</button>
                         <button class="group-btn" data-group="mojali">حجر مجلي</button>
                         <button class="group-btn" data-group="mosnafar">حجر مصنفر</button>
                     </div>
-                    <div class="search-box"><input type="text" id="searchProduct" placeholder="Search products..."></div>
+                    <div class="search-box"><input type="text" id="searchProduct" placeholder="Search..."></div>
                     <div class="product-list" id="productList"></div>
                 </div>
 
                 <div class="cart-panel">
                     <h3>Shopping Cart</h3>
-                    
                     <div class="input-row" id="cartInputRow">
                         <input type="text" id="itemName" placeholder="Item Name" style="flex:2">
                         <div id="dynamicFields"></div>
@@ -335,7 +303,7 @@
                     <div class="form-group"><label>Discount %:</label><input type="number" id="posDiscount" value="0" step="1" min="0" max="100"></div>
                     
                     <div style="overflow-x: auto; max-height: 300px; overflow-y: auto;">
-                        <table id="cartTable"><thead><tr><th>Item</th><th>Size/Details</th><th>Qty/Area</th><th>Unit Price</th><th>Total</th><th>Actions</th></tr></thead>
+                        <table id="cartTable"><thead><tr><th>Item</th><th>Details</th><th>Qty</th><th>Unit Price</th><th>Total</th><th>Action</th></tr></thead>
                         <tbody id="cartBody"></tbody></table>
                     </div>
                     
@@ -343,7 +311,7 @@
                         <p><strong>Subtotal:</strong> <span id="subtotal">SAR 0.00</span></p>
                         <p><strong>Discount:</strong> <span id="discountPercent">0</span>% - <span id="discountAmount">SAR 0.00</span></p>
                         <p><strong>Tax (<span id="taxRateDisplay">0</span>%):</strong> <span id="taxAmount">SAR 0.00</span></p>
-                        <h2 style="color:#ffd700"><strong>Grand Total:</strong> <span id="grandTotal">SAR 0.00</span></h2>
+                        <h2><strong>Grand Total:</strong> <span id="grandTotal">SAR 0.00</span></h2>
                     </div>
                     
                     <div class="action-buttons">
@@ -376,12 +344,12 @@
             <div class="inventory-panel">
                 <h3>Inventory Management</h3>
                 <div class="group-filter" id="inventoryGroupFilter">
-                    <button class="group-btn active" data-group="all">All Products</button>
+                    <button class="group-btn active" data-group="all">All</button>
                     <button class="group-btn" data-group="mwad">مواد بناء</button>
                     <button class="group-btn" data-group="mojali">حجر مجلي</button>
                     <button class="group-btn" data-group="mosnafar">حجر مصنفر</button>
                 </div>
-                <div class="search-box"><input type="text" id="inventorySearch" placeholder="Search inventory..."></div>
+                <div class="search-box"><input type="text" id="inventorySearch" placeholder="Search..."></div>
                 <button id="addProductBtn" class="btn-success">Add New Product</button>
                 <div style="overflow-x: auto; max-height: 500px;">
                     <table id="inventoryTable"><thead><tr><th>Group</th><th>Name</th><th>Size</th><th>Selling Price</th><th>Cost Price</th><th>Stock</th><th>Actions</th></tr></thead>
@@ -392,7 +360,7 @@
 
         <div id="profitlossTab" class="tab-content">
             <div class="stats-grid">
-                <div class="stat-card"><h3>Total Revenue</h3><div class="value" id="revenue">SAR 0</div></div>
+                <div class="stat-card"><h3>Revenue</h3><div class="value" id="revenue">SAR 0</div></div>
                 <div class="stat-card"><h3>Total Cost</h3><div class="value" id="totalCost">SAR 0</div></div>
                 <div class="stat-card profit-card"><h3>Net Profit</h3><div class="value" id="netProfit">SAR 0</div></div>
                 <div class="stat-card"><h3>Profit Margin</h3><div class="value" id="profitMargin">0%</div></div>
@@ -402,7 +370,7 @@
         <div id="invoicesTab" class="tab-content">
             <div class="report-panel">
                 <h3>All Invoices</h3>
-                <div class="search-box"><input type="text" id="invoiceSearch" placeholder="Search by invoice or customer..."></div>
+                <div class="search-box"><input type="text" id="invoiceSearch" placeholder="Search..."></div>
                 <div style="overflow-x: auto; max-height: 500px;">
                     <table id="invoicesTable"><thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Actions</th></tr></thead>
                     <tbody id="invoicesBody"></tbody></table>
@@ -412,36 +380,32 @@
 
         <div id="settingsTab" class="tab-content">
             <div class="settings-panel">
-                <h3>⚙️ System Settings</h3>
+                <h3>⚙️ Settings</h3>
                 <div class="settings-grid">
-                    <div class="setting-card">
-                        <h4>🏢 Company Profile</h4>
+                    <div class="setting-card"><h4>🏢 Company</h4>
                         <div class="form-group"><label>Company Name</label><input type="text" id="companyNameSetting"></div>
-                        <div class="form-group"><label>Company Logo (Emoji)</label><input type="text" id="companyLogoSetting" maxlength="5"></div>
+                        <div class="form-group"><label>Logo (Emoji)</label><input type="text" id="companyLogoSetting" maxlength="5"></div>
                         <div class="form-group"><label>Tagline</label><input type="text" id="companyTaglineSetting"></div>
                         <div class="form-group"><label>Address</label><textarea id="companyAddressSetting" rows="2"></textarea></div>
-                        <div class="form-group"><label>Phone Number</label><input type="text" id="companyPhoneSetting"></div>
-                        <button id="saveCompanySettingsBtn" class="btn-success">Save Company Settings</button>
+                        <div class="form-group"><label>Phone</label><input type="text" id="companyPhoneSetting"></div>
+                        <button id="saveCompanySettingsBtn" class="btn-success">Save</button>
                     </div>
-                    <div class="setting-card">
-                        <h4>💰 Tax / VAT Settings</h4>
-                        <div class="form-group"><label style="display: flex; justify-content: space-between;">Enable Tax/VAT<label class="toggle-switch"><input type="checkbox" id="taxEnabledToggle"><span class="slider"></span></label></label></div>
-                        <div class="form-group"><label>Tax Rate (%)</label><input type="number" id="taxRateSetting" value="15" step="0.5" min="0" max="100"></div>
+                    <div class="setting-card"><h4>💰 Tax</h4>
+                        <div class="form-group"><label>Enable Tax <label class="toggle-switch"><input type="checkbox" id="taxEnabledToggle"><span class="slider"></span></label></label></div>
+                        <div class="form-group"><label>Tax Rate (%)</label><input type="number" id="taxRateSetting" value="15"></div>
                         <div class="form-group"><label>Tax Name</label><input type="text" id="taxNameSetting" value="VAT"></div>
-                        <button id="saveTaxSettingsBtn" class="btn-success">Save Tax Settings</button>
+                        <button id="saveTaxSettingsBtn" class="btn-success">Save</button>
                     </div>
-                    <div class="setting-card">
-                        <h4>📄 Invoice Settings</h4>
-                        <div class="form-group"><label>Invoice Footer</label><textarea id="invoiceFooterSetting" rows="3"></textarea></div>
-                        <div class="form-group"><label>Additional Notes</label><textarea id="invoiceNotesSetting" rows="2"></textarea></div>
-                        <button id="saveInvoiceSettingsBtn" class="btn-success">Save Invoice Settings</button>
+                    <div class="setting-card"><h4>📄 Invoice</h4>
+                        <div class="form-group"><label>Footer</label><textarea id="invoiceFooterSetting" rows="3"></textarea></div>
+                        <div class="form-group"><label>Notes</label><textarea id="invoiceNotesSetting" rows="2"></textarea></div>
+                        <button id="saveInvoiceSettingsBtn" class="btn-success">Save</button>
                     </div>
-                    <div class="setting-card">
-                        <h4>💾 Backup & Restore</h4>
-                        <button id="backupDataBtn" class="btn-info">📥 Backup Data</button>
-                        <button id="restoreDataBtn" class="btn-warning">📤 Restore Data</button>
+                    <div class="setting-card"><h4>💾 Backup</h4>
+                        <button id="backupDataBtn" class="btn-info">Backup</button>
+                        <button id="restoreDataBtn" class="btn-warning">Restore</button>
                         <input type="file" id="restoreFileInput" style="display:none;" accept=".json">
-                        <button id="resetAllDataBtn" class="btn-danger">⚠️ Reset All Data</button>
+                        <button id="resetAllDataBtn" class="btn-danger">Reset All</button>
                     </div>
                 </div>
             </div>
@@ -454,7 +418,7 @@
             <div style="text-align: center; margin-top: 20px;">
                 <button id="closeModalBtn" class="btn-info">Close</button>
                 <button id="printInvoiceBtn" class="btn-success">Print</button>
-                <button id="shareWhatsAppBtn" class="btn-whatsapp">Send via WhatsApp</button>
+                <button id="shareWhatsAppBtn" class="btn-whatsapp">WhatsApp</button>
             </div>
         </div>
     </div>
@@ -462,23 +426,16 @@
     <div id="pdfTemplate" style="position: fixed; top: -9999px; left: -9999px; width: 800px; background: white;"></div>
 
     <script>
-        let cart = [];
-        let allOrders = [];
-        let products = [];
-        let currentCurrency = 'SAR';
-        let currentLanguage = 'en';
-        let actionHistory = [];
-        let currentProductGroup = 'all';
-        let currentInventoryGroup = 'all';
-        let selectedItemType = 'pieces'; // 'sqm' or 'pieces'
-
-        let companySettings = { name: 'TABUK MARBLE', logo: '🏛️', tagline: 'Premium Marble Solutions | Since 2018', address: 'Al Arjan District, Tabuk | Tel: +966 59 807 4287', phone: '0598074287' };
+        let cart = [], allOrders = [], products = [], actionHistory = [];
+        let currentCurrency = 'SAR', currentLanguage = 'en';
+        let currentProductGroup = 'all', currentInventoryGroup = 'all';
+        
+        let companySettings = { name: 'TABUK MARBLE', logo: '🏛️', tagline: 'Premium Marble Solutions', address: 'Tabuk, Saudi Arabia', phone: '0598074287' };
         let taxSettings = { enabled: true, rate: 15, name: 'VAT' };
-        let invoiceSettings = { footer: 'Thank you for choosing TABUK MARBLE!', notes: '' };
+        let invoiceSettings = { footer: 'Thank you!', notes: '' };
 
-        // Complete products database
         const defaultProducts = [
-            // ===== مواد بناء GROUP - Pieces Mode (prices aap khud set karein) =====
+            // مواد بناء - Pieces Mode (prices 0 - aap khud set karein)
             { id: 1, name: 'زاویہ اپ ڈاون', size: '4*4*3mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
             { id: 2, name: 'زاویہ اپ ڈاون', size: '4*4*2mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
             { id: 3, name: 'زاویہ اپ ڈاون', size: '4*3*3mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
@@ -488,170 +445,379 @@
             { id: 7, name: 'زاویہ اپ ڈاون', size: '4*8*3mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
             { id: 8, name: 'زاویہ اپ ڈاون', size: '4*10*3mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
             { id: 9, name: 'زاویہ اپ ڈاون', size: '5*5*3mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 10, name: 'زاویہ اپ ڈاون', size: '4*4*3mm (مط)', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 11, name: 'مسمار مغلوب', size: '10*40', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 12, name: 'مسمار مغلوب', size: '10*50', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 13, name: 'مسمار مغلوب', size: '10*60', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 14, name: 'مسمار مغلوب', size: '10*80', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 15, name: 'مسمار مغلوب', size: '10*100', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 16, name: 'براغی سقف', size: '10*72', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 17, name: 'براغی سقف', size: '10*92', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 18, name: 'براغی سقف', size: '10*112', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 19, name: 'براغی سقف', size: '10*115', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 20, name: 'براغی سقف', size: '10*202', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 21, name: 'جولی ابو جمل', size: 'Standard', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 22, name: 'جولی گلیڈتیر', size: 'Standard', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 23, name: 'دسک حجر احمر اے ایس', size: '7 بوسہ', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 24, name: 'دسک حجر احمر اے ایس', size: '4.50 بوسہ', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 25, name: 'دسک جرانیت ایے وا', size: '7 بوسہ', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 26, name: 'دسک بوش', size: '9 بوسہ', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 27, name: 'دسک حجر احمر اے ایس', size: '9 بوسہ', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 28, name: 'ریشہ ہلتی', size: '20cm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 29, name: 'ریشہ ہلتی', size: '15cm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 30, name: 'ریشہ ہلتی', size: '10cm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 31, name: 'ریشہ دریل', size: '4mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 32, name: 'ریشہ دریل', size: '6mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 33, name: 'ریشہ دریل', size: '10mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 34, name: 'گمتا چوڑی', size: 'Standard', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 35, name: 'گمتا سادہ', size: 'Standard', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
-            { id: 36, name: 'بکرا', size: 'Standard', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 10, name: 'مسمار مغلوب', size: '10*40', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 11, name: 'مسمار مغلوب', size: '10*50', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 12, name: 'مسمار مغلوب', size: '10*60', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 13, name: 'مسمار مغلوب', size: '10*80', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 14, name: 'مسمار مغلوب', size: '10*100', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 15, name: 'براغی سقف', size: '10*72', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 16, name: 'براغی سقف', size: '10*92', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 17, name: 'براغی سقف', size: '10*112', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 18, name: 'براغی سقف', size: '10*115', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 19, name: 'براغی سقف', size: '10*202', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 20, name: 'جولی ابو جمل', size: 'Standard', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 21, name: 'جولی گلیڈتیر', size: 'Standard', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 22, name: 'دسک حجر احمر اے ایس', size: '7 بوسہ', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 23, name: 'دسک حجر احمر اے ایس', size: '4.50 بوسہ', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 24, name: 'دسک جرانیت ایے وا', size: '7 بوسہ', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 25, name: 'دسک بوش', size: '9 بوسہ', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 26, name: 'ریشہ ہلتی', size: '20cm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 27, name: 'ریشہ ہلتی', size: '15cm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 28, name: 'ریشہ ہلتی', size: '10cm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 29, name: 'ریشہ دریل', size: '4mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 30, name: 'ریشہ دریل', size: '6mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 31, name: 'ریشہ دریل', size: '10mm', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 32, name: 'گمتا چوڑی', size: 'Standard', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 33, name: 'گمتا سادہ', size: 'Standard', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
+            { id: 34, name: 'بکرا', size: 'Standard', group: 'mwad', sellingPrice: 0, costPrice: 0, stock: 2000, type: 'pieces' },
             
-            // ===== حجر مصنفر GROUP - SQM Mode (Marble) Cost:50, Selling:60 =====
-            { id: 101, name: 'ابیض مصنفر فرزا 1*2', size: '3*40*80', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
-            { id: 102, name: 'ابیض مصنفر فرزا C', size: '3*40*60', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.6 },
-            { id: 103, name: 'ابیض مصنفر فرزا B', size: '3*50*100', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 1.0 },
-            { id: 104, name: 'ابیض مصنفر فرزا B', size: '3*40*..', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
-            { id: 105, name: 'ابیض مصنفر فرزتین B', size: '3*40*80', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
-            { id: 106, name: 'ایضض مصنفر مبروم', size: '4*7', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 4, width: 0.07, length: 0.07 },
-            { id: 107, name: 'ایضض مصنفر مبروم', size: '5*7', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 5, width: 0.07, length: 0.07 },
-            { id: 108, name: 'ایضض مصنفر مبروم', size: '3*7', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.07, length: 0.07 },
-            { id: 109, name: 'ایضض مصنفر مبروم', size: '3*10', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.1, length: 0.1 },
-            { id: 110, name: 'ایضض مصنفر مبروم', size: '3*15', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.15, length: 0.15 },
-            { id: 111, name: 'ایضض مصنفر مبروم', size: '3*18', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.18, length: 0.18 },
-            { id: 112, name: 'ایضض مصنفر مبروم', size: '3*20', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.2 },
-            { id: 113, name: 'ایضض مصنفر مبروم', size: '3*25', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.25 },
-            { id: 114, name: 'ایضض مصنفر مبروم', size: '3*27', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.27, length: 0.27 },
-            { id: 115, name: 'ایضض مصنفر مبروم', size: '3*30', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
-            { id: 116, name: 'ایضض مصنفر مبروم', size: '3*32', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.32, length: 0.32 },
-            { id: 117, name: 'ایضض مصنفر مبروم', size: '3*35', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.35, length: 0.35 },
-            { id: 118, name: 'ایضض مصنفر مبروم', size: '3*37', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.37, length: 0.37 },
-            { id: 119, name: 'ایضض مصنفر مبروم B', size: '3*40', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
-            { id: 120, name: 'ایضض مصنفر مبروم', size: '3*50', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 0.5 },
-            { id: 121, name: 'ایضض مصنفر مبروم', size: '3*60', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.6, length: 0.6 },
-            { id: 122, name: 'ابیض مصنفر سادہ', size: '3*7', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.07, length: 0.07 },
-            { id: 123, name: 'ابیض مصنفر سادہ', size: '3*10', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.1, length: 0.1 },
-            { id: 124, name: 'ابیض مصنفر سادہ', size: '3*15', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.15, length: 0.15 },
-            { id: 125, name: 'ابیض مصنفر سادہ', size: '3*18', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.18, length: 0.18 },
-            { id: 126, name: 'ابیض مصنفر سادہ', size: '3*20', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.2 },
-            { id: 127, name: 'ابیض مصنفر سادہ', size: '3*25', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.25 },
-            { id: 128, name: 'ابیض مصنفر سادہ', size: '2*27', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 2, width: 0.27, length: 0.27 },
-            { id: 129, name: 'ابیض مصنفر سادہ', size: '3*30', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
-            { id: 130, name: 'ابیض مصنفر سادہ B', size: '3*40', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
-            { id: 131, name: 'ابیض مصنفر سادہ', size: '3*50', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 0.5 },
-            { id: 132, name: 'ایضض مصنفر', size: '3*60', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.6, length: 0.6 },
-            { id: 133, name: 'ایضض مصنفر مشطوف', size: '3*30', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
-            { id: 134, name: 'ابیض مصنفر غرفہ رومانی', size: '3*15', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.15, length: 0.15 },
-            { id: 135, name: 'ابیض مصنفر غرفہ رومانی', size: '3*20', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.2 },
-            { id: 136, name: 'ابیض مصنفر غرفہ رومانی', size: '3*25', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.25 },
-            { id: 137, name: 'ابیض مصنفر غرفہ رومانی', size: '3*30', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
-            { id: 138, name: 'ابیض مصنفر غرفہ رومانی', size: '3*35', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.35, length: 0.35 },
-            { id: 139, name: 'ابیض مصنفر غرفہ رومانی', size: '3*40', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
-            { id: 140, name: 'ابیض مصنفر غرفہ رومانی', size: '3*50', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 0.5 },
-            { id: 141, name: 'ابیض مصنفر مبروم مفروز', size: '3*25', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.25 },
-            { id: 142, name: 'پیانو ابیض مصنفر', size: '3*20*50', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.5 },
-            { id: 143, name: 'پیانو ابیض مصنفر', size: '3*25*50', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.5 },
-            { id: 144, name: 'پیانو ابیض مصنفر', size: '3*30*60', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.6 },
-            { id: 145, name: 'پیانو ابیض مصنفر', size: '5*25*50', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 5, width: 0.25, length: 0.5 },
+            // حجر مصنفر - SQM Mode (Cost 50, Selling 60)
+            { id: 101, name: 'ابیض مصنفر فرزا', size: '3*40*80', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
+            { id: 102, name: 'ابیض مصنفر مبروم', size: '3*30', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
+            { id: 103, name: 'ابیض مصنفر سادہ', size: '3*20', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.2 },
+            { id: 104, name: 'ابیض مصنفر غرفہ رومانی', size: '3*30', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
+            { id: 105, name: 'پیانو ابیض مصنفر', size: '3*20*50', group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.5 },
             
-            // ===== حجر مجلی GROUP - SQM Mode (Marble) Cost:60, Selling:70 =====
-            { id: 201, name: 'ابیض مجلی فرزا A', size: '3*40*80', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
-            { id: 202, name: 'ابیض مجلی فرزا C', size: '3*40*60', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.6 },
-            { id: 203, name: 'ابیض مجلی فرزا B', size: '3*40*80', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
-            { id: 204, name: 'ابیض مجلی فرزا A', size: '3*30*30', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
-            { id: 205, name: 'ایضض مجلی مبروم', size: '3*7', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.07, length: 0.07 },
-            { id: 206, name: 'ایضض مجلی مبروم', size: '3*10', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.1, length: 0.1 },
-            { id: 207, name: 'ایضض مجلی مبروم', size: '3*15', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.15, length: 0.15 },
-            { id: 208, name: 'ایضض مجلی مبروم', size: '3*18', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.18, length: 0.18 },
-            { id: 209, name: 'ایضض مجلی مبروم', size: '3*20', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.2 },
-            { id: 210, name: 'ایضض مجلی مبروم', size: '3*25', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.25 },
-            { id: 211, name: 'ایضض مجلی مبروم', size: '3*27', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.27, length: 0.27 },
-            { id: 212, name: 'ایضض مجلی مبروم', size: '3*30', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
-            { id: 213, name: 'ایضض مجلی مبروم', size: '3*32', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.32, length: 0.32 },
-            { id: 214, name: 'ایضض مجلی مبروم', size: '3*35', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.35, length: 0.35 },
-            { id: 215, name: 'ایضض مجلی مبروم', size: '3*37', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.37, length: 0.37 },
-            { id: 216, name: 'ایضض مجلی مبروم', size: '3*40', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
-            { id: 217, name: 'ایضض مجلی مبروم', size: '3*50', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 0.5 },
-            { id: 218, name: 'ایضض مجلی مبروم', size: '3*60', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.6, length: 0.6 },
-            { id: 219, name: 'ابیض مجلی مشطوف', size: '3*30', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
-            { id: 220, name: 'ابیض مجلی سادہ', size: '3*10', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.1, length: 0.1 },
-            { id: 221, name: 'ابیض مجلی سادہ', size: '3*15', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.15, length: 0.15 },
-            { id: 222, name: 'ابیض مجلی سادہ', size: '3*18', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.18, length: 0.18 },
-            { id: 223, name: 'ابیض مجلی سادہ', size: '3*20', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.2 },
-            { id: 224, name: 'ابیض مجلی سادہ B', size: '3*25', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.25 },
-            { id: 225, name: 'ابیض مجلی سادہ A', size: '2*25', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 2, width: 0.25, length: 0.25 },
-            { id: 226, name: 'ابیض مجلی سادہ B', size: '3*30', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
-            { id: 227, name: 'ابیض مجلی سادہ A', size: '3*30', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
-            { id: 228, name: 'ابیض مجلی سادہ', size: '3*40', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
-            { id: 229, name: 'ابیض مجلی سادہ', size: '3*50', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 0.5 },
-            { id: 230, name: 'ابیض مجلی غرفہ رومانی', size: '3*15', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.15, length: 0.15 },
-            { id: 231, name: 'ابیض مجلی غرفہ رومانی', size: '3*20', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.2 },
-            { id: 232, name: 'ابیض مجلی غرفہ رومانی', size: '3*25', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.25, length: 0.25 },
-            { id: 233, name: 'ابیض مجلی غرفہ رومانی', size: '3*30', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
-            { id: 234, name: 'ابیض مجلی غرفہ رومانی', size: '3*35', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.35, length: 0.35 },
-            { id: 235, name: 'ابیض مجلی غرفہ رومانی', size: '3*40', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
-            { id: 236, name: 'ابیض مجلی غرفہ رومانی', size: '3*50', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 0.5 },
-            { id: 237, name: 'ابیض بشارتہ فرزا', size: '3*40*80', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
-            { id: 238, name: 'ابیض بشارتہ فرزا', size: '3*40*60', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.6 },
-            { id: 239, name: 'ابیض بشارتہ فرزا', size: '3*30*60', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.6 },
-            { id: 240, name: 'ابیض بشارتہ فرزا B', size: '3*40', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
-            { id: 241, name: 'ابیض بشارتہ مشطوف B', size: '3*30*60', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.6 },
-            { id: 242, name: 'ابیض بشارتہ A', size: '3*40*80', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
-            { id: 243, name: 'KAREEMI HJAR SADA', size: '3*40', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.4 },
-            { id: 244, name: 'ابیض بشارتہ مشطوف C', size: '3*40*60', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.6 },
-            { id: 245, name: 'ابیض بشارتہ مشطوف C', size: '3*50*50', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.5, length: 0.5 },
-            { id: 246, name: 'ابیض بشارتہ A', size: '4*6*75', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 4, width: 0.6, length: 0.75 },
-            { id: 247, name: 'MNHOOD ABIAZ', size: '3*20*1.20', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 1.2 },
-            { id: 248, name: 'MNHOOD ABIAZ', size: '3*15*1.20', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.15, length: 1.2 },
+            // حجر مجلي - SQM Mode (Cost 60, Selling 70)
+            { id: 201, name: 'ابیض مجلی فرزا', size: '3*40*80', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
+            { id: 202, name: 'ابیض مجلی مبروم', size: '3*30', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
+            { id: 203, name: 'ابیض مجلی سادہ', size: '3*20', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.2, length: 0.2 },
+            { id: 204, name: 'ابیض مجلی غرفہ رومانی', size: '3*30', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.3, length: 0.3 },
+            { id: 205, name: 'ابیض بشارتہ', size: '3*40*80', group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 },
         ];
 
-        function toArabicNumbers(str) {
-            const arabicNumbers = { '0':'٠','1':'١','2':'٢','3':'٣','4':'٤','5':'٥','6':'٦','7':'٧','8':'٨','9':'٩' };
-            return String(str).replace(/[0-9]/g, function(d) { return arabicNumbers[d]; });
+        function formatCurrency(amount) {
+            if (isNaN(amount)) amount = 0;
+            let symbols = { SAR: 'SAR ', USD: '$ ' };
+            let rates = { SAR: 1, USD: 0.27 };
+            let converted = (amount * rates[currentCurrency]).toFixed(2);
+            return symbols[currentCurrency] + converted;
         }
 
-        function formatPhoneNumber(phone, isArabic) {
-            if (!phone) return '-';
-            let cleaned = phone.replace(/\D/g, '');
-            if (cleaned.length === 10 && cleaned.startsWith('05')) {
-                if (isArabic) return toArabicNumbers(cleaned);
-                return cleaned;
-            }
-            if (isArabic) return toArabicNumbers(phone);
-            return phone;
-        }
+        function getGroupName(g) { return g === 'mwad' ? 'مواد بناء' : (g === 'mojali' ? 'حجر مجلي' : 'حجر مصنفر'); }
 
-        function getCompanyAddress() {
-            if (currentLanguage === 'ar') {
-                return companySettings.address;
-            }
-            return companySettings.address;
-        }
+        function saveProducts() { localStorage.setItem('tabuk_products', JSON.stringify(products)); }
+        function saveOrders() { localStorage.setItem('tabuk_orders', JSON.stringify(allOrders)); }
 
-        function getGroupName(group) {
-            if (group === 'mwad') return 'مواد بناء';
-            if (group === 'mojali') return 'حجر مجلي';
-            if (group === 'mosnafar') return 'حجر مصنفر';
-            return 'All';
-        }
-
-        function loadAllSettings() {
-            const savedCompany = localStorage.getItem('tabuk_company_settings');
-            if (savedCompany) companySettings = JSON.parse(savedCompany);
-            const savedTax = localStorage.getItem('tabuk_tax_settings');
-            if (savedTax) taxSettings = JSON.parse(savedTax);
-            const savedInvoice = localStorage.getItem('tabuk_invoice_settings');
-            if (savedInvoice) invoiceSettings = JSON.parse(savedInvoice);
+        function initData() {
+            let saved = localStorage.getItem('tabuk_products');
+            if (saved && JSON.parse(saved).length > 0) products = JSON.parse(saved);
+            else { products = JSON.parse(JSON.stringify(defaultProducts)); saveProducts(); }
             
+            let savedOrders = localStorage.getItem('tabuk_orders');
+            allOrders = savedOrders ? JSON.parse(savedOrders) : [];
+            
+            // Setup dynamic fields
+            let dyn = document.getElementById('dynamicFields');
+            dyn.innerHTML = `
+                <div id="sqmFields" style="display:none; display:flex; gap:10px; flex:3;">
+                    <input type="number" id="thickness" placeholder="Thickness cm"><input type="number" id="width" placeholder="Width m"><input type="number" id="length" placeholder="Length m"><input type="number" id="sqmPrice" placeholder="Price/sqm">
+                </div>
+                <div id="piecesFields" style="display:flex; gap:10px; flex:3;">
+                    <input type="text" id="pieceSize" placeholder="Size" style="flex:2"><input type="number" id="piecesCount" placeholder="Qty" value="1" style="flex:1"><input type="number" id="pieceUnitPrice" placeholder="Price/pc" style="flex:1">
+                </div>
+            `;
+            
+            displayProducts();
+            loadInventory();
+            updateCartDisplay();
+            updateAll();
+            setupGroupFilters();
+            
+            let today = new Date();
+            let mp = document.getElementById('monthPicker');
+            if(mp) mp.value = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0');
+        }
+
+        function setupGroupFilters() {
+            document.querySelectorAll('#productGroupFilter .group-btn').forEach(btn => {
+                btn.onclick = () => {
+                    document.querySelectorAll('#productGroupFilter .group-btn').forEach(b=>b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentProductGroup = btn.dataset.group;
+                    displayProducts();
+                };
+            });
+            document.querySelectorAll('#inventoryGroupFilter .group-btn').forEach(btn => {
+                btn.onclick = () => {
+                    document.querySelectorAll('#inventoryGroupFilter .group-btn').forEach(b=>b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentInventoryGroup = btn.dataset.group;
+                    loadInventory();
+                };
+            });
+        }
+
+        function displayProducts() {
+            let search = document.getElementById('searchProduct').value.toLowerCase();
+            let filtered = products.filter(p => (currentProductGroup === 'all' || p.group === currentProductGroup) && (p.name.toLowerCase().includes(search) || p.size.toLowerCase().includes(search)));
+            let container = document.getElementById('productList');
+            container.innerHTML = '';
+            filtered.forEach(p => {
+                let cls = p.group === 'mwad' ? 'group-mwad' : (p.group === 'mojali' ? 'group-mojali' : 'group-mosnafar');
+                let price = p.sellingPrice > 0 ? formatCurrency(p.sellingPrice) : 'Set Price';
+                let unit = p.type === 'sqm' ? '/sqm' : '/pc';
+                let div = document.createElement('div');
+                div.className = 'product-card';
+                div.innerHTML = `<span class="group-badge ${cls}">${getGroupName(p.group)}</span><h4>${p.name}</h4><div>${p.size}</div><div style="color:#27ae60">${price}${unit}</div><div>Stock: ${p.stock}</div>`;
+                div.onclick = () => {
+                    document.getElementById('itemName').value = p.name;
+                    document.getElementById('costPriceItem').value = p.costPrice;
+                    if(p.type === 'sqm') {
+                        document.getElementById('sqmFields').style.display = 'flex';
+                        document.getElementById('piecesFields').style.display = 'none';
+                        document.getElementById('thickness').value = p.thickness || 3;
+                        document.getElementById('width').value = p.width || 0.4;
+                        document.getElementById('length').value = p.length || 0.8;
+                        document.getElementById('sqmPrice').value = p.sellingPrice;
+                    } else {
+                        document.getElementById('sqmFields').style.display = 'none';
+                        document.getElementById('piecesFields').style.display = 'flex';
+                        document.getElementById('pieceSize').value = p.size;
+                        document.getElementById('pieceUnitPrice').value = p.sellingPrice;
+                        document.getElementById('piecesCount').value = 1;
+                    }
+                    showToast(p.name + ' loaded');
+                };
+                container.appendChild(div);
+            });
+        }
+
+        function addToCart() {
+            let name = document.getElementById('itemName').value;
+            if(!name) { showToast('Select an item first!'); return; }
+            let cost = parseFloat(document.getElementById('costPriceItem').value) || 0;
+            let isSqm = document.getElementById('sqmFields').style.display === 'flex';
+            
+            if(isSqm) {
+                let w = parseFloat(document.getElementById('width').value);
+                let l = parseFloat(document.getElementById('length').value);
+                let price = parseFloat(document.getElementById('sqmPrice').value);
+                if(!w || !l || !price) { showToast('Fill all SQM fields'); return; }
+                let area = w * l;
+                let total = area * price;
+                cart.push({ id: Date.now(), name, type: 'sqm', size: `${w}x${l}m`, qty: area.toFixed(2)+' sqm', sellingPrice: price, costPrice: cost || price*0.7, total });
+            } else {
+                let size = document.getElementById('pieceSize').value;
+                let qty = parseFloat(document.getElementById('piecesCount').value);
+                let price = parseFloat(document.getElementById('pieceUnitPrice').value);
+                if(!size || !qty || !price) { showToast('Fill all fields'); return; }
+                let total = qty * price;
+                cart.push({ id: Date.now(), name, type: 'pieces', size, qty: qty+' pcs', sellingPrice: price, costPrice: cost || price*0.6, total });
+            }
+            updateCartDisplay();
+            showToast('Added to cart');
+        }
+
+        function updateCartDisplay() {
+            let tbody = document.getElementById('cartBody');
+            if(cart.length === 0) { tbody.innerHTML = '<tr><td colspan="6">Empty</td></tr>'; updateTotals(); return; }
+            tbody.innerHTML = '';
+            let subtotal = 0;
+            cart.forEach((item, idx) => {
+                subtotal += item.total;
+                let row = tbody.insertRow();
+                row.insertCell(0).innerHTML = item.name;
+                row.insertCell(1).innerHTML = item.size;
+                row.insertCell(2).innerHTML = item.qty;
+                row.insertCell(3).innerHTML = formatCurrency(item.sellingPrice);
+                row.insertCell(4).innerHTML = formatCurrency(item.total);
+                let btn = document.createElement('button');
+                btn.innerHTML = '❌';
+                btn.style.cssText = 'background:#e74c3c; padding:5px 10px';
+                btn.onclick = () => { cart.splice(idx,1); updateCartDisplay(); };
+                row.insertCell(5).appendChild(btn);
+            });
+            updateTotals(subtotal);
+        }
+
+        function updateTotals(subtotal) {
+            if(!subtotal) subtotal = cart.reduce((s,i)=>s+i.total,0);
+            let discPer = parseFloat(document.getElementById('posDiscount').value) || 0;
+            let discAmt = subtotal * discPer / 100;
+            let afterDisc = subtotal - discAmt;
+            let taxAmt = taxSettings.enabled ? afterDisc * taxSettings.rate / 100 : 0;
+            let grand = afterDisc + taxAmt;
+            document.getElementById('subtotal').innerHTML = formatCurrency(subtotal);
+            document.getElementById('discountAmount').innerHTML = formatCurrency(discAmt);
+            document.getElementById('taxAmount').innerHTML = formatCurrency(taxAmt);
+            document.getElementById('grandTotal').innerHTML = formatCurrency(grand);
+        }
+
+        function confirmOrder() {
+            if(cart.length === 0) { showToast('Cart empty'); return; }
+            let customer = document.getElementById('posCustomer').value;
+            let phone = document.getElementById('posCustomerPhone').value;
+            let discPer = parseFloat(document.getElementById('posDiscount').value) || 0;
+            let subtotal = cart.reduce((s,i)=>s+i.total,0);
+            let discAmt = subtotal * discPer / 100;
+            let afterDisc = subtotal - discAmt;
+            let taxAmt = taxSettings.enabled ? afterDisc * taxSettings.rate / 100 : 0;
+            let total = afterDisc + taxAmt;
+            let cost = cart.reduce((s,i)=>s + (i.costPrice * (i.type === 'sqm' ? parseFloat(i.qty) : parseInt(i.qty))),0);
+            let profit = total - cost;
+            let invNo = 'INV-' + String(allOrders.length+1).padStart(4,'0');
+            
+            // update stock
+            cart.forEach(item => {
+                let p = products.find(pr => pr.name === item.name);
+                if(p && p.stock) p.stock -= 1;
+            });
+            saveProducts();
+            
+            allOrders.push({ invoiceNo: invNo, date: new Date().toISOString(), customer, customerPhone: phone, items: [...cart], subtotal, discountPercent: discPer, discountAmount: discAmt, taxAmount: taxAmt, total, cost, profit });
+            saveOrders();
+            showToast('Order confirmed! ' + invNo);
+            cart = [];
+            updateCartDisplay();
+            displayProducts();
+            loadInventory();
+            updateAll();
+        }
+
+        function updateAll() {
+            let totalSales = allOrders.reduce((s,o)=>s+o.total,0);
+            let totalProfit = allOrders.reduce((s,o)=>s+o.profit,0);
+            document.getElementById('totalSales').innerHTML = formatCurrency(totalSales);
+            document.getElementById('totalOrders').innerHTML = allOrders.length;
+            document.getElementById('totalProfit').innerHTML = formatCurrency(totalProfit);
+            let revenue = totalSales;
+            let cost = allOrders.reduce((s,o)=>s+o.cost,0);
+            let profit = revenue - cost;
+            let margin = revenue ? (profit/revenue*100).toFixed(2) : 0;
+            document.getElementById('revenue').innerHTML = formatCurrency(revenue);
+            document.getElementById('totalCost').innerHTML = formatCurrency(cost);
+            document.getElementById('netProfit').innerHTML = formatCurrency(profit);
+            document.getElementById('profitMargin').innerHTML = margin + '%';
+            loadMonthlyData();
+            displayInvoices();
+        }
+
+        function loadMonthlyData() {
+            let month = document.getElementById('monthPicker').value;
+            if(!month) return;
+            let filtered = allOrders.filter(o => o.date.substring(0,7) === month);
+            let tbody = document.getElementById('monthlyBody');
+            tbody.innerHTML = '';
+            filtered.forEach(o => {
+                let row = tbody.insertRow();
+                row.insertCell(0).innerHTML = new Date(o.date).toLocaleDateString();
+                row.insertCell(1).innerHTML = o.invoiceNo;
+                row.insertCell(2).innerHTML = o.customer;
+                row.insertCell(3).innerHTML = o.customerPhone || '-';
+                row.insertCell(4).innerHTML = o.items.length;
+                row.insertCell(5).innerHTML = formatCurrency(o.total);
+                row.insertCell(6).innerHTML = formatCurrency(o.profit);
+                let cell = row.insertCell(7);
+                let v = document.createElement('button'); v.innerHTML='View'; v.style.background='#3498db'; v.onclick=()=>viewInvoice(o.invoiceNo);
+                let e = document.createElement('button'); e.innerHTML='Edit'; e.style.background='#9b59b6'; e.onclick=()=>editInvoice(o.invoiceNo);
+                let d = document.createElement('button'); d.innerHTML='Delete'; d.style.background='#e74c3c'; d.onclick=()=>deleteInvoice(o.invoiceNo);
+                let s = document.createElement('button'); s.innerHTML='WhatsApp'; s.style.background='#25d366'; s.onclick=()=>sendWhatsApp(o.invoiceNo);
+                cell.appendChild(v); cell.appendChild(e); cell.appendChild(d); cell.appendChild(s);
+            });
+        }
+
+        function displayInvoices() {
+            let search = document.getElementById('invoiceSearch').value.toLowerCase();
+            let filtered = allOrders.filter(o => o.invoiceNo.toLowerCase().includes(search) || o.customer.toLowerCase().includes(search)).reverse();
+            let tbody = document.getElementById('invoicesBody');
+            tbody.innerHTML = '';
+            filtered.forEach(o => {
+                let row = tbody.insertRow();
+                row.insertCell(0).innerHTML = o.invoiceNo;
+                row.insertCell(1).innerHTML = new Date(o.date).toLocaleDateString();
+                row.insertCell(2).innerHTML = o.customer;
+                row.insertCell(3).innerHTML = o.customerPhone || '-';
+                row.insertCell(4).innerHTML = o.items.length;
+                row.insertCell(5).innerHTML = formatCurrency(o.total);
+                let cell = row.insertCell(6);
+                let v = document.createElement('button'); v.innerHTML='View'; v.style.background='#3498db'; v.onclick=()=>viewInvoice(o.invoiceNo);
+                let e = document.createElement('button'); e.innerHTML='Edit'; e.style.background='#9b59b6'; e.onclick=()=>editInvoice(o.invoiceNo);
+                let d = document.createElement('button'); d.innerHTML='Delete'; d.style.background='#e74c3c'; d.onclick=()=>deleteInvoice(o.invoiceNo);
+                let s = document.createElement('button'); s.innerHTML='WhatsApp'; s.style.background='#25d366'; s.onclick=()=>sendWhatsApp(o.invoiceNo);
+                cell.appendChild(v); cell.appendChild(e); cell.appendChild(d); cell.appendChild(s);
+            });
+        }
+
+        function viewInvoice(invNo) {
+            let o = allOrders.find(x=>x.invoiceNo===invNo);
+            if(!o) return;
+            let itemsHtml = '<table><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>';
+            o.items.forEach(i => { itemsHtml += `<tr><td>${i.name}</td><td>${i.size}</td><td>${i.qty}</td><td>${formatCurrency(i.sellingPrice)}</td><td>${formatCurrency(i.total)}</td></tr>`; });
+            itemsHtml += '</tbody></table>';
+            document.getElementById('invoiceDetails').innerHTML = `<div style="text-align:center"><h2>${companySettings.logo} ${companySettings.name}</h2><p>${companySettings.address}</p></div><div><p>Invoice: ${o.invoiceNo}</p><p>Date: ${new Date(o.date).toLocaleString()}</p><p>Customer: ${o.customer}</p><p>Phone: ${o.customerPhone}</p></div>${itemsHtml}<div style="text-align:right"><p>Subtotal: ${formatCurrency(o.subtotal)}</p><p>Discount: ${o.discountPercent}% - ${formatCurrency(o.discountAmount)}</p><p>Tax: ${formatCurrency(o.taxAmount)}</p><h3>Total: ${formatCurrency(o.total)}</h3></div><div style="text-align:center"><p>${invoiceSettings.footer}</p></div>`;
+            document.getElementById('invoiceModal').style.display = 'flex';
+            window.currentInvNo = invNo;
+        }
+
+        function editInvoice(invNo) {
+            let o = allOrders.find(x=>x.invoiceNo===invNo);
+            if(!o) return;
+            let newDisc = prompt('Discount %:', o.discountPercent);
+            if(newDisc !== null) { o.discountPercent = parseFloat(newDisc); o.discountAmount = o.subtotal * o.discountPercent / 100; let ad = o.subtotal - o.discountAmount; o.taxAmount = taxSettings.enabled ? ad * taxSettings.rate / 100 : 0; o.total = ad + o.taxAmount; o.profit = o.total - o.cost; saveOrders(); updateAll(); showToast('Updated'); }
+        }
+
+        function deleteInvoice(invNo) { if(confirm('Delete?')) { allOrders = allOrders.filter(x=>x.invoiceNo!==invNo); saveOrders(); updateAll(); showToast('Deleted'); } }
+        function sendWhatsApp(invNo) { let o = allOrders.find(x=>x.invoiceNo===invNo); if(!o || !o.customerPhone) { showToast('No phone'); return; } let p = o.customerPhone.replace(/\D/g,''); if(p.startsWith('05')) p='966'+p.substring(1); let msg = `${companySettings.name} Invoice ${o.invoiceNo}%0ATotal: ${formatCurrency(o.total)}`; window.open(`https://wa.me/${p}?text=${msg}`,'_blank'); }
+
+        function loadInventory() {
+            let search = document.getElementById('inventorySearch').value.toLowerCase();
+            let filtered = products.filter(p => (currentInventoryGroup === 'all' || p.group === currentInventoryGroup) && (p.name.toLowerCase().includes(search) || p.size.toLowerCase().includes(search)));
+            let tbody = document.getElementById('inventoryBody');
+            tbody.innerHTML = '';
+            filtered.forEach(p => {
+                let row = tbody.insertRow();
+                row.insertCell(0).innerHTML = `<span class="group-badge ${p.group === 'mwad' ? 'group-mwad' : (p.group === 'mojali' ? 'group-mojali' : 'group-mosnafar')}">${getGroupName(p.group)}</span>`;
+                row.insertCell(1).innerHTML = p.name;
+                row.insertCell(2).innerHTML = p.size;
+                row.insertCell(3).innerHTML = formatCurrency(p.sellingPrice);
+                row.insertCell(4).innerHTML = formatCurrency(p.costPrice);
+                row.insertCell(5).innerHTML = p.stock;
+                let cell = row.insertCell(6);
+                let stk = document.createElement('button'); stk.innerHTML='Stock'; stk.style.background='#3498db'; stk.onclick=()=>{ let ns=prompt('New stock:',p.stock); if(ns){p.stock=parseInt(ns); saveProducts(); loadInventory(); displayProducts(); } };
+                let prc = document.createElement('button'); prc.innerHTML='Price'; prc.style.background='#9b59b6'; prc.onclick=()=>{ let np=prompt('New price:',p.sellingPrice); if(np){p.sellingPrice=parseFloat(np); saveProducts(); loadInventory(); displayProducts(); } };
+                let del = document.createElement('button'); del.innerHTML='Delete'; del.style.background='#e74c3c'; del.onclick=()=>{ if(confirm('Delete?')){ products=products.filter(x=>x.id!==p.id); saveProducts(); loadInventory(); displayProducts(); } };
+                cell.appendChild(stk); cell.appendChild(prc); cell.appendChild(del);
+            });
+        }
+
+        function showToast(msg) { let t = document.createElement('div'); t.className='toast'; t.innerHTML=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),3000); }
+        function closeModal() { document.getElementById('invoiceModal').style.display = 'none'; }
+        function printInvoice() { let w = window.open('','_blank'); w.document.write(`<html><head><title>Invoice</title><style>body{padding:20px} table{width:100%;border-collapse:collapse} th,td{padding:10px;border-bottom:1px solid #ddd}</style></head><body>${document.getElementById('invoiceDetails').innerHTML}</body></html>`); w.document.close(); w.print(); }
+        function shareCurrent() { if(window.currentInvNo) sendWhatsApp(window.currentInvNo); }
+        function backupData() { let data = {products, orders:allOrders, companySettings, taxSettings, invoiceSettings}; let a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(data)],{type:'application/json'})); a.download = `tabuk_backup_${new Date().toISOString().slice(0,19)}.json`; a.click(); showToast('Backup done'); }
+        function restoreData(file) { let r = new FileReader(); r.onload = e => { let d = JSON.parse(e.target.result); if(d.products) products = d.products; if(d.orders) allOrders = d.orders; saveProducts(); saveOrders(); location.reload(); }; r.readAsText(file); }
+        function resetAll() { if(confirm('RESET ALL DATA?')) { localStorage.clear(); location.reload(); } }
+
+        function setupEvents() {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.onclick = () => { document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active')); document.getElementById(btn.dataset.tab+'Tab').classList.add('active'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); if(btn.dataset.tab === 'inventory') loadInventory(); if(btn.dataset.tab === 'monthly') loadMonthlyData(); });
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.onclick = () => { document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); currentLanguage = btn.dataset.lang; });
+            document.querySelectorAll('.currency-btn').forEach(btn => btn.onclick = () => { document.querySelectorAll('.currency-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); currentCurrency = btn.dataset.currency; displayProducts(); updateCartDisplay(); loadInventory(); updateAll(); });
+            document.getElementById('addToCartBtn').onclick = addToCart;
+            document.getElementById('confirmOrderBtn').onclick = confirmOrder;
+            document.getElementById('clearCartBtn').onclick = () => { cart = []; updateCartDisplay(); };
+            document.getElementById('undoCartBtn').onclick = () => { if(cart.length) cart.pop(); updateCartDisplay(); };
+            document.getElementById('posDiscount').oninput = () => updateTotals();
+            document.getElementById('searchProduct').onkeyup = displayProducts;
+            document.getElementById('inventorySearch').onkeyup = loadInventory;
+            document.getElementById('invoiceSearch').onkeyup = displayInvoices;
+            document.getElementById('monthPicker').onchange = loadMonthlyData;
+            document.getElementById('addProductBtn').onclick = () => { alert('Add product feature - use inventory edit instead'); };
+            document.getElementById('closeModalBtn').onclick = closeModal;
+            document.getElementById('printInvoiceBtn').onclick = printInvoice;
+            document.getElementById('shareWhatsAppBtn').onclick = shareCurrent;
+            document.getElementById('saveCompanySettingsBtn').onclick = () => { companySettings = { name: document.getElementById('companyNameSetting').value, logo: document.getElementById('companyLogoSetting').value||'🏛️', tagline: document.getElementById('companyTaglineSetting').value, address: document.getElementById('companyAddressSetting').value, phone: document.getElementById('companyPhoneSetting').value }; localStorage.setItem('tabuk_company_settings',JSON.stringify(companySettings)); showToast('Saved'); };
+            document.getElementById('saveTaxSettingsBtn').onclick = () => { taxSettings = { enabled: document.getElementById('taxEnabledToggle').checked, rate: parseFloat(document.getElementById('taxRateSetting').value), name: document.getElementById('taxNameSetting').value }; localStorage.setItem('tabuk_tax_settings',JSON.stringify(taxSettings)); updateTotals(); showToast('Saved'); };
+            document.getElementById('saveInvoiceSettingsBtn').onclick = () => { invoiceSettings = { footer: document.getElementById('invoiceFooterSetting').value, notes: document.getElementById('invoiceNotesSetting').value }; localStorage.setItem('tabuk_invoice_settings',JSON.stringify(invoiceSettings)); showToast('Saved'); };
+            document.getElementById('backupDataBtn').onclick = backupData;
+            document.getElementById('restoreDataBtn').onclick = () => document.getElementById('restoreFileInput').click();
+            document.getElementById('restoreFileInput').onchange = e => { if(e.target.files[0]) restoreData(e.target.files[0]); };
+            document.getElementById('resetAllDataBtn').onclick = resetAll;
+            
+            // Load saved settings
+            let sc = localStorage.getItem('tabuk_company_settings'); if(sc) companySettings = JSON.parse(sc);
+            let st = localStorage.getItem('tabuk_tax_settings'); if(st) taxSettings = JSON.parse(st);
+            let si = localStorage.getItem('tabuk_invoice_settings'); if(si) invoiceSettings = JSON.parse(si);
             document.getElementById('companyNameSetting').value = companySettings.name;
             document.getElementById('companyLogoSetting').value = companySettings.logo;
             document.getElementById('companyTaglineSetting').value = companySettings.tagline;
@@ -662,536 +828,13 @@
             document.getElementById('taxNameSetting').value = taxSettings.name;
             document.getElementById('invoiceFooterSetting').value = invoiceSettings.footer;
             document.getElementById('invoiceNotesSetting').value = invoiceSettings.notes;
-            
             document.getElementById('companyNameDisplay').innerHTML = companySettings.name;
             document.getElementById('companyLogoDisplay').innerHTML = companySettings.logo;
             document.getElementById('companyTaglineDisplay').innerHTML = companySettings.tagline;
             document.getElementById('taxRateDisplay').innerHTML = taxSettings.rate;
         }
 
-        function saveProducts() { localStorage.setItem('tabuk_products', JSON.stringify(products)); }
-        function saveOrders() { localStorage.setItem('tabuk_orders', JSON.stringify(allOrders)); updateAll(); }
-
-        function updateAll() {
-            updateMonthlyReport();
-            updateProfitLoss();
-            displayInvoices();
-            loadMonthlyData();
-        }
-
-        function formatCurrency(amount) {
-            if (isNaN(amount)) amount = 0;
-            const symbols = { SAR: 'SAR ', USD: '$ ' };
-            const rates = { SAR: 1, USD: 0.27 };
-            let converted = (amount * rates[currentCurrency]).toFixed(2);
-            if (currentLanguage === 'ar') converted = toArabicNumbers(converted);
-            return symbols[currentCurrency] + converted;
-        }
-
-        const translations = {
-            en: { pos: "POS System", monthly: "Monthly Report", inventory: "Inventory", profitloss: "Profit & Loss", invoices: "Invoices", settings: "Settings", products: "Products", shoppingCart: "Shopping Cart", customerName: "Customer Name", customerPhone: "Customer Phone", discount: "Discount", confirmOrder: "Confirm Order", clearCart: "Clear Cart", undo: "Undo", downloadInvoice: "Download Invoice", totalSales: "Total Sales", totalOrders: "Total Orders", totalProfit: "Total Profit", addProduct: "Add New Product", item: "Item", total: "Total", date: "Date", invoice: "Invoice", customer: "Customer", phone: "Phone", items: "Items", profit: "Profit", revenue: "Total Revenue", cost: "Total Cost", netProfit: "Net Profit", margin: "Profit Margin", thankYou: "Thank you!", subtotal: "Subtotal", grandTotal: "Grand Total", deleteConfirm: "Are you sure?", deleteSuccess: "Deleted!", noInvoices: "No invoices found", cartEmpty: "Cart is empty!", orderConfirmed: "Order Confirmed! Invoice: ", productAdded: "added to cart!", edit: "Edit", delete: "Delete", view: "View", share: "WhatsApp", updateStock: "Update Stock" },
-            ar: { pos: "نظام البيع", monthly: "التقرير الشهري", inventory: "المخزون", profitloss: "الأرباح والخسائر", invoices: "الفواتير", settings: "الإعدادات", products: "المنتجات", shoppingCart: "سلة التسوق", customerName: "اسم العميل", customerPhone: "رقم الجوال", discount: "الخصم", confirmOrder: "تأكيد الطلب", clearCart: "مسح السلة", undo: "تراجع", downloadInvoice: "تحميل الفاتورة", totalSales: "إجمالي المبيعات", totalOrders: "إجمالي الطلبات", totalProfit: "إجمالي الربح", addProduct: "إضافة منتج", item: "العنصر", total: "المجموع", date: "التاريخ", invoice: "الفاتورة", customer: "العميل", phone: "الجوال", items: "العناصر", profit: "الربح", revenue: "إجمالي الإيرادات", cost: "إجمالي التكلفة", netProfit: "صافي الربح", margin: "هامش الربح", thankYou: "شكرا!", subtotal: "المجموع الفرعي", grandTotal: "المجموع الكلي", deleteConfirm: "هل أنت متأكد؟", deleteSuccess: "تم الحذف!", noInvoices: "لا توجد فواتير", cartEmpty: "السلة فارغة!", orderConfirmed: "تم تأكيد الطلب! الفاتورة: ", productAdded: "تمت الإضافة!", edit: "تعديل", delete: "حذف", view: "عرض", share: "واتساب", updateStock: "تحديث المخزون" }
-        };
-        function getTranslation(key) { return translations[currentLanguage][key] || key; }
-
-        function resetAndLoadData() {
-            localStorage.removeItem('tabuk_products');
-            localStorage.removeItem('tabuk_orders');
-            products = JSON.parse(JSON.stringify(defaultProducts));
-            saveProducts();
-            allOrders = [];
-            saveOrders();
-            loadAllSettings();
-            displayProducts();
-            loadInventory();
-            updateCartDisplay();
-            updateAll();
-            showToast('✅ All products loaded! ' + products.length + ' items added.');
-        }
-
-        function initData() {
-            let savedProducts = localStorage.getItem('tabuk_products');
-            if (savedProducts && JSON.parse(savedProducts).length > 0) {
-                products = JSON.parse(savedProducts);
-            } else {
-                products = JSON.parse(JSON.stringify(defaultProducts));
-                saveProducts();
-            }
-            
-            let savedOrders = localStorage.getItem('tabuk_orders');
-            allOrders = savedOrders ? JSON.parse(savedOrders) : [];
-            
-            loadAllSettings();
-            displayProducts();
-            updateMonthlyReport();
-            updateProfitLoss();
-            displayInvoices();
-            loadInventory();
-            updateCartDisplay();
-            
-            const today = new Date();
-            const monthPicker = document.getElementById('monthPicker');
-            if (monthPicker) monthPicker.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
-            
-            setupGroupFilters();
-            setupDynamicFields();
-            
-            if(products.length === 0) {
-                resetAndLoadData();
-            }
-        }
-        
-        function setupDynamicFields() {
-            const dynamicFields = document.getElementById('dynamicFields');
-            // Create SQM fields
-            const sqmDiv = document.createElement('div');
-            sqmDiv.className = 'sqm-fields';
-            sqmDiv.id = 'sqmFields';
-            sqmDiv.style.display = 'none';
-            sqmDiv.innerHTML = `
-                <input type="number" id="thickness" placeholder="Thickness cm" step="0.1">
-                <input type="number" id="width" placeholder="Width m" step="0.01">
-                <input type="number" id="length" placeholder="Length m" step="0.01">
-                <input type="number" id="sqmPrice" placeholder="Price per sqm" step="0.01">
-            `;
-            
-            // Create Pieces fields
-            const piecesDiv = document.createElement('div');
-            piecesDiv.className = 'pieces-fields';
-            piecesDiv.id = 'piecesFields';
-            piecesDiv.style.display = 'flex';
-            piecesDiv.innerHTML = `
-                <input type="text" id="pieceSize" placeholder="Size (e.g., 4*4*3mm)" style="flex:2">
-                <input type="number" id="piecesCount" placeholder="Qty" step="1" min="1" value="1" style="flex:1">
-                <input type="number" id="pieceUnitPrice" placeholder="Price per piece" step="0.01" style="flex:1">
-            `;
-            
-            dynamicFields.appendChild(sqmDiv);
-            dynamicFields.appendChild(piecesDiv);
-        }
-
-        function setupGroupFilters() {
-            document.querySelectorAll('#productGroupFilter .group-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('#productGroupFilter .group-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentProductGroup = btn.getAttribute('data-group');
-                    displayProducts();
-                });
-            });
-            document.querySelectorAll('#inventoryGroupFilter .group-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('#inventoryGroupFilter .group-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentInventoryGroup = btn.getAttribute('data-group');
-                    loadInventory();
-                });
-            });
-        }
-
-        function displayProducts() {
-            const searchTerm = document.getElementById('searchProduct').value.toLowerCase();
-            let filtered = products;
-            if (currentProductGroup !== 'all') {
-                filtered = filtered.filter(p => p.group === currentProductGroup);
-            }
-            filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm) || (p.size && p.size.toLowerCase().includes(searchTerm)));
-            
-            const container = document.getElementById('productList');
-            if (!container) return;
-            container.innerHTML = '';
-            
-            if(filtered.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:20px;">No products found</div>';
-                return;
-            }
-            
-            filtered.forEach(p => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                const groupClass = p.group === 'mwad' ? 'group-mwad' : (p.group === 'mojali' ? 'group-mojali' : 'group-mosnafar');
-                const groupName = getGroupName(p.group);
-                const priceDisplay = p.sellingPrice > 0 ? formatCurrency(p.sellingPrice) : 'Set Price';
-                const unitText = p.type === 'sqm' ? '/sqm' : '/pc';
-                card.innerHTML = `<div><span class="group-badge ${groupClass}">${groupName}</span></div>
-                    <h4>${p.name}</h4><div>Size: ${p.size}</div>
-                    <div style="color:#27ae60;font-weight:bold">${priceDisplay}${unitText}</div>
-                    <div style="font-size:11px">Stock: ${p.stock}</div>`;
-                card.onclick = () => {
-                    document.getElementById('itemName').value = p.name;
-                    document.getElementById('costPriceItem').value = p.costPrice;
-                    
-                    if (p.type === 'sqm') {
-                        // Show SQM fields, hide pieces fields
-                        document.getElementById('sqmFields').style.display = 'flex';
-                        document.getElementById('piecesFields').style.display = 'none';
-                        document.getElementById('thickness').value = p.thickness || 3;
-                        document.getElementById('width').value = p.width || 0.4;
-                        document.getElementById('length').value = p.length || 0.8;
-                        document.getElementById('sqmPrice').value = p.sellingPrice;
-                    } else {
-                        // Show pieces fields, hide SQM fields
-                        document.getElementById('sqmFields').style.display = 'none';
-                        document.getElementById('piecesFields').style.display = 'flex';
-                        document.getElementById('pieceSize').value = p.size;
-                        document.getElementById('pieceUnitPrice').value = p.sellingPrice;
-                        document.getElementById('piecesCount').value = 1;
-                    }
-                    showToast(p.name + ' loaded');
-                };
-                container.appendChild(card);
-            });
-        }
-
-        function addToCart() {
-            const name = document.getElementById('itemName').value.trim();
-            const costPrice = parseFloat(document.getElementById('costPriceItem').value);
-            if (!name) { showToast('Please select an item first!'); return; }
-            
-            // Check if SQM fields are visible or Pieces fields
-            const sqmFields = document.getElementById('sqmFields');
-            const isSqmMode = sqmFields.style.display === 'flex';
-            
-            if (isSqmMode) {
-                const thickness = parseFloat(document.getElementById('thickness').value);
-                const width = parseFloat(document.getElementById('width').value);
-                const length = parseFloat(document.getElementById('length').value);
-                const price = parseFloat(document.getElementById('sqmPrice').value);
-                if (!thickness || !width || !length || !price) { showToast('Please fill all SQM fields!'); return; }
-                const area = width * length;
-                const total = area * price;
-                actionHistory.push(JSON.parse(JSON.stringify(cart)));
-                cart.push({ 
-                    id: Date.now(), 
-                    name: name, 
-                    type: 'sqm', 
-                    size: `${width}m x ${length}m (${thickness}cm)`, 
-                    qty: area.toFixed(2) + ' sqm', 
-                    sellingPrice: price, 
-                    costPrice: costPrice || price * 0.8, 
-                    total: total 
-                });
-                showToast(name + ' added to cart');
-            } else {
-                const size = document.getElementById('pieceSize').value;
-                const piecesCount = parseFloat(document.getElementById('piecesCount').value);
-                const piecePrice = parseFloat(document.getElementById('pieceUnitPrice').value);
-                if (!size || !piecesCount || !piecePrice) { showToast('Please fill all fields!'); return; }
-                const total = piecesCount * piecePrice;
-                actionHistory.push(JSON.parse(JSON.stringify(cart)));
-                cart.push({ 
-                    id: Date.now(), 
-                    name: name, 
-                    type: 'pieces', 
-                    size: size, 
-                    qty: piecesCount + ' pcs', 
-                    sellingPrice: piecePrice, 
-                    costPrice: costPrice || piecePrice * 0.6, 
-                    total: total 
-                });
-                showToast(name + ' added to cart');
-            }
-            
-            // Clear fields but keep product loaded
-            document.getElementById('costPriceItem').value = '';
-            if (isSqmMode) {
-                document.getElementById('sqmPrice').value = '';
-            } else {
-                document.getElementById('piecesCount').value = 1;
-                document.getElementById('pieceUnitPrice').value = '';
-            }
-            updateCartDisplay();
-        }
-
-        function updateCartDisplay() {
-            const tbody = document.getElementById('cartBody');
-            if (!tbody) return;
-            if (cart.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">Cart is empty</td></tr>';
-                document.getElementById('subtotal').innerHTML = formatCurrency(0);
-                document.getElementById('taxAmount').innerHTML = formatCurrency(0);
-                document.getElementById('grandTotal').innerHTML = formatCurrency(0);
-                return;
-            }
-            let subtotal = 0;
-            tbody.innerHTML = '';
-            cart.forEach((item, idx) => {
-                subtotal += item.total;
-                const row = tbody.insertRow();
-                row.insertCell(0).innerHTML = item.name;
-                row.insertCell(1).innerHTML = item.size;
-                row.insertCell(2).innerHTML = item.qty;
-                row.insertCell(3).innerHTML = formatCurrency(item.sellingPrice);
-                row.insertCell(4).innerHTML = formatCurrency(item.total);
-                const actionCell = row.insertCell(5);
-                const delBtn = document.createElement('button');
-                delBtn.innerHTML = '❌';
-                delBtn.style.cssText = 'padding:5px 10px; background:#e74c3c; border:none; color:white; cursor:pointer; border-radius:5px';
-                delBtn.onclick = () => { actionHistory.push(JSON.parse(JSON.stringify(cart))); cart.splice(idx, 1); updateCartDisplay(); showToast('Item removed'); };
-                actionCell.appendChild(delBtn);
-            });
-            const discountPercent = parseFloat(document.getElementById('posDiscount').value) || 0;
-            const discountAmount = (subtotal * discountPercent) / 100;
-            let afterDiscount = subtotal - discountAmount;
-            let taxAmount = taxSettings.enabled ? (afterDiscount * taxSettings.rate) / 100 : 0;
-            const grandTotal = afterDiscount + taxAmount;
-            document.getElementById('subtotal').innerHTML = formatCurrency(subtotal);
-            document.getElementById('discountPercent').innerText = discountPercent;
-            document.getElementById('discountAmount').innerHTML = formatCurrency(discountAmount);
-            document.getElementById('taxAmount').innerHTML = formatCurrency(taxAmount);
-            document.getElementById('grandTotal').innerHTML = formatCurrency(grandTotal);
-        }
-
-        function clearCart() { if (confirm('Clear entire cart?')) { actionHistory.push(JSON.parse(JSON.stringify(cart))); cart = []; updateCartDisplay(); showToast('Cart cleared'); } }
-        function undoLastAction() { if (actionHistory.length > 0) { cart = actionHistory.pop(); updateCartDisplay(); showToast('Undo successful'); } else { showToast('Nothing to undo'); } }
-
-        function confirmOrder() {
-            if (cart.length === 0) { showToast(getTranslation('cartEmpty')); return; }
-            const customer = document.getElementById('posCustomer').value || 'Walk-in Customer';
-            const customerPhone = document.getElementById('posCustomerPhone').value || '';
-            const discountPercent = parseFloat(document.getElementById('posDiscount').value) || 0;
-            const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
-            const discountAmount = (subtotal * discountPercent) / 100;
-            let afterDiscount = subtotal - discountAmount;
-            let taxAmount = taxSettings.enabled ? (afterDiscount * taxSettings.rate) / 100 : 0;
-            const total = afterDiscount + taxAmount;
-            const cost = cart.reduce((sum, item) => sum + (item.costPrice * (item.type === 'sqm' ? parseFloat(item.qty) : parseInt(item.qty))), 0);
-            const profit = total - cost;
-            const invoiceNo = 'INV-' + String(allOrders.length + 1).padStart(4, '0');
-            
-            // Update stock
-            cart.forEach(item => {
-                const product = products.find(p => p.name === item.name && p.size === item.size);
-                if (product && product.stock) {
-                    let qtyUsed = item.type === 'sqm' ? 1 : parseInt(item.qty);
-                    product.stock = Math.max(0, product.stock - qtyUsed);
-                }
-            });
-            saveProducts();
-            
-            allOrders.push({ invoiceNo, date: new Date().toISOString(), customer, customerPhone, items: cart.map(item => ({ ...item })), subtotal, discountPercent, discountAmount, taxAmount, total, cost, profit });
-            saveOrders();
-            showToast(getTranslation('orderConfirmed') + invoiceNo);
-            cart = []; actionHistory = []; updateCartDisplay(); updateAll(); displayProducts(); loadInventory();
-        }
-
-        function viewFullInvoice(invoiceNo) {
-            const order = allOrders.find(o => o.invoiceNo === invoiceNo);
-            if (!order) return;
-            const modal = document.getElementById('invoiceModal');
-            const detailsDiv = document.getElementById('invoiceDetails');
-            const isArabic = currentLanguage === 'ar';
-            let itemsHtml = '<table style="width:100%; border-collapse:collapse;"><thead><tr style="background:#1a1a2e; color:#ffd700;"><th>Item</th><th>Size</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead><tbody>';
-            order.items.forEach(item => {
-                itemsHtml += `<tr><td>${item.name}</td><td>${item.size}</td><td>${item.qty}</td><td>${formatCurrency(item.sellingPrice)}</td><td>${formatCurrency(item.total)}</td></tr>`;
-            });
-            itemsHtml += '</tbody></table>';
-            detailsDiv.innerHTML = `<div><div style="background:#1a1a2e; color:#ffd700; padding:15px; text-align:center"><h2>${companySettings.logo} ${companySettings.name}</h2><p>${companySettings.tagline}</p><p>${getCompanyAddress()}</p></div>
-            <div><p><strong>Invoice:</strong> ${order.invoiceNo}</p><p><strong>Date:</strong> ${new Date(order.date).toLocaleString()}</p><p><strong>Customer:</strong> ${order.customer}</p><p><strong>Phone:</strong> ${formatPhoneNumber(order.customerPhone, isArabic)}</p></div>
-            ${itemsHtml}<div style="text-align:right"><p><strong>Subtotal:</strong> ${formatCurrency(order.subtotal)}</p><p><strong>Discount:</strong> ${order.discountPercent}% - ${formatCurrency(order.discountAmount)}</p>${taxSettings.enabled ? `<p><strong>${taxSettings.name} (${taxSettings.rate}%):</strong> ${formatCurrency(order.taxAmount)}</p>` : ''}<h3><strong>Grand Total:</strong> ${formatCurrency(order.total)}</h3></div>
-            <div style="text-align:center; margin-top:20px"><p>${invoiceSettings.footer}</p><p>${getCompanyAddress()}</p></div></div>`;
-            modal.style.display = 'flex';
-            window.currentInvoice = order;
-        }
-
-        function editInvoice(invoiceNo) {
-            const order = allOrders.find(o => o.invoiceNo === invoiceNo);
-            if (!order) return;
-            const newCustomer = prompt('Edit Customer Name:', order.customer);
-            if (newCustomer && newCustomer.trim()) order.customer = newCustomer.trim();
-            const newPhone = prompt('Edit Phone Number:', order.customerPhone);
-            if (newPhone !== null) order.customerPhone = newPhone;
-            const newDiscount = prompt('Edit Discount % (0-100):', order.discountPercent);
-            if (newDiscount !== null && !isNaN(newDiscount)) {
-                order.discountPercent = parseFloat(newDiscount);
-                order.discountAmount = (order.subtotal * order.discountPercent) / 100;
-                let afterDiscount = order.subtotal - order.discountAmount;
-                order.taxAmount = taxSettings.enabled ? (afterDiscount * taxSettings.rate) / 100 : 0;
-                order.total = afterDiscount + order.taxAmount;
-                order.profit = order.total - order.cost;
-            }
-            saveOrders(); updateAll(); showToast('Invoice updated!');
-        }
-
-        function deleteInvoice(invoiceNo) { if (confirm(getTranslation('deleteConfirm'))) { allOrders = allOrders.filter(o => o.invoiceNo !== invoiceNo); saveOrders(); updateAll(); showToast(getTranslation('deleteSuccess')); } }
-        
-        async function sendWhatsAppInvoice(invoiceNo) { 
-            const order = allOrders.find(o => o.invoiceNo === invoiceNo); 
-            if (!order || !order.customerPhone) { showToast('No phone number!'); return; }
-            let phone = order.customerPhone.replace(/\D/g, ''); 
-            if (phone.length === 10 && phone.startsWith('05')) phone = '966' + phone.substring(1);
-            const msg = `${companySettings.name} Invoice ${order.invoiceNo}%0ACustomer: ${order.customer}%0ATotal: ${formatCurrency(order.total)}%0A${invoiceSettings.footer}`;
-            window.open(`https://wa.me/${phone}?text=${msg}`, '_blank'); showToast('Opening WhatsApp...');
-        }
-
-        function updateMonthlyReport() { 
-            document.getElementById('totalSales').innerHTML = formatCurrency(allOrders.reduce((s,o)=>s+(o.total||0),0)); 
-            document.getElementById('totalOrders').innerHTML = allOrders.length; 
-            document.getElementById('totalProfit').innerHTML = formatCurrency(allOrders.reduce((s,o)=>s+(o.profit||0),0)); 
-            loadMonthlyData(); 
-        }
-        
-        function loadMonthlyData() {
-            const month = document.getElementById('monthPicker').value;
-            if (!month) return;
-            const filtered = allOrders.filter(o => o.date.substring(0,7) === month);
-            const tbody = document.getElementById('monthlyBody');
-            if (filtered.length === 0) { tbody.innerHTML = '<table><td colspan="8">No invoices</td></tr>'; return; }
-            tbody.innerHTML = '';
-            filtered.forEach(o => {
-                const row = tbody.insertRow();
-                row.insertCell(0).innerHTML = new Date(o.date).toLocaleDateString();
-                row.insertCell(1).innerHTML = `<strong>${o.invoiceNo}</strong>`;
-                row.insertCell(2).innerHTML = o.customer;
-                row.insertCell(3).innerHTML = formatPhoneNumber(o.customerPhone, currentLanguage === 'ar');
-                row.insertCell(4).innerHTML = o.items.length;
-                row.insertCell(5).innerHTML = formatCurrency(o.total);
-                row.insertCell(6).innerHTML = `<span style="color:#27ae60">${formatCurrency(o.profit)}</span>`;
-                const actionCell = row.insertCell(7);
-                actionCell.className = 'action-group';
-                const viewBtn = document.createElement('button'); viewBtn.innerHTML = '👁️ View'; viewBtn.style.cssText = 'background:#3498db'; viewBtn.onclick = () => viewFullInvoice(o.invoiceNo);
-                const editBtn = document.createElement('button'); editBtn.innerHTML = '✏️ Edit'; editBtn.style.cssText = 'background:#9b59b6'; editBtn.onclick = () => editInvoice(o.invoiceNo);
-                const delBtn = document.createElement('button'); delBtn.innerHTML = '🗑️ Delete'; delBtn.style.cssText = 'background:#e74c3c'; delBtn.onclick = () => deleteInvoice(o.invoiceNo);
-                const shareBtn = document.createElement('button'); shareBtn.innerHTML = '📱 WhatsApp'; shareBtn.style.cssText = 'background:#25d366'; shareBtn.onclick = () => sendWhatsAppInvoice(o.invoiceNo);
-                actionCell.appendChild(viewBtn); actionCell.appendChild(editBtn); actionCell.appendChild(delBtn); actionCell.appendChild(shareBtn);
-            });
-        }
-        
-        function updateProfitLoss() { 
-            const revenue = allOrders.reduce((s,o)=>s+(o.total||0),0); 
-            const cost = allOrders.reduce((s,o)=>s+(o.cost||0),0); 
-            const profit = revenue-cost; 
-            const margin = revenue>0?((profit/revenue)*100).toFixed(2):0; 
-            document.getElementById('revenue').innerHTML=formatCurrency(revenue); 
-            document.getElementById('totalCost').innerHTML=formatCurrency(cost); 
-            document.getElementById('netProfit').innerHTML=formatCurrency(profit); 
-            document.getElementById('profitMargin').innerHTML=margin+'%'; 
-        }
-        
-        function displayInvoices() {
-            const search = document.getElementById('invoiceSearch').value.toLowerCase();
-            const filtered = allOrders.filter(o => o.invoiceNo.toLowerCase().includes(search) || o.customer.toLowerCase().includes(search)).reverse();
-            const tbody = document.getElementById('invoicesBody');
-            if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="7">No invoices</td></tr>'; return; }
-            tbody.innerHTML = '';
-            filtered.forEach(o => {
-                const row = tbody.insertRow();
-                row.insertCell(0).innerHTML = `<strong>${o.invoiceNo}</strong>`;
-                row.insertCell(1).innerHTML = new Date(o.date).toLocaleDateString();
-                row.insertCell(2).innerHTML = o.customer;
-                row.insertCell(3).innerHTML = formatPhoneNumber(o.customerPhone, currentLanguage === 'ar');
-                row.insertCell(4).innerHTML = o.items.length + ' items';
-                row.insertCell(5).innerHTML = formatCurrency(o.total);
-                const actionCell = row.insertCell(6);
-                actionCell.className = 'action-group';
-                const viewBtn = document.createElement('button'); viewBtn.innerHTML = '👁️ View'; viewBtn.style.cssText = 'background:#3498db'; viewBtn.onclick = () => viewFullInvoice(o.invoiceNo);
-                const editBtn = document.createElement('button'); editBtn.innerHTML = '✏️ Edit'; editBtn.style.cssText = 'background:#9b59b6'; editBtn.onclick = () => editInvoice(o.invoiceNo);
-                const delBtn = document.createElement('button'); delBtn.innerHTML = '🗑️ Delete'; delBtn.style.cssText = 'background:#e74c3c'; delBtn.onclick = () => deleteInvoice(o.invoiceNo);
-                const shareBtn = document.createElement('button'); shareBtn.innerHTML = '📱 WhatsApp'; shareBtn.style.cssText = 'background:#25d366'; shareBtn.onclick = () => sendWhatsAppInvoice(o.invoiceNo);
-                actionCell.appendChild(viewBtn); actionCell.appendChild(editBtn); actionCell.appendChild(delBtn); actionCell.appendChild(shareBtn);
-            });
-        }
-        
-        function loadInventory() {
-            const search = document.getElementById('inventorySearch').value.toLowerCase();
-            let filtered = products;
-            if (currentInventoryGroup !== 'all') {
-                filtered = filtered.filter(p => p.group === currentInventoryGroup);
-            }
-            filtered = filtered.filter(p => p.name.toLowerCase().includes(search) || (p.size && p.size.toLowerCase().includes(search)));
-            const tbody = document.getElementById('inventoryBody');
-            tbody.innerHTML = '';
-            
-            if(filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">No products found</td></tr>';
-                return;
-            }
-            
-            filtered.forEach(p => {
-                const row = tbody.insertRow();
-                const groupClass = p.group === 'mwad' ? 'group-mwad' : (p.group === 'mojali' ? 'group-mojali' : 'group-mosnafar');
-                row.insertCell(0).innerHTML = `<span class="group-badge ${groupClass}">${getGroupName(p.group)}</span>`;
-                row.insertCell(1).innerHTML = p.name;
-                row.insertCell(2).innerHTML = p.size;
-                row.insertCell(3).innerHTML = formatCurrency(p.sellingPrice);
-                row.insertCell(4).innerHTML = formatCurrency(p.costPrice);
-                row.insertCell(5).innerHTML = `<span style="color:${p.stock<100?'#e74c3c':'#27ae60'}">${p.stock}</span>`;
-                const actionCell = row.insertCell(6);
-                const updateBtn = document.createElement('button'); updateBtn.innerHTML = '📦 Stock'; updateBtn.style.cssText = 'background:#3498db'; updateBtn.onclick = () => { const newStock = prompt('New stock:', p.stock); if(newStock && !isNaN(newStock)) { p.stock = parseInt(newStock); saveProducts(); loadInventory(); displayProducts(); showToast('Stock updated'); } };
-                const editBtn = document.createElement('button'); editBtn.innerHTML = '✏️ Price'; editBtn.style.cssText = 'background:#9b59b6'; editBtn.onclick = () => { const newPrice = prompt('New selling price:', p.sellingPrice); if(newPrice && !isNaN(newPrice)) { p.sellingPrice = parseFloat(newPrice); saveProducts(); loadInventory(); displayProducts(); showToast('Price updated'); } };
-                const delBtn = document.createElement('button'); delBtn.innerHTML = '🗑️ Delete'; delBtn.style.cssText = 'background:#e74c3c'; delBtn.onclick = () => { if(confirm('Delete this product?')) { products = products.filter(pr=>pr.id!==p.id); saveProducts(); loadInventory(); displayProducts(); showToast('Deleted'); } };
-                actionCell.appendChild(updateBtn); actionCell.appendChild(editBtn); actionCell.appendChild(delBtn);
-            });
-        }
-        
-        function showAddProductModal() {
-            const group = prompt('Select Group:\n1 - مواد بناء\n2 - حجر مجلي\n3 - حجر مصنفر');
-            let groupName = 'mwad';
-            if (group === '2') groupName = 'mojali';
-            else if (group === '3') groupName = 'mosnafar';
-            const type = confirm('Marble/SQM (OK) or Fitting/Pieces (Cancel)?') ? 'sqm' : 'pieces';
-            const name = prompt('Product name:');
-            if (!name) return;
-            const size = prompt('Size/Dimensions:');
-            const price = parseFloat(prompt('Selling price:'));
-            const cost = parseFloat(prompt('Cost price:')) || price*0.6;
-            const stock = parseInt(prompt('Stock quantity:')) || 2000;
-            const newId = Math.max(...products.map(p=>p.id),0)+1;
-            const newProduct = { id: newId, name, size, group: groupName, sellingPrice: price, costPrice: cost, stock, type };
-            if (type === 'sqm') {
-                newProduct.thickness = parseFloat(prompt('Thickness (cm):')) || 3;
-                newProduct.width = parseFloat(prompt('Width (m):')) || 0.4;
-                newProduct.length = parseFloat(prompt('Length (m):')) || 0.8;
-            }
-            products.push(newProduct);
-            saveProducts(); displayProducts(); loadInventory(); showToast('Product added!');
-        }
-        
-        function backupData() { const data = { products, orders: allOrders, companySettings, taxSettings, invoiceSettings }; const blob = new Blob([JSON.stringify(data)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `tabuk_backup_${new Date().toISOString().slice(0,19)}.json`; a.click(); showToast('Backup created'); }
-        function restoreData(file) { const reader = new FileReader(); reader.onload = e => { try { const data = JSON.parse(e.target.result); if(data.products) products = data.products; if(data.orders) allOrders = data.orders; if(data.companySettings) companySettings = data.companySettings; if(data.taxSettings) taxSettings = data.taxSettings; if(data.invoiceSettings) invoiceSettings = data.invoiceSettings; saveProducts(); saveOrders(); loadAllSettings(); displayProducts(); loadInventory(); updateAll(); showToast('Restored!'); } catch(err) { showToast('Invalid file'); } }; reader.readAsText(file); }
-        function setCurrency(c) { currentCurrency = c; displayProducts(); updateCartDisplay(); updateAll(); loadInventory(); }
-        function setLanguage(lang) { currentLanguage = lang; updateUILanguage(); updateCartDisplay(); updateAll(); displayInvoices(); loadInventory(); }
-        function updateUILanguage() { const t = translations[currentLanguage]; document.querySelectorAll('.tab-btn').forEach(btn => { const tn = btn.getAttribute('data-tab'); if(t[tn]) btn.innerHTML = (tn==='settings'?'⚙️ ':'') + t[tn]; }); }
-        function closeModal() { document.getElementById('invoiceModal').style.display = 'none'; }
-        function printInvoice() { const w = window.open('', '_blank'); w.document.write(`<html><head><title>Invoice</title><style>body{font-family:Arial;padding:20px} table{width:100%;border-collapse:collapse} th,td{padding:10px;border-bottom:1px solid #ddd} th{background:#1a1a2e;color:#ffd700}</style></head><body>${document.getElementById('invoiceDetails').innerHTML}</body></html>`); w.document.close(); w.print(); }
-        function shareCurrentInvoice() { if(window.currentInvoice) sendWhatsAppInvoice(window.currentInvoice.invoiceNo); else showToast('No invoice'); }
-        function showToast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.innerHTML = msg; document.body.appendChild(t); setTimeout(()=>t.remove(),3000); }
-        
-        function setupEventListeners() {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => { const tn = btn.getAttribute('data-tab'); document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active')); document.getElementById(tn+'Tab').classList.add('active'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); if(tn==='inventory') loadInventory(); if(tn==='monthly') loadMonthlyData(); }));
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); setLanguage(btn.getAttribute('data-lang')); }));
-            document.querySelectorAll('.currency-btn').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('.currency-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); setCurrency(btn.getAttribute('data-currency')); }));
-            document.getElementById('addToCartBtn').addEventListener('click', addToCart);
-            document.getElementById('confirmOrderBtn').addEventListener('click', confirmOrder);
-            document.getElementById('clearCartBtn').addEventListener('click', clearCart);
-            document.getElementById('undoCartBtn').addEventListener('click', undoLastAction);
-            document.getElementById('downloadInvoiceBtn').addEventListener('click', () => { if(cart.length===0) showToast('Cart empty'); else { showToast('Download feature ready'); } });
-            document.getElementById('searchProduct').addEventListener('keyup', displayProducts);
-            document.getElementById('inventorySearch').addEventListener('keyup', loadInventory);
-            document.getElementById('invoiceSearch').addEventListener('keyup', displayInvoices);
-            document.getElementById('monthPicker').addEventListener('change', loadMonthlyData);
-            document.getElementById('posDiscount').addEventListener('input', updateCartDisplay);
-            document.getElementById('addProductBtn').addEventListener('click', showAddProductModal);
-            document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-            document.getElementById('printInvoiceBtn').addEventListener('click', printInvoice);
-            document.getElementById('shareWhatsAppBtn').addEventListener('click', shareCurrentInvoice);
-            document.getElementById('saveCompanySettingsBtn').addEventListener('click', () => { companySettings = { name: document.getElementById('companyNameSetting').value, logo: document.getElementById('companyLogoSetting').value||'🏛️', tagline: document.getElementById('companyTaglineSetting').value, address: document.getElementById('companyAddressSetting').value, phone: document.getElementById('companyPhoneSetting').value }; localStorage.setItem('tabuk_company_settings',JSON.stringify(companySettings)); loadAllSettings(); showToast('Saved'); });
-            document.getElementById('saveTaxSettingsBtn').addEventListener('click', () => { taxSettings = { enabled: document.getElementById('taxEnabledToggle').checked, rate: parseFloat(document.getElementById('taxRateSetting').value), name: document.getElementById('taxNameSetting').value }; localStorage.setItem('tabuk_tax_settings',JSON.stringify(taxSettings)); loadAllSettings(); updateCartDisplay(); showToast('Saved'); });
-            document.getElementById('saveInvoiceSettingsBtn').addEventListener('click', () => { invoiceSettings = { footer: document.getElementById('invoiceFooterSetting').value, notes: document.getElementById('invoiceNotesSetting').value }; localStorage.setItem('tabuk_invoice_settings',JSON.stringify(invoiceSettings)); showToast('Saved'); });
-            document.getElementById('backupDataBtn').addEventListener('click', backupData);
-            document.getElementById('restoreDataBtn').addEventListener('click', () => document.getElementById('restoreFileInput').click());
-            document.getElementById('restoreFileInput').addEventListener('change', e => { if(e.target.files[0]) restoreData(e.target.files[0]); });
-            document.getElementById('resetAllDataBtn').addEventListener('click', () => { if(confirm('RESET ALL DATA? This will delete all products and orders!')) { localStorage.clear(); location.reload(); } });
-        }
-        
-        window.addEventListener('DOMContentLoaded', () => { 
-            initData(); 
-            setupEventListeners(); 
-            updateUILanguage();
-            if(products.length === 0) {
-                resetAndLoadData();
-            }
-        });
+        window.onload = () => { initData(); setupEvents(); };
     </script>
 </body>
 </html>
