@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>TABUK MARBLE - Professional Business Management System</title>
+    <title>TABUK MARBLE - Complete Business Management System</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
@@ -137,7 +137,6 @@
         .btn-warning { background: #f39c12; }
         .btn-info { background: #3498db; }
         .btn-whatsapp { background: #25d366; }
-        .btn-edit { background: #9b59b6; }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -301,8 +300,8 @@
                 <div class="cart-panel">
                     <h3>Shopping Cart</h3>
                     <div class="unit-selector">
-                        <button class="unit-btn active" data-unit="sqm">Square Meter (m²) - Marble</button>
-                        <button class="unit-btn" data-unit="pieces">Pieces (Units) - Fittings</button>
+                        <button class="unit-btn active" data-unit="sqm">Square Meter (m²)</button>
+                        <button class="unit-btn" data-unit="pieces">Pieces (Units)</button>
                     </div>
                     
                     <div class="input-row" style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
@@ -468,9 +467,9 @@
         let taxSettings = { enabled: true, rate: 15, name: 'VAT' };
         let invoiceSettings = { footer: 'Thank you for choosing TABUK MARBLE!', notes: '' };
 
-        // Complete products list with ALL 3 groups
+        // ==================== COMPLETE PRODUCTS DATABASE ====================
         const defaultProducts = [
-            // ==================== مواد بناء GROUP (36 items) ====================
+            // ===== مواد بناء GROUP (36 items) =====
             { id: 1, name: 'زاویہ اپ ڈاون', size: '4*4*3mm', group: 'mwad', sellingPrice: 5, costPrice: 3, stock: 2000, type: 'pieces' },
             { id: 2, name: 'زاویہ اپ ڈاون', size: '4*4*2mm', group: 'mwad', sellingPrice: 4.5, costPrice: 2.7, stock: 2000, type: 'pieces' },
             { id: 3, name: 'زاویہ اپ ڈاون', size: '4*3*3mm', group: 'mwad', sellingPrice: 4.5, costPrice: 2.7, stock: 2000, type: 'pieces' },
@@ -508,7 +507,7 @@
             { id: 35, name: 'گمتا سادہ', size: 'Standard', group: 'mwad', sellingPrice: 25, costPrice: 15, stock: 2000, type: 'pieces' },
             { id: 36, name: 'بکرا', size: 'Standard', group: 'mwad', sellingPrice: 35, costPrice: 21, stock: 2000, type: 'pieces' },
             
-            // ==================== حجر مصنفر GROUP (52 items) ====================
+            // ===== حجر مصنفر GROUP =====
             { id: 101, name: 'ابیض مصنفر فرزا 1*2', size: '3*40*80', group: 'mosnafar', sellingPrice: 45, costPrice: 28, stock: 2000, type: 'pieces' },
             { id: 102, name: 'ابیض مصنفر فرزا C', size: '3*40*60', group: 'mosnafar', sellingPrice: 42, costPrice: 26, stock: 2000, type: 'pieces' },
             { id: 103, name: 'ابیض مصنفر فرزا B', size: '3*50*100', group: 'mosnafar', sellingPrice: 55, costPrice: 34, stock: 2000, type: 'pieces' },
@@ -539,25 +538,24 @@
             { id: 128, name: 'ابیض مصنفر سادہ', size: '3*25*..', group: 'mosnafar', sellingPrice: 30, costPrice: 19, stock: 2000, type: 'pieces' },
             { id: 129, name: 'ابیض مصنفر سادہ', size: '2*27*..', group: 'mosnafar', sellingPrice: 25, costPrice: 16, stock: 2000, type: 'pieces' },
             { id: 130, name: 'ابیض مصنفر سادہ', size: '3*30*..', group: 'mosnafar', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
-            { id: 131, name: 'ABIZ MUSANFR B', size: '3*30*..', group: 'mosnafar', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
-            { id: 132, name: 'ابیض مصنفر سادہ B', size: '3*40*..', group: 'mosnafar', sellingPrice: 42, costPrice: 26, stock: 2000, type: 'pieces' },
-            { id: 133, name: 'ابیض مصنفر سادہ', size: '3*50*..', group: 'mosnafar', sellingPrice: 48, costPrice: 30, stock: 2000, type: 'pieces' },
-            { id: 134, name: 'ایضض مصنفر', size: '3*60*..', group: 'mosnafar', sellingPrice: 55, costPrice: 34, stock: 2000, type: 'pieces' },
-            { id: 135, name: 'ایضض مصنفر مشطوف', size: '3*30*..', group: 'mosnafar', sellingPrice: 38, costPrice: 24, stock: 2000, type: 'pieces' },
-            { id: 136, name: 'ابیض مصنفر غرفہ رومانی', size: '3*15*..', group: 'mosnafar', sellingPrice: 22, costPrice: 14, stock: 2000, type: 'pieces' },
-            { id: 137, name: 'ابیض مصنفر غرفہ رومانی', size: '3*20*..', group: 'mosnafar', sellingPrice: 26, costPrice: 16, stock: 2000, type: 'pieces' },
-            { id: 138, name: 'ابیض مصنفر غرفہ رومانی', size: '3*25*..', group: 'mosnafar', sellingPrice: 30, costPrice: 19, stock: 2000, type: 'pieces' },
-            { id: 139, name: 'ابیض مصنفر غرفہ رومانی', size: '3*30*..', group: 'mosnafar', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
-            { id: 140, name: 'ابیض مصنفر غرفہ رومانی', size: '3*35*..', group: 'mosnafar', sellingPrice: 40, costPrice: 25, stock: 2000, type: 'pieces' },
-            { id: 141, name: 'ابیض مصنفر غرفہ رومانی', size: '3*40*..', group: 'mosnafar', sellingPrice: 44, costPrice: 28, stock: 2000, type: 'pieces' },
-            { id: 142, name: 'ابیض مصنفر غرفہ رومانی', size: '3*50*..', group: 'mosnafar', sellingPrice: 50, costPrice: 31, stock: 2000, type: 'pieces' },
-            { id: 143, name: 'ابیض مصنفر مبروم مفروز', size: '3*25*..', group: 'mosnafar', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
-            { id: 144, name: 'پیانو ابیض مصنفر', size: '3*20*50', group: 'mosnafar', sellingPrice: 28, costPrice: 18, stock: 2000, type: 'pieces' },
-            { id: 145, name: 'پیانو ابیض مصنفر', size: '3*25*50', group: 'mosnafar', sellingPrice: 32, costPrice: 20, stock: 2000, type: 'pieces' },
-            { id: 146, name: 'پیانو ابیض مصنفر', size: '3*30*60', group: 'mosnafar', sellingPrice: 38, costPrice: 24, stock: 2000, type: 'pieces' },
-            { id: 147, name: 'پیانو ابیض مصنفر', size: '5*25*50', group: 'mosnafar', sellingPrice: 45, costPrice: 28, stock: 2000, type: 'pieces' },
+            { id: 131, name: 'ابیض مصنفر سادہ B', size: '3*40*..', group: 'mosnafar', sellingPrice: 42, costPrice: 26, stock: 2000, type: 'pieces' },
+            { id: 132, name: 'ابیض مصنفر سادہ', size: '3*50*..', group: 'mosnafar', sellingPrice: 48, costPrice: 30, stock: 2000, type: 'pieces' },
+            { id: 133, name: 'ایضض مصنفر', size: '3*60*..', group: 'mosnafar', sellingPrice: 55, costPrice: 34, stock: 2000, type: 'pieces' },
+            { id: 134, name: 'ایضض مصنفر مشطوف', size: '3*30*..', group: 'mosnafar', sellingPrice: 38, costPrice: 24, stock: 2000, type: 'pieces' },
+            { id: 135, name: 'ابیض مصنفر غرفہ رومانی', size: '3*15*..', group: 'mosnafar', sellingPrice: 22, costPrice: 14, stock: 2000, type: 'pieces' },
+            { id: 136, name: 'ابیض مصنفر غرفہ رومانی', size: '3*20*..', group: 'mosnafar', sellingPrice: 26, costPrice: 16, stock: 2000, type: 'pieces' },
+            { id: 137, name: 'ابیض مصنفر غرفہ رومانی', size: '3*25*..', group: 'mosnafar', sellingPrice: 30, costPrice: 19, stock: 2000, type: 'pieces' },
+            { id: 138, name: 'ابیض مصنفر غرفہ رومانی', size: '3*30*..', group: 'mosnafar', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
+            { id: 139, name: 'ابیض مصنفر غرفہ رومانی', size: '3*35*..', group: 'mosnafar', sellingPrice: 40, costPrice: 25, stock: 2000, type: 'pieces' },
+            { id: 140, name: 'ابیض مصنفر غرفہ رومانی', size: '3*40*..', group: 'mosnafar', sellingPrice: 44, costPrice: 28, stock: 2000, type: 'pieces' },
+            { id: 141, name: 'ابیض مصنفر غرفہ رومانی', size: '3*50*..', group: 'mosnafar', sellingPrice: 50, costPrice: 31, stock: 2000, type: 'pieces' },
+            { id: 142, name: 'ابیض مصنفر مبروم مفروز', size: '3*25*..', group: 'mosnafar', sellingPrice: 35, costPrice: 22, stock: 2000, type: 'pieces' },
+            { id: 143, name: 'پیانو ابیض مصنفر', size: '3*20*50', group: 'mosnafar', sellingPrice: 28, costPrice: 18, stock: 2000, type: 'pieces' },
+            { id: 144, name: 'پیانو ابیض مصنفر', size: '3*25*50', group: 'mosnafar', sellingPrice: 32, costPrice: 20, stock: 2000, type: 'pieces' },
+            { id: 145, name: 'پیانو ابیض مصنفر', size: '3*30*60', group: 'mosnafar', sellingPrice: 38, costPrice: 24, stock: 2000, type: 'pieces' },
+            { id: 146, name: 'پیانو ابیض مصنفر', size: '5*25*50', group: 'mosnafar', sellingPrice: 45, costPrice: 28, stock: 2000, type: 'pieces' },
             
-            // ==================== حجر مجلی GROUP (40+ items) ====================
+            // ===== حجر مجلی GROUP =====
             { id: 201, name: 'ابیض مجلی فرزا A', size: '3*40*80', group: 'mojali', sellingPrice: 50, costPrice: 32, stock: 2000, type: 'pieces' },
             { id: 202, name: 'ابیض مجلی فرزا C', size: '3*40*60', group: 'mojali', sellingPrice: 45, costPrice: 28, stock: 2000, type: 'pieces' },
             { id: 203, name: 'ابیض مجلی فرزا B', size: '3*40*80', group: 'mojali', sellingPrice: 50, costPrice: 32, stock: 2000, type: 'pieces' },
@@ -688,16 +686,40 @@
         };
         function getTranslation(key) { return translations[currentLanguage][key] || key; }
 
+        function resetAndLoadData() {
+            // Clear old localStorage data
+            localStorage.removeItem('tabuk_products');
+            localStorage.removeItem('tabuk_orders');
+            
+            // Load fresh products
+            products = JSON.parse(JSON.stringify(defaultProducts));
+            saveProducts();
+            
+            allOrders = [];
+            saveOrders();
+            
+            loadAllSettings();
+            displayProducts();
+            loadInventory();
+            updateCartDisplay();
+            updateAll();
+            
+            showToast('✅ All products loaded successfully! Total ' + products.length + ' items added.');
+        }
+
         function initData() {
             let savedProducts = localStorage.getItem('tabuk_products');
-            if (savedProducts) {
+            if (savedProducts && JSON.parse(savedProducts).length > 0) {
                 products = JSON.parse(savedProducts);
             } else {
-                products = defaultProducts;
+                // Force reset if empty or invalid
+                products = JSON.parse(JSON.stringify(defaultProducts));
                 saveProducts();
             }
+            
             let savedOrders = localStorage.getItem('tabuk_orders');
             allOrders = savedOrders ? JSON.parse(savedOrders) : [];
+            
             loadAllSettings();
             displayProducts();
             updateMonthlyReport();
@@ -705,11 +727,18 @@
             displayInvoices();
             loadInventory();
             updateCartDisplay();
+            
             const today = new Date();
             const monthPicker = document.getElementById('monthPicker');
             if (monthPicker) monthPicker.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+            
             setupUnitSelector();
             setupGroupFilters();
+            
+            console.log('Products loaded:', products.length);
+            if(products.length === 0) {
+                resetAndLoadData();
+            }
         }
 
         function setupGroupFilters() {
@@ -761,6 +790,12 @@
             const container = document.getElementById('productList');
             if (!container) return;
             container.innerHTML = '';
+            
+            if(filtered.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:20px;">No products found</div>';
+                return;
+            }
+            
             filtered.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
@@ -1022,6 +1057,12 @@
             filtered = filtered.filter(p => p.name.toLowerCase().includes(search) || (p.size && p.size.toLowerCase().includes(search)));
             const tbody = document.getElementById('inventoryBody');
             tbody.innerHTML = '';
+            
+            if(filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">No products found</td></tr>';
+                return;
+            }
+            
             filtered.forEach(p => {
                 const row = tbody.insertRow();
                 const groupClass = p.group === 'mwad' ? 'group-mwad' : (p.group === 'mojali' ? 'group-mojali' : 'group-mosnafar');
@@ -1089,10 +1130,18 @@
             document.getElementById('backupDataBtn').addEventListener('click', backupData);
             document.getElementById('restoreDataBtn').addEventListener('click', () => document.getElementById('restoreFileInput').click());
             document.getElementById('restoreFileInput').addEventListener('change', e => { if(e.target.files[0]) restoreData(e.target.files[0]); });
-            document.getElementById('resetAllDataBtn').addEventListener('click', () => { if(confirm('RESET ALL DATA?')) { localStorage.clear(); location.reload(); } });
+            document.getElementById('resetAllDataBtn').addEventListener('click', () => { if(confirm('RESET ALL DATA? This will delete all products and orders!')) { localStorage.clear(); location.reload(); } });
         }
         
-        window.addEventListener('DOMContentLoaded', () => { initData(); setupEventListeners(); updateUILanguage(); });
+        window.addEventListener('DOMContentLoaded', () => { 
+            initData(); 
+            setupEventListeners(); 
+            updateUILanguage();
+            // Force check if products are empty
+            if(products.length === 0) {
+                resetAndLoadData();
+            }
+        });
     </script>
 </body>
 </html>
