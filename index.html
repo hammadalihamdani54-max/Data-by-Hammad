@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>TABUK MARBLE - Business Management System</title>
+    <title>TABUK MARBLE - Complete Business System</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
@@ -71,21 +71,12 @@
         .payment-green { color: #10b981; font-weight: bold; }
         .payment-red { color: #ef4444; font-weight: bold; }
         .rtl { direction: rtl; text-align: right; }
-        .rtl table th, .rtl table td { text-align: right; }
         .input-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; align-items: flex-end; }
         .input-group { flex: 1; min-width: 100px; }
         .mode-buttons { display: flex; gap: 8px; margin-bottom: 12px; }
         .mode-btn { flex: 1; background: #e2e8f0; padding: 8px; border-radius: 8px; text-align: center; cursor: pointer; font-size: 12px; font-weight: bold; }
         .mode-btn.active { background: #ffd700; }
-        .pdf-invoice { max-width: 800px; margin: 0 auto; background: white; border: 2px solid #ffd700; border-radius: 12px; }
-        .pdf-header { background: #1a1a2e; color: #ffd700; padding: 15px; text-align: center; }
-        .pdf-body { padding: 15px; }
-        .pdf-table { width: 100%; border-collapse: collapse; }
-        .pdf-table th, .pdf-table td { padding: 6px; border-bottom: 1px solid #ddd; text-align: center; font-size: 11px; }
-        .pdf-table th { background: #1a1a2e; color: #ffd700; }
-        .daily-sale-card { background: white; border-radius: 10px; padding: 10px; margin-bottom: 8px; border-left: 4px solid #ffd700; }
         .action-buttons { display: flex; flex-wrap: wrap; gap: 5px; }
-        hr { margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -105,39 +96,24 @@
         <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
     </div>
     
-    <!-- POS Tab -->
-    <div id="posTab" class="tab-content active"><div class="pos-grid"><div class="products-panel"><h3>Products</h3><div class="group-filter" id="productGroupFilter"><button class="group-btn active" data-group="all">All</button><button class="group-btn" data-group="mwad">MWAD</button><button class="group-btn" data-group="mojali">ABIAZ MAJLI</button><button class="group-btn" data-group="mosnafar">ABIAZ MUSANFR</button></div><div class="search-box"><input type="text" id="searchProduct" placeholder="Search..."></div><div class="product-list" id="productList"></div></div><div class="cart-panel"><h3>Shopping Cart</h3><div class="mode-buttons" id="modeButtons"><div class="mode-btn active" data-mode="sqm">Square Meter (m²)</div><div class="mode-btn" data-mode="manual">Manual Area (m²)</div><div class="mode-btn" data-mode="pieces">Pieces</div></div><div class="cart-input-section"><div class="input-row"><div class="input-group" style="flex:2"><label>Item Name</label><input type="text" id="itemName" placeholder="Select item"></div><div class="input-group"><label>Cost Price</label><input type="number" id="costPriceItem" placeholder="Cost" step="0.01"></div></div><div id="sqmFields"><div class="input-row"><div class="input-group"><label>Thickness (cm)</label><input type="number" id="thickness" step="0.1" placeholder="3"></div><div class="input-group"><label>Width (m)</label><input type="number" id="width" step="0.01" placeholder="0.4"></div><div class="input-group"><label>Length (m)</label><input type="number" id="length" step="0.01" placeholder="0.8"></div><div class="input-group"><label>Price / m²</label><input type="number" id="sqmPrice" step="0.01"></div></div></div><div id="manualFields" style="display:none"><div class="input-row"><div class="input-group"><label>Thickness (cm)</label><input type="number" id="manualThickness" step="0.1" placeholder="3"></div><div class="input-group"><label>Width (m)</label><input type="number" id="manualWidth" step="0.01" placeholder="0.4"></div><div class="input-group"><label>Length (m)</label><input type="number" id="manualLength" step="0.01" placeholder="0.8"></div><div class="input-group"><label>Area (m²)</label><input type="number" id="manualArea" step="0.01" placeholder="e.g., 200"></div><div class="input-group"><label>Price / m²</label><input type="number" id="manualPrice" step="0.01"></div></div></div><div id="piecesFields" style="display:none"><div class="input-row"><div class="input-group"><label>Size</label><input type="text" id="pieceSize" placeholder="Size"></div><div class="input-group"><label>Quantity</label><input type="number" id="piecesCount" value="1" step="1"></div><div class="input-group"><label>Price / piece</label><input type="number" id="pieceUnitPrice" step="0.01"></div></div></div><button id="addToCartBtn" class="btn-success" style="width:100%">+ Add to Cart</button></div><div class="form-group"><label>Customer Name</label><input type="text" id="posCustomer"></div><div class="form-group"><label>Phone Number</label><input type="tel" id="posCustomerPhone"></div><div id="discountFieldGroup" style="display:none"><div class="form-group"><label>Discount %</label><input type="number" id="posDiscount" value="0" step="1" min="0" max="100"></div></div><div id="taxFieldGroup" style="display:none"><div class="form-group"><label>Tax Rate (%)</label><input type="number" id="posTaxRate" value="0" step="0.1" readonly></div></div><div class="input-row"><div class="input-group"><label>Amount Received (SAR)</label><input type="number" id="posAmountReceived" step="0.01" value="0" placeholder="0"></div></div><div style="overflow-x:auto"><table id="cartTable"><thead id="cartHeader"><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th><th></th></tr></thead><tbody id="cartBody"></tbody></table></div><div class="total-box"><p><strong>Subtotal:</strong> <span id="subtotal">SAR 0.00</span></p><p id="discountRow" style="display:none"><strong>Discount:</strong> <span id="discountPercent">0</span>% - <span id="discountAmount">SAR 0.00</span></p><p id="taxRow" style="display:none"><strong><span id="taxNameLabel">Tax</span> (<span id="taxRateDisplay">0</span>%):</strong> <span id="taxAmount">SAR 0.00</span></p><h2><strong>Total:</strong> <span id="grandTotal">SAR 0.00</span></h2><p><strong>Received:</strong> <span id="receivedAmount">SAR 0.00</span></p><p id="remainingMsg" style="font-size:13px;margin-top:8px;font-weight:bold"></p></div><div><button id="confirmOrderBtn" class="btn-success">Confirm Order</button><button id="clearCartBtn" class="btn-danger">Clear</button><button id="downloadCartPdfBtn" class="btn-info">PDF</button></div></div></div></div>
+    <div id="posTab" class="tab-content active"><div class="pos-grid"><div class="products-panel"><h3>Products</h3><div class="group-filter" id="productGroupFilter"><button class="group-btn active" data-group="all">All</button><button class="group-btn" data-group="mwad">MWAD</button><button class="group-btn" data-group="mojali">ABIAZ MAJLI</button><button class="group-btn" data-group="mosnafar">ABIAZ MUSANFR</button></div><div class="search-box"><input type="text" id="searchProduct" placeholder="Search..."></div><div class="product-list" id="productList"></div></div><div class="cart-panel"><h3>Shopping Cart</h3><div class="mode-buttons" id="modeButtons"><div class="mode-btn active" data-mode="sqm">Square Meter (m²)</div><div class="mode-btn" data-mode="manual">Manual Area (m²)</div><div class="mode-btn" data-mode="pieces">Pieces</div></div><div class="cart-input-section"><div class="input-row"><div class="input-group" style="flex:2"><label>Item Name</label><input type="text" id="itemName" placeholder="Select item"></div><div class="input-group"><label>Cost Price</label><input type="number" id="costPriceItem" placeholder="Cost" step="0.01"></div></div><div id="sqmFields"><div class="input-row"><div class="input-group"><label>Thickness (cm)</label><input type="number" id="thickness" step="0.1" placeholder="3"></div><div class="input-group"><label>Width (m)</label><input type="number" id="width" step="0.01" placeholder="0.4"></div><div class="input-group"><label>Length (m)</label><input type="number" id="length" step="0.01" placeholder="0.8"></div><div class="input-group"><label>Price / m²</label><input type="number" id="sqmPrice" step="0.01"></div></div></div><div id="manualFields" style="display:none"><div class="input-row"><div class="input-group"><label>Thickness (cm)</label><input type="number" id="manualThickness" step="0.1" placeholder="3"></div><div class="input-group"><label>Width (m)</label><input type="number" id="manualWidth" step="0.01" placeholder="0.4"></div><div class="input-group"><label>Length (m)</label><input type="number" id="manualLength" step="0.01" placeholder="0.8"></div><div class="input-group"><label>Area (m²)</label><input type="number" id="manualArea" step="0.01" placeholder="e.g., 200"></div><div class="input-group"><label>Price / m²</label><input type="number" id="manualPrice" step="0.01"></div></div></div><div id="piecesFields" style="display:none"><div class="input-row"><div class="input-group"><label>Size</label><input type="text" id="pieceSize" placeholder="Size"></div><div class="input-group"><label>Quantity</label><input type="number" id="piecesCount" value="1" step="1"></div><div class="input-group"><label>Price / piece</label><input type="number" id="pieceUnitPrice" step="0.01"></div></div></div><button id="addToCartBtn" class="btn-success" style="width:100%">+ Add to Cart</button></div><div class="form-group"><label>Customer Name</label><input type="text" id="posCustomer"></div><div class="form-group"><label>Phone Number</label><input type="tel" id="posCustomerPhone"></div><div id="discountFieldGroup" style="display:none"><div class="form-group"><label>Discount %</label><input type="number" id="posDiscount" value="0" step="1" min="0" max="100"></div></div><div class="input-row"><div class="input-group"><label>Amount Received (SAR)</label><input type="number" id="posAmountReceived" step="0.01" value="0" placeholder="0"></div></div><div style="overflow-x:auto"><table id="cartTable"><thead id="cartHeader"><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th><th></th></tr></thead><tbody id="cartBody"></tbody></table></div><div class="total-box"><p><strong>Subtotal:</strong> <span id="subtotal">SAR 0.00</span></p><p id="discountRow" style="display:none"><strong>Discount:</strong> <span id="discountPercent">0</span>% - <span id="discountAmount">SAR 0.00</span></p><p id="taxRow" style="display:none"><strong><span id="taxNameLabel">Tax</span> (<span id="taxRateDisplay">0</span>%):</strong> <span id="taxAmount">SAR 0.00</span></p><h2><strong>Total:</strong> <span id="grandTotal">SAR 0.00</span></h2><p><strong>Received:</strong> <span id="receivedAmount">SAR 0.00</span></p><p id="remainingMsg" style="font-size:13px;margin-top:8px;font-weight:bold"></p></div><div><button id="confirmOrderBtn" class="btn-success">Confirm Order</button><button id="clearCartBtn" class="btn-danger">Clear</button><button id="downloadCartPdfBtn" class="btn-info">PDF</button></div></div></div></div>
     
-    <!-- Customers Tab -->
     <div id="customersTab" class="tab-content"><div class="customer-panel"><h3>Customer Accounts</h3><div class="search-box"><input type="text" id="customerSearch" placeholder="Search..."></div><div id="customerList"></div></div></div>
-    
-    <!-- Daily Sales Tab -->
     <div id="dailyTab" class="tab-content"><div class="daily-panel"><h3>Daily Sales Report</h3><div class="stats-grid"><div class="stat-card"><h3>Today's Sales</h3><div class="value" id="todaySales">SAR 0</div></div><div class="stat-card"><h3>Today's Orders</h3><div class="value" id="todayOrders">0</div></div><div class="stat-card"><h3>Today's Profit</h3><div class="value" id="todayProfit">SAR 0</div></div></div><div class="form-group"><label>Select Date:</label><input type="date" id="dailyDatePicker"></div><button id="loadDailyBtn" class="btn-info">Load Report</button><div id="dailySalesList" style="margin-top:15px;max-height:400px;overflow-y:auto"></div><div id="dailyTotalBox" style="margin-top:15px;padding:12px;background:#1a1a2e;border-radius:12px;color:white;text-align:right"></div></div></div>
-    
-    <!-- Monthly Tab -->
     <div id="monthlyTab" class="tab-content"><div class="stats-grid"><div class="stat-card"><h3>Total Sales</h3><div class="value" id="totalSales">SAR 0</div></div><div class="stat-card"><h3>Total Orders</h3><div class="value" id="totalOrders">0</div></div><div class="stat-card"><h3>Total Profit</h3><div class="value" id="totalProfit">SAR 0</div></div></div><div class="report-panel"><h3>Monthly Transactions</h3><input type="month" id="monthPicker"><div style="overflow-x:auto"><table id="monthlyTable"><thead id="monthlyHeader"><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Profit</th><th>Status</th><th>Actions</th></tr></thead><tbody id="monthlyBody"></tbody></table></div></div></div>
-    
-    <!-- Inventory Tab -->
     <div id="inventoryTab" class="tab-content"><div class="inventory-panel"><h3>Inventory</h3><div class="group-filter" id="inventoryGroupFilter"><button class="group-btn active" data-group="all">All</button><button class="group-btn" data-group="mwad">MWAD</button><button class="group-btn" data-group="mojali">ABIAZ MAJLI</button><button class="group-btn" data-group="mosnafar">ABIAZ MUSANFR</button></div><div class="search-box"><input type="text" id="inventorySearch" placeholder="Search..."></div><button id="addProductBtn" class="btn-success">+ Add Product</button><div style="overflow-x:auto"><table id="inventoryTable"><thead><tr><th>Group</th><th>Name</th><th>Size</th><th>Selling</th><th>Cost</th><th>Stock</th><th>Actions</th></tr></thead><tbody id="inventoryBody"></tbody></table></div></div></div>
-    
-    <!-- Profit & Loss Tab -->
     <div id="profitlossTab" class="tab-content"><div class="stats-grid"><div class="stat-card"><h3>Revenue</h3><div class="value" id="revenue">SAR 0</div></div><div class="stat-card"><h3>Total Cost</h3><div class="value" id="totalCost">SAR 0</div></div><div class="stat-card"><h3>Net Profit</h3><div class="value" id="netProfit">SAR 0</div></div><div class="stat-card"><h3>Profit Margin</h3><div class="value" id="profitMargin">0%</div></div></div></div>
-    
-    <!-- Invoices Tab -->
     <div id="invoicesTab" class="tab-content"><div class="report-panel"><h3>All Invoices</h3><div class="search-box"><input type="text" id="invoiceSearch" placeholder="Search..."></div><div style="overflow-x:auto"><table id="invoicesTable"><thead id="invoicesHeader"><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody id="invoicesBody"></tbody></table></div></div></div>
-    
-    <!-- Settings Tab -->
     <div id="settingsTab" class="tab-content"><div class="settings-panel"><h3>Settings</h3><div class="stats-grid"><div class="setting-card"><h4>Company</h4><div class="form-group"><label>Name</label><input type="text" id="companyNameSetting"></div><div class="form-group"><label>Logo Text</label><input type="text" id="companyLogoSetting" maxlength="10"></div><div class="form-group"><label>Tagline</label><input type="text" id="companyTaglineSetting"></div><div class="form-group"><label>Address</label><textarea id="companyAddressSetting" rows="2"></textarea></div><div class="form-group"><label>Phone</label><input type="text" id="companyPhoneSetting"></div><button id="saveCompanyBtn" class="btn-success">Save</button></div><div class="setting-card"><h4>Tax & Discount</h4><div class="form-group"><label><input type="checkbox" id="taxEnabledToggle"> Enable Tax</label></div><div class="form-group"><label>Tax Rate (%)</label><input type="number" id="taxRateSetting" value="15"></div><div class="form-group"><label>Tax Name</label><input type="text" id="taxNameSetting" value="VAT"></div><div class="form-group"><label><input type="checkbox" id="discountEnabledToggle"> Enable Discount in POS</label></div><button id="saveTaxBtn" class="btn-success">Save</button></div><div class="setting-card"><h4>Invoice</h4><div class="form-group"><label>Footer</label><textarea id="invoiceFooterSetting" rows="2"></textarea></div><div class="form-group"><label>Notes</label><textarea id="invoiceNotesSetting" rows="2"></textarea></div><button id="saveInvoiceBtn" class="btn-success">Save</button></div><div class="setting-card"><h4>Data</h4><button id="backupBtn" class="btn-info">Backup</button><button id="restoreBtn" class="btn-warning">Restore</button><input type="file" id="restoreFile" style="display:none"><button id="resetBtn" class="btn-danger">Reset All</button></div></div></div></div>
 </div>
 
-<div id="invoiceModal" class="modal"><div class="modal-content"><div id="invoiceDetails"></div><div style="text-align:center"><button id="closeModalBtn">Close</button><button id="printModalBtn">Print</button><button id="whatsappModalBtn">WhatsApp</button><button id="downloadModalPdfBtn">Download PDF</button><button id="shareImageBtn" class="btn-whatsapp">Share as Image</button></div></div></div>
+<div id="invoiceModal" class="modal"><div class="modal-content"><div id="invoiceDetails"></div><div style="text-align:center"><button id="closeModalBtn">Close</button><button id="printModalBtn">Print</button><button id="whatsappModalBtn">WhatsApp</button><button id="downloadModalPdfBtn">Download PDF</button></div></div></div>
 <div id="receivePaymentModal" class="modal"><div class="modal-content"><h3>Receive Payment</h3><div class="form-group"><label>Amount (SAR)</label><input type="number" id="receiveAmountInput" step="0.01"></div><div class="form-group"><label>Notes</label><input type="text" id="receiveNotesInput"></div><div style="text-align:center"><button id="confirmReceiveBtn" class="btn-success">Confirm</button><button id="cancelReceiveBtn" class="btn-danger">Cancel</button></div></div></div>
-<div id="shareLedgerModal" class="modal"><div class="modal-content"><h3>Share Customer Ledger</h3><div id="ledgerDetails"></div><div style="text-align:center"><button id="closeLedgerModal">Close</button><button id="shareLedgerWhatsappBtn" class="btn-whatsapp">Share via WhatsApp</button><button id="shareLedgerImageBtn" class="btn-info">Share as Image</button></div></div></div>
+<div id="shareLedgerModal" class="modal"><div class="modal-content"><h3>Share Customer Ledger</h3><div id="ledgerDetails"></div><div style="text-align:center"><button id="closeLedgerModal">Close</button><button id="shareLedgerWhatsappBtn" class="btn-whatsapp">Share via WhatsApp</button></div></div></div>
 <div id="pdfTemplate" style="position:fixed;top:-9999px;left:-9999px;"></div>
-<div id="imageShareTemp" style="position:fixed;top:-9999px;left:-9999px;"></div>
 
 <script>
-// ==================== CONFIGURATION ====================
+// ==================== CONFIG ====================
 let currentLang = 'en', currentCurrency = 'SAR', currentMode = 'sqm';
 let cart = [], allOrders = [], products = [], customers = [];
 let company = { name: "TABUK MARBLE", logo: "🏢", tagline: "Premium Marble Solutions", address: "Tabuk, KSA", phone: "0598074287" };
@@ -146,52 +122,66 @@ let discountEnabled = false;
 let invoiceSettings = { footer: "Thank you!", notes: "" };
 let currentReceiveInvoice = null, currentShareCustomer = null;
 
-// ==================== ALL PRODUCTS ====================
+// ==================== ALL PRODUCTS (COMPLETE) ====================
 function buildProducts() {
     let prods = []; let id = 1;
     
-    // ===== MWAD (Materials) =====
-    const mats = [
-        ["زاویہ اپ ڈاون","4*4*3mm",9200],["زاویہ اپ ڈاون","4*4*2mm",6600],["زاویہ اپ ڈاون","4*3*3mm",4300],["زاویہ اپ ڈاون","4*3*2mm",2500],
-        ["زاویہ اپ ڈاون","4*5*3mm",1200],["زاویہ اپ ڈاون","4*6*3mm",850],["زاویہ اپ ڈاون","4*8*3mm",420],["زاویہ اپ ڈاون","4*10*3mm",400],
-        ["زاویہ اپ ڈاون","5*5*3mm",0],["مسمار مغلوب","10*40",4800],["مسمار مغلوب","10*50",4800],["مسمار مغلوب","10*60",3500],
-        ["مسمار مغلوب","10*80",1500],["مسمار مغلوب","10*100",1440],["براغی سقف","10*72",2200],["براغی سقف","10*92",2100],
-        ["براغی سقف","10*112",1920],["براغی سقف","10*115",2200],["براغی سقف","10*202",1040],["جولی ابو جمل","Standard",5],
-        ["جولی گلیڈتیر","Standard",0],["دسک حجر احمر اے ایس","7 بوسہ",0],["دسک حجر احمر اے ایس","4.50 بوسہ",7],
-        ["دسک جرانیت ایے وا","7 بوسہ",3],["دسک بوش","9 بوسہ",20],["دسک حجر احمر اے ایس","9 بوسہ",0],["ریشہ ہلتی","20cm",0],
-        ["ریشہ ہلتی","15cm",24],["ریشہ ہلتی","10cm",1],["ریشہ دریل","4mm",12],["ریشہ دریل","6mm",10],["ریشہ دریل","10mm",16],
-        ["گمتا چوڑی","Standard",7],["گمتا سادہ","Standard",7],["بکرا","Standard",1]
+    // ----- MATERIALS (MWAD) - 37 items -----
+    const materials = [
+        ["زاویہ اپ ڈاون", "4*4*3mm", 9200], ["زاویہ اپ ڈاون", "4*4*2mm", 6600], ["زاویہ اپ ڈاون", "4*3*3mm", 4300],
+        ["زاویہ اپ ڈاون", "4*3*2mm", 2500], ["زاویہ اپ ڈاون", "4*5*3mm", 1200], ["زاویہ اپ ڈاون", "4*6*3mm", 850],
+        ["زاویہ اپ ڈاون", "4*8*3mm", 420], ["زاویہ اپ ڈاون", "4*10*3mm", 400], ["زاویہ اپ ڈاون", "5*5*3mm", 0],
+        ["زاویہ اپ ڈاون", "4*4*3mm (مط)", 0], ["مسمار مغلوب", "10*40", 4800], ["مسمار مغلوب", "10*50", 4800],
+        ["مسمار مغلوب", "10*60", 3500], ["مسمار مغلوب", "10*80", 1500], ["مسمار مغلوب", "10*100", 1440],
+        ["براغی سقف", "10*72", 2200], ["براغی سقف", "10*92", 2100], ["براغی سقف", "10*112", 1920],
+        ["براغی سقف", "10*115", 2200], ["براغی سقف", "10*202", 1040], ["جولی ابو جمل", "Standard", 5],
+        ["جولی گلیڈتیر", "Standard", 0], ["دسک حجر احمر اے ایس", "7 بوسہ", 0], ["دسک حجر احمر اے ایس", "4.50 بوسہ", 7],
+        ["دسک جرانیت ایے وا", "7 بوسہ", 3], ["دسک بوش", "9 بوسہ", 20], ["دسک حجر احمر اے ایس", "9 بوسہ", 0],
+        ["ریشہ ہلتی", "20cm", 0], ["ریشہ ہلتی", "15cm", 24], ["ریشہ ہلتی", "10cm", 1],
+        ["ریشہ دریل", "4mm", 12], ["ریشہ دریل", "6mm", 10], ["ریشہ دریل", "10mm", 16],
+        ["گمتا چوڑی", "Standard", 7], ["گمتا سادہ", "Standard", 7], ["بکرا", "Standard", 1]
     ];
-    mats.forEach(m => { prods.push({ id: id++, name: m[0], size: m[1], group: 'mwad', sellingPrice: 0, costPrice: 0, stock: m[2], type: 'pieces' }); });
+    materials.forEach(m => { prods.push({ id: id++, name: m[0], size: m[1], group: 'mwad', sellingPrice: 0, costPrice: 0, stock: m[2], type: 'pieces' }); });
     
-    // ===== ABIAZ MAJLI (Polished) =====
-    const majliSizes = ["3*7", "3*10", "3*15", "3*18", "3*20", "3*25", "3*27", "3*30", "3*32", "3*35", "3*37", "3*40", "3*50", "3*60"];
-    const majliTypes = ["ابیض مجلی مبروم", "ابیض مجلی سادہ", "ابیض مجلی غرفہ رومانی"];
-    majliTypes.forEach(type => {
-        majliSizes.forEach(size => { prods.push({ id: id++, name: type, size: size, group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 50, type: 'sqm', thickness: 3 }); });
+    // ----- HONED (ABIAZ MUSANFR) - Standard Sizes -----
+    const honedSizes = ["3*7", "3*10", "3*15", "3*18", "3*20", "3*25", "3*27", "3*30", "3*32", "3*35", "3*37", "3*40", "3*50", "3*60", "4*7", "5*7"];
+    const honedTypes = ["ابیض مصنفر مبروم", "ابیض مصنفر سادہ", "ابیض مصنفر غرفہ رومانی"];
+    honedTypes.forEach(type => {
+        honedSizes.forEach(size => { prods.push({ id: id++, name: type, size: size, group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 50, type: 'sqm', thickness: 3 }); });
     });
-    const majliSpecial = [
-        ["(A)ابیض مجلی فرزا 1*2","3*40*80",75],["(C)ابیض مجلی فرزا 1*2","3*40*60",75],["(B)ابیض مجلی فرزا 1*2","3*40*80",75],["(A)ابیض مجلی فرزا 1*2","3*30*30",70],
-        ["ابیض مجلی مشطوف","3*30",80],["ابیض بشارتہ فرزا 1*2","3*40*80",85],["ابیض بشارتہ فرزا 1*2","3*40*60",85],["ابیض بشارتہ فرزا 1*2","3*30*60",80],
-        ["B ابیض بشارتہ فرزا 1*2","3*40",85],["ابیض بشارتہ مشطوف B","3*30*60",85],["ابیض بشارتہ A","3*40*80",90],["KAREEMI HJAR SADA","3*40",70],
-        ["C ابیض بشارتہ مشطوف","3*40*60",85],["C ابیض بشارتہ مشطوف","3*50*50",85],["ابیض بشارتہ A","4*60*75",95],["ابیض منحوت","3*20*1.20",65],["MNHOOD ABIAZ","3*15*1.20",60]
-    ];
-    majliSpecial.forEach(m => { prods.push({ id: id++, name: m[0], size: m[1], group: 'mojali', sellingPrice: m[2], costPrice: m[2]-10, stock: 50, type: 'sqm', thickness: 3 }); });
     
-    // ===== ABIAZ MUSANFR (Honed) =====
-    const musanfrSizes = ["3*7", "3*10", "3*15", "3*18", "3*20", "3*25", "3*27", "3*30", "3*32", "3*35", "3*37", "3*40", "3*50", "3*60"];
-    const musanfrTypes = ["ابیض مصنفر مبروم", "ابیض مصنفر سادہ", "ابیض مصنفر غرفہ رومانی"];
-    musanfrTypes.forEach(type => {
-        musanfrSizes.forEach(size => { prods.push({ id: id++, name: type, size: size, group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 50, type: 'sqm', thickness: 3 }); });
+    // ----- HONED Special Items -----
+    const honedSpecial = [
+        ["ابیض مصنفر فرزا 1*2", "3*40*80", 65], ["(C)ابیض مصنفر فرزا 1*2", "3*40*60", 65],
+        ["(B)ابیض مصنفر فرزا 1*2", "3*50*100", 70], ["(B)ابیض مصنفر فرزا 1*2", "3*40", 65],
+        ["(B)ابیض مصنفرفرزتین1*2", "3*40*80", 70], ["ابیض مصنفر فرزا 1*2", "3*40*100", 68],
+        ["ابیض مصنفر مشطوف", "3*30", 65], ["ابیض مصنفر مبروم مفروز", "3*25", 65],
+        ["پیانو ابیض مصنفر", "3*20*50", 55], ["پیانو ابیض مصنفر", "3*25*50", 60],
+        ["پیانو ابیض مصنفر", "3*30*60", 65], ["پیانو ابیض مصنفر", "5*25*50", 70]
+    ];
+    honedSpecial.forEach(s => { prods.push({ id: id++, name: s[0], size: s[1], group: 'mosnafar', sellingPrice: s[2], costPrice: s[2]-10, stock: 50, type: 'sqm', thickness: 3 }); });
+    
+    // ----- POLISHED (ABIAZ MAJLI) - Standard Sizes -----
+    const polishedSizes = ["3*7", "3*10", "3*15", "3*18", "3*20", "3*25", "3*27", "3*30", "3*32", "3*35", "3*37", "3*40", "3*50", "3*60"];
+    const polishedTypes = ["ابیض مجلی مبروم", "ابیض مجلی سادہ", "ابیض مجلی غرفہ رومانی"];
+    polishedTypes.forEach(type => {
+        polishedSizes.forEach(size => { prods.push({ id: id++, name: type, size: size, group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 50, type: 'sqm', thickness: 3 }); });
     });
-    const musanfrSpecial = [
-        ["ابیض مصنفر فرزا 1*2","3*40*80",65],["(C)ابیض مصنفر فرزا 1*2","3*40*60",65],["(B)ابیض مصنفر فرزا 1*2","3*50*100",70],["(B)ابیض مصنفر فرزا 1*2","3*40",65],
-        ["(B)ابیض مصنفرفرزتین1*2","3*40*80",70],["ابیض مصنفر فرزا 1*2","3*40*100",68],["ابیض مصنفر مبروم","4*7",60],["ابیض مصنفر مبروم","5*7",65],
-        ["ابیض مصنفر مشطوف","3*30",65],["ابیض مصنفر مبروم مفروز","3*25",65],["پیانو ابیض مصنفر","3*20*50",55],["پیانو ابیض مصنفر","3*25*50",60],
-        ["پیانو ابیض مصنفر","3*30*60",65],["پیانو ابیض مصنفر","5*25*50",70]
-    ];
-    musanfrSpecial.forEach(m => { prods.push({ id: id++, name: m[0], size: m[1], group: 'mosnafar', sellingPrice: m[2], costPrice: m[2]-10, stock: 50, type: 'sqm', thickness: 3 }); });
     
+    // ----- POLISHED Special Items -----
+    const polishedSpecial = [
+        ["(A)ابیض مجلی فرزا 1*2", "3*40*80", 75], ["(C)ابیض مجلی فرزا 1*2", "3*40*60", 75],
+        ["(B)ابیض مجلی فرزا 1*2", "3*40*80", 75], ["(A)ابیض مجلی فرزا 1*2", "3*30*30", 70],
+        ["ابیض مجلی مشطوف", "3*30", 80], ["ابیض بشارتہ فرزا 1*2", "3*40*80", 85],
+        ["ابیض بشارتہ فرزا 1*2", "3*40*60", 85], ["ابیض بشارتہ فرزا 1*2", "3*30*60", 80],
+        ["B ابیض بشارتہ فرزا 1*2", "3*40", 85], ["ابیض بشارتہ مشطوف B", "3*30*60", 85],
+        ["ابیض بشارتہ A", "3*40*80", 90], ["KAREEMI HJAR SADA", "3*40", 70],
+        ["C ابیض بشارتہ مشطوف", "3*40*60", 85], ["C ابیض بشارتہ مشطوف", "3*50*50", 85],
+        ["ابیض بشارتہ A", "4*60*75", 95], ["ابیض منحوت", "3*20*1.20", 65], ["MNHOOD ABIAZ", "3*15*1.20", 60]
+    ];
+    polishedSpecial.forEach(s => { prods.push({ id: id++, name: s[0], size: s[1], group: 'mojali', sellingPrice: s[2], costPrice: s[2]-10, stock: 50, type: 'sqm', thickness: 3 }); });
+    
+    console.log("Total products loaded:", prods.length);
     return prods;
 }
 
@@ -199,12 +189,11 @@ function formatNumber(n) { let val = n.toFixed(2); if(currentLang === 'ar') retu
 function formatCurrency(amt) { let r = currentCurrency === 'SAR' ? 1 : 0.27; let sym = currentCurrency === 'SAR' ? 'SAR ' : '$ '; return sym + formatNumber(amt * r); }
 function getGroupName(g) { if(g === 'mwad') return 'MWAD'; if(g === 'mojali') return 'ABIAZ MAJLI'; return 'ABIAZ MUSANFR'; }
 function saveData() { localStorage.setItem('tabuk_products', JSON.stringify(products)); localStorage.setItem('tabuk_orders', JSON.stringify(allOrders)); localStorage.setItem('tabuk_customers', JSON.stringify(customers)); localStorage.setItem('tabuk_company', JSON.stringify(company)); localStorage.setItem('tabuk_tax', JSON.stringify(tax)); localStorage.setItem('tabuk_invoice', JSON.stringify(invoiceSettings)); localStorage.setItem('tabuk_discountEnabled', discountEnabled); }
-function loadData() { let p = localStorage.getItem('tabuk_products'); products = (p && JSON.parse(p).length) ? JSON.parse(p) : buildProducts(); let o = localStorage.getItem('tabuk_orders'); if(o) allOrders = JSON.parse(o); let c = localStorage.getItem('tabuk_customers'); if(c) customers = JSON.parse(c); let comp = localStorage.getItem('tabuk_company'); if(comp) company = JSON.parse(comp); let t = localStorage.getItem('tabuk_tax'); if(t) tax = JSON.parse(t); let inv = localStorage.getItem('tabuk_invoice'); if(inv) invoiceSettings = JSON.parse(inv); let de = localStorage.getItem('tabuk_discountEnabled'); if(de !== null) discountEnabled = de === 'true'; }
+function loadData() { let p = localStorage.getItem('tabuk_products'); if(p && JSON.parse(p).length > 0) products = JSON.parse(p); else products = buildProducts(); let o = localStorage.getItem('tabuk_orders'); if(o) allOrders = JSON.parse(o); let c = localStorage.getItem('tabuk_customers'); if(c) customers = JSON.parse(c); let comp = localStorage.getItem('tabuk_company'); if(comp) company = JSON.parse(comp); let t = localStorage.getItem('tabuk_tax'); if(t) tax = JSON.parse(t); let inv = localStorage.getItem('tabuk_invoice'); if(inv) invoiceSettings = JSON.parse(inv); let de = localStorage.getItem('tabuk_discountEnabled'); if(de !== null) discountEnabled = de === 'true'; }
 function showToast(msg) { let t = document.createElement('div'); t.className = 'toast'; t.innerText = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
 
 // ==================== DAILY SALES ====================
-function getTodayKey() { return new Date().toISOString().slice(0,10); }
-function updateDailySales() { displayDailySales(document.getElementById('dailyDatePicker').value || getTodayKey()); }
+function updateDailySales() { let date = document.getElementById('dailyDatePicker').value || new Date().toISOString().slice(0,10); displayDailySales(date); }
 function displayDailySales(date) {
     let orders = allOrders.filter(o => o.date.slice(0,10) === date);
     let total = orders.reduce((s,o)=>s+o.total,0), profit = orders.reduce((s,o)=>s+o.profit,0);
@@ -213,17 +202,18 @@ function displayDailySales(date) {
     document.getElementById('todayProfit').innerHTML = formatCurrency(profit);
     let container = document.getElementById('dailySalesList'); container.innerHTML = '';
     orders.forEach(o => { let div = document.createElement('div'); div.className = 'daily-sale-card'; div.innerHTML = `<strong>${o.invoiceNo}</strong> - ${new Date(o.date).toLocaleTimeString()}<br>Customer: ${o.customer} | Total: ${formatCurrency(o.total)} | Paid: ${formatCurrency(o.paid||0)}<br>Status: ${o.status}<div class="action-buttons"><button onclick="viewFullInvoice('${o.invoiceNo}')" class="btn-info" style="padding:2px 8px">View</button><button onclick="deleteInvoice('${o.invoiceNo}')" class="btn-danger" style="padding:2px 8px">Delete</button></div>`; container.appendChild(div); });
-    let totalBox = document.getElementById('dailyTotalBox'); totalBox.innerHTML = `<h3>Daily Summary</h3><p>Total Sales: ${formatCurrency(total)}</p><p>Total Profit: ${formatCurrency(profit)}</p><p>Orders: ${orders.length}</p>`;
+    document.getElementById('dailyTotalBox').innerHTML = `<h3>Daily Summary</h3><p>Total Sales: ${formatCurrency(total)}</p><p>Total Profit: ${formatCurrency(profit)}</p><p>Orders: ${orders.length}</p>`;
 }
 function loadDailyReport() { let date = document.getElementById('dailyDatePicker').value; if(date) displayDailySales(date); else showToast('Select date'); }
 
-// ==================== PRODUCT DISPLAY ====================
+// ==================== DISPLAY PRODUCTS ====================
 let currentProductGroup = 'all', currentInventoryGroup = 'all';
 function displayProducts() {
     let search = document.getElementById('searchProduct').value.toLowerCase();
     let filtered = products.filter(p => (currentProductGroup === 'all' || p.group === currentProductGroup) && (p.name.toLowerCase().includes(search) || p.size.toLowerCase().includes(search)));
     let container = document.getElementById('productList'); container.innerHTML = '';
-    filtered.forEach(p => { let cls = p.group === 'mwad' ? 'group-mwad' : (p.group === 'mojali' ? 'group-mojali' : 'group-mosnafar'); let price = p.sellingPrice > 0 ? formatCurrency(p.sellingPrice) : 'Set Price'; let div = document.createElement('div'); div.className = 'product-card'; div.innerHTML = `<span class="group-badge ${cls}">${getGroupName(p.group)}</span><h4>${p.name}</h4><div>${p.size}</div><div>${price}${p.type === 'sqm' ? '/m²' : '/pc'}</div><div>Stock: ${p.stock}</div>`; div.onclick = () => { document.getElementById('itemName').value = p.name; document.getElementById('costPriceItem').value = p.costPrice; if(p.type === 'sqm') { document.querySelector('.mode-btn[data-mode="sqm"]').click(); document.getElementById('thickness').value = p.thickness || 3; document.getElementById('width').value = 0.4; document.getElementById('length').value = 0.8; document.getElementById('sqmPrice').value = p.sellingPrice; } else { document.querySelector('.mode-btn[data-mode="pieces"]').click(); document.getElementById('pieceSize').value = p.size; document.getElementById('pieceUnitPrice').value = p.sellingPrice; document.getElementById('piecesCount').value = 1; } showToast(p.name + ' loaded'); }; container.appendChild(div); });
+    if(filtered.length === 0) { container.innerHTML = '<div style="text-align:center;padding:20px">No products found</div>'; return; }
+    filtered.forEach(p => { let cls = p.group === 'mwad' ? 'group-mwad' : (p.group === 'mojali' ? 'group-mojali' : 'group-mosnafar'); let price = p.sellingPrice > 0 ? formatCurrency(p.sellingPrice) : 'Set Price'; let div = document.createElement('div'); div.className = 'product-card'; div.innerHTML = `<span class="group-badge ${cls}">${getGroupName(p.group)}</span><h4>${p.name}</h4><div style="font-size:11px">${p.size}</div><div style="color:#27ae60;font-weight:bold">${price}${p.type === 'sqm' ? '/m²' : '/pc'}</div><div>Stock: ${p.stock}</div>`; div.onclick = () => { document.getElementById('itemName').value = p.name; document.getElementById('costPriceItem').value = p.costPrice; if(p.type === 'sqm') { document.querySelector('.mode-btn[data-mode="sqm"]').click(); document.getElementById('thickness').value = p.thickness || 3; document.getElementById('width').value = 0.4; document.getElementById('length').value = 0.8; document.getElementById('sqmPrice').value = p.sellingPrice; } else { document.querySelector('.mode-btn[data-mode="pieces"]').click(); document.getElementById('pieceSize').value = p.size; document.getElementById('pieceUnitPrice').value = p.sellingPrice; document.getElementById('piecesCount').value = 1; } showToast(p.name + ' loaded'); }; container.appendChild(div); });
 }
 function loadInventory() {
     let search = document.getElementById('inventorySearch').value.toLowerCase();
@@ -258,7 +248,7 @@ function addToCart() {
     updateCartDisplay(); showToast('Added to cart');
 }
 function updateCartDisplay() {
-    let tb = document.getElementById('cartBody'); if(cart.length === 0) { tb.innerHTML = '<td><td colspan="6">Empty cart</td></tr>'; updateTotals(); return; }
+    let tb = document.getElementById('cartBody'); if(cart.length === 0) { tb.innerHTML = '<tr><td colspan="6">Empty cart</td><tr>'; updateTotals(); return; }
     tb.innerHTML = ''; let sub = 0;
     cart.forEach((item, idx) => { sub += item.total; let r = tb.insertRow(); r.insertCell(0).innerHTML = item.name; r.insertCell(1).innerHTML = item.size; r.insertCell(2).innerHTML = item.qty; r.insertCell(3).innerHTML = formatCurrency(item.sellingPrice); r.insertCell(4).innerHTML = formatCurrency(item.total); let btn = document.createElement('button'); btn.innerHTML = 'X'; btn.style.background = '#e74c3c'; btn.style.padding = '4px 8px'; btn.onclick = () => { cart.splice(idx, 1); updateCartDisplay(); }; r.insertCell(5).appendChild(btn); });
     updateTotals(sub);
@@ -267,10 +257,9 @@ function updateTotals(sub) { if(sub === undefined) sub = cart.reduce((s,i)=>s+i.
 document.getElementById('posDiscount').oninput = () => updateTotals();
 document.getElementById('posAmountReceived').oninput = () => updateTotals();
 document.getElementById('posCustomer').oninput = () => updateTotals();
-function editCartItem() { if(cart.length === 0) return; let idx = prompt(`Item number (1-${cart.length}):`); if(idx && idx > 0 && idx <= cart.length) { let newPrice = prompt('New price:', cart[idx-1].sellingPrice); if(newPrice && !isNaN(newPrice)) { cart[idx-1].sellingPrice = parseFloat(newPrice); cart[idx-1].total = cart[idx-1].type === 'pieces' ? parseFloat(cart[idx-1].qty) * parseFloat(newPrice) : parseFloat(cart[idx-1].qty) * parseFloat(newPrice); updateCartDisplay(); showToast('Updated'); } } }
 function clearCart() { if(confirm('Clear cart?')) { cart = []; updateCartDisplay(); } }
 
-// ==================== ORDERS & CUSTOMERS ====================
+// ==================== ORDERS ====================
 function getCustomerByPhone(phone) { return customers.find(c => c.phone === phone); }
 function updateCustomerAccount(order) {
     let cust = getCustomerByPhone(order.customerPhone);
@@ -322,9 +311,9 @@ window.receiveForInvoice = openReceivePayment;
 window.viewInvoice = viewFullInvoice;
 function shareLedger(phone) {
     let cust = customers.find(c => c.phone === phone); if(!cust) return;
-    let details = `<h4>${cust.name} - ${cust.phone}</h4><table style="width:100%;border-collapse:collapse"><thead><tr><th>Invoice</th><th>Total</th><th>Received</th><th>Remaining</th><th>To/From</th></tr></thead><tbody>`;
+    let details = `<h4>${cust.name} - ${cust.phone}</h4><table style="width:100%;border-collapse:collapse"><thead><table><th>Invoice</th><th>Total</th><th>Received</th><th>Remaining</th><th>To/From</th></tr></thead><tbody>`;
     let totalRemaining = 0;
-    cust.invoices.forEach(i => { let rem = i.amount - i.paid; totalRemaining += rem; let toFrom = rem > 0 ? `To Customer: ${cust.name}` : (rem < 0 ? `To Company: ${company.name}` : 'Settled'); details += `<tr><td>${i.invoiceNo}</td><td>${formatCurrency(i.amount)}</td><td>${formatCurrency(i.paid)}</td><td class="${rem > 0 ? 'payment-red' : (rem < 0 ? 'payment-green' : '')}">${formatCurrency(Math.abs(rem))}</td><td>${toFrom}</td></tr>`; });
+    cust.invoices.forEach(i => { let rem = i.amount - i.paid; totalRemaining += rem; let toFrom = rem > 0 ? `To Customer: ${cust.name}` : (rem < 0 ? `To Company: ${company.name}` : 'Settled'); details += `<tr><tr>${i.invoiceNo}</td><td>${formatCurrency(i.amount)}</td><td>${formatCurrency(i.paid)}</td><td class="${rem > 0 ? 'payment-red' : (rem < 0 ? 'payment-green' : '')}">${formatCurrency(Math.abs(rem))}</td><td>${toFrom}</td>`; });
     details += `<tr style="background:#f0f0f0;font-weight:bold"><td>Total</td><td>${formatCurrency(cust.invoices.reduce((s,i)=>s+i.amount,0))}</td><td>${formatCurrency(cust.invoices.reduce((s,i)=>s+i.paid,0))}</td><td class="${totalRemaining > 0 ? 'payment-red' : (totalRemaining < 0 ? 'payment-green' : '')}">${formatCurrency(Math.abs(totalRemaining))}</td><td>${totalRemaining > 0 ? `To Customer: ${cust.name}` : (totalRemaining < 0 ? `To Company: ${company.name}` : 'Settled')}</td></tr></tbody></table>`;
     document.getElementById('ledgerDetails').innerHTML = details;
     currentShareCustomer = cust;
@@ -333,12 +322,6 @@ function shareLedger(phone) {
 window.shareLedger = shareLedger;
 function closeLedgerModal() { document.getElementById('shareLedgerModal').style.display = 'none'; }
 function shareLedgerWhatsApp() { if(!currentShareCustomer) return; let msg = `Ledger for ${currentShareCustomer.name} (${currentShareCustomer.phone}):\n`; currentShareCustomer.invoices.forEach(i => { let rem = i.amount - i.paid; msg += `${i.invoiceNo}: Total ${formatCurrency(i.amount)} | Received ${formatCurrency(i.paid)} | Remaining ${formatCurrency(rem)}\n`; }); let totalRem = currentShareCustomer.invoices.reduce((s,i)=>s+(i.amount-i.paid),0); msg += `\nTotal Remaining: ${formatCurrency(totalRem)}`; let p = currentShareCustomer.phone.replace(/\D/g,''); if(p.startsWith('05')) p = '966' + p.substring(1); window.open(`https://wa.me/${p}?text=${encodeURIComponent(msg)}`); }
-async function shareLedgerImage() { if(!currentShareCustomer) return; let el = document.getElementById('ledgerDetails'); let canvas = await html2canvas(el, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); let p = currentShareCustomer.phone.replace(/\D/g,''); if(p.startsWith('05')) p = '966' + p.substring(1); window.open(`https://wa.me/${p}?text=${encodeURIComponent('Ledger for ' + currentShareCustomer.name)}`); setTimeout(() => { let w = window.open('', '_blank'); w.document.write(`<html><body style="margin:0"><img src="${imgData}" style="max-width:100%"></body></html>`); w.document.close(); }, 500); }
-
-// ==================== DELETE FUNCTIONS ====================
-function deleteInvoice(invNo) { if(confirm(`⚠️ WARNING: Are you sure you want to delete invoice ${invNo}? This action cannot be undone.`)) { allOrders = allOrders.filter(x => x.invoiceNo !== invNo); customers.forEach(c => { c.invoices = c.invoices.filter(i => i.invoiceNo !== invNo); }); customers = customers.filter(c => c.invoices.length > 0); saveData(); updateReports(); displayCustomers(); updateDailySales(); loadMonthlyData(); displayInvoices(); showToast(`Invoice ${invNo} deleted`); } }
-function deleteCustomer(phone) { if(confirm(`⚠️ WARNING: Delete customer and all invoices? This cannot be undone.`)) { customers = customers.filter(c => c.phone !== phone); allOrders = allOrders.filter(o => o.customerPhone !== phone); saveData(); updateReports(); displayCustomers(); updateDailySales(); loadMonthlyData(); displayInvoices(); showToast(`Customer deleted`); } }
-window.deleteInvoice = deleteInvoice;
 
 // ==================== REPORTS ====================
 function updateReports() {
@@ -347,7 +330,6 @@ function updateReports() {
     let cost = allOrders.reduce((s,o)=>s+o.cost,0), profit = ts - cost, margin = ts ? (profit/ts*100).toFixed(2) : 0;
     document.getElementById('revenue').innerHTML = formatCurrency(ts); document.getElementById('totalCost').innerHTML = formatCurrency(cost); document.getElementById('netProfit').innerHTML = formatCurrency(profit); document.getElementById('profitMargin').innerHTML = margin + '%';
     loadMonthlyData(); displayInvoices(); updateDailySales();
-    applyLanguageToTables();
 }
 function loadMonthlyData() {
     let m = document.getElementById('monthPicker').value; if(!m) return;
@@ -359,9 +341,11 @@ function displayInvoices() {
     let f = allOrders.filter(o => o.invoiceNo.toLowerCase().includes(search) || o.customer.toLowerCase().includes(search)).reverse(), tb = document.getElementById('invoicesBody'); tb.innerHTML = '';
     f.forEach(o => { let r = tb.insertRow(); r.insertCell(0).innerHTML = o.invoiceNo; r.insertCell(1).innerHTML = new Date(o.date).toLocaleDateString(); r.insertCell(2).innerHTML = o.customer; r.insertCell(3).innerHTML = o.customerPhone || '-'; r.insertCell(4).innerHTML = o.items.length; r.insertCell(5).innerHTML = formatCurrency(o.total); r.insertCell(6).innerHTML = `<span class="badge-${o.status === 'paid' ? 'paid' : (o.status === 'partial' ? 'partial' : 'unpaid')}">${o.status}</span>`; let c = r.insertCell(7); c.className = 'action-buttons'; c.innerHTML = `<button onclick="viewFullInvoice('${o.invoiceNo}')" class="btn-info" style="padding:2px 8px">View</button><button onclick="openReceivePayment('${o.invoiceNo}')" class="btn-success" style="padding:2px 8px">Pay</button><button onclick="sendWhatsApp('${o.invoiceNo}')" class="btn-whatsapp" style="padding:2px 8px">WhatsApp</button><button onclick="deleteInvoice('${o.invoiceNo}')" class="btn-danger" style="padding:2px 8px">Delete</button>`; });
 }
+function deleteInvoice(invNo) { if(confirm(`⚠️ Delete invoice ${invNo}? This cannot be undone.`)) { allOrders = allOrders.filter(x => x.invoiceNo !== invNo); customers.forEach(c => { c.invoices = c.invoices.filter(i => i.invoiceNo !== invNo); }); customers = customers.filter(c => c.invoices.length > 0); saveData(); updateReports(); displayCustomers(); updateDailySales(); loadMonthlyData(); displayInvoices(); showToast(`Invoice ${invNo} deleted`); } }
+window.deleteInvoice = deleteInvoice;
 function sendWhatsApp(invNo) { let o = allOrders.find(x => x.invoiceNo === invNo); if(!o || !o.customerPhone) { showToast('No phone'); return; } let p = o.customerPhone.replace(/\D/g,''); if(p.startsWith('05')) p = '966' + p.substring(1); let msg = `${company.name} Invoice ${o.invoiceNo}%0ATotal: ${formatCurrency(o.total)}%0A${invoiceSettings.footer}`; window.open(`https://wa.me/${p}?text=${msg}`); }
 
-// ==================== INVOICE PDF & IMAGE ====================
+// ==================== INVOICE PDF ====================
 function viewFullInvoice(invNo) {
     let o = allOrders.find(x => x.invoiceNo === invNo); if(!o) return;
     let remaining = o.total - (o.paid || 0);
@@ -383,15 +367,13 @@ async function downloadPDF(invNo) {
     let html = `<div style="font-family:Arial;max-width:800px;margin:auto;border:2px solid #ffd700;border-radius:12px"><div style="background:#1a1a2e;color:#ffd700;padding:15px;text-align:center"><h2>${company.logo} ${company.name}</h2><p>${company.tagline}</p><p>${company.address}</p></div><div style="padding:15px"><div style="background:#f8f9fa;padding:12px;border-radius:10px"><strong>Invoice:</strong> ${o.invoiceNo}<br><strong>Date:</strong> ${new Date(o.date).toLocaleString()}<br><strong>Customer:</strong> ${o.customer}<br><strong>Phone:</strong> ${o.customerPhone}</div><table style="width:100%;border-collapse:collapse;margin-top:10px"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${itemsHtml}</tbody></table><div style="text-align:right;margin-top:15px;border-top:2px solid #ffd700;padding-top:10px"><p>Subtotal: ${formatCurrency(o.subtotal)}</p>${o.discountPercent > 0 ? `<p>Discount: -${formatCurrency(o.discountAmount)}</p>` : ''}${tax.enabled && tax.rate > 0 ? `<p>${tax.name}: ${formatCurrency(o.taxAmount)}</p>` : ''}<h3>Total: ${formatCurrency(o.total)}</h3><p>Paid: ${formatCurrency(o.paid || 0)}</p><p><strong>${nameText}</strong></p><p><strong>Remaining: ${formatCurrency(Math.abs(remaining))}</strong></p></div><div style="text-align:center;margin-top:15px;font-size:10px;color:#666">${invoiceSettings.footer}</div></div></div>`;
     let tpl = document.getElementById('pdfTemplate'); tpl.innerHTML = html;
     try { let canvas = await html2canvas(tpl, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); let { jsPDF } = window.jspdf; let imgWidth = 190, imgHeight = (canvas.height * imgWidth) / canvas.width; let doc = new jsPDF('p', 'mm', 'a4'); doc.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight); doc.save(`${company.name}_${o.invoiceNo}.pdf`); showToast('PDF Downloaded'); } catch(e) { showToast('Error: ' + e.message); } }
-async function shareAsImage() { if(!window.currentInvoiceNo) return; let el = document.getElementById('invoicePrintArea') || document.querySelector('#invoiceDetails div'); if(!el) { showToast('Cannot find invoice'); return; } let canvas = await html2canvas(el, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); let w = window.open('', '_blank'); w.document.write(`<html><body style="margin:0"><img src="${imgData}" style="max-width:100%"></body></html>`); w.document.close(); showToast('Image ready - take screenshot or share'); }
-async function downloadCartPDF() { if(cart.length === 0) { showToast('Cart empty'); return; } let cust = document.getElementById('posCustomer').value; let phone = document.getElementById('posCustomerPhone').value; let dp = discountEnabled ? parseFloat(document.getElementById('posDiscount').value) || 0 : 0; let sub = cart.reduce((s,i)=>s+i.total,0), da = sub * dp / 100, ad = sub - da, taxRate = tax.enabled ? tax.rate : 0, ta = ad * taxRate / 100, total = ad + ta; let itemsHtml = ''; cart.forEach(i => { itemsHtml += `<tr><td>${i.name}</td><td>${i.size}</td><td>${i.qty}</td><td>${formatCurrency(i.sellingPrice)}</td><td>${formatCurrency(i.total)}</td></tr>`; }); let html = `<div style="font-family:Arial;border:2px solid #ffd700;border-radius:12px"><div style="background:#1a1a2e;color:#ffd700;padding:15px;text-align:center"><h2>${company.logo} ${company.name}</h2></div><div style="padding:15px"><h3>Cart Preview</h3><p>Customer: ${cust} | Phone: ${phone}</p><table style="width:100%;border-collapse:collapse"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${itemsHtml}</tbody></table><div style="text-align:right;margin-top:15px"><p>Subtotal: ${formatCurrency(sub)}</p>${dp > 0 ? `<p>Discount: ${dp}% - ${formatCurrency(da)}</p>` : ''}${tax.enabled && tax.rate > 0 ? `<p>${tax.name}: ${formatCurrency(ta)}</p>` : ''}<h3>Total: ${formatCurrency(total)}</h3></div></div></div>`; let tpl = document.getElementById('pdfTemplate'); tpl.innerHTML = html; try { let canvas = await html2canvas(tpl, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); let { jsPDF } = window.jspdf; let imgWidth = 190, imgHeight = (canvas.height * imgWidth) / canvas.width; let doc = new jsPDF('p', 'mm', 'a4'); doc.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight); doc.save(`${company.name}_Cart.pdf`); showToast('PDF Downloaded'); } catch(e) { showToast('Error'); } }
+async function downloadCartPDF() { if(cart.length === 0) { showToast('Cart empty'); return; } let cust = document.getElementById('posCustomer').value; let phone = document.getElementById('posCustomerPhone').value; let dp = discountEnabled ? parseFloat(document.getElementById('posDiscount').value) || 0 : 0; let sub = cart.reduce((s,i)=>s+i.total,0), da = sub * dp / 100, ad = sub - da, taxRate = tax.enabled ? tax.rate : 0, ta = ad * taxRate / 100, total = ad + ta; let itemsHtml = ''; cart.forEach(i => { itemsHtml += `<tr><td>${i.name}</td><td>${i.size}</td><td>${i.qty}</td><td>${formatCurrency(i.sellingPrice)}</td><td>${formatCurrency(i.total)}<tr>`; }); let html = `<div style="font-family:Arial;border:2px solid #ffd700;border-radius:12px"><div style="background:#1a1a2e;color:#ffd700;padding:15px;text-align:center"><h2>${company.logo} ${company.name}</h2></div><div style="padding:15px"><h3>Cart Preview</h3><p>Customer: ${cust} | Phone: ${phone}</p><table style="width:100%;border-collapse:collapse"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${itemsHtml}</tbody></table><div style="text-align:right;margin-top:15px"><p>Subtotal: ${formatCurrency(sub)}</p>${dp > 0 ? `<p>Discount: ${dp}% - ${formatCurrency(da)}</p>` : ''}${tax.enabled && tax.rate > 0 ? `<p>${tax.name}: ${formatCurrency(ta)}</p>` : ''}<h3>Total: ${formatCurrency(total)}</h3></div></div></div>`; let tpl = document.getElementById('pdfTemplate'); tpl.innerHTML = html; try { let canvas = await html2canvas(tpl, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); let { jsPDF } = window.jspdf; let imgWidth = 190, imgHeight = (canvas.height * imgWidth) / canvas.width; let doc = new jsPDF('p', 'mm', 'a4'); doc.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight); doc.save(`${company.name}_Cart.pdf`); showToast('PDF Downloaded'); } catch(e) { showToast('Error'); } }
 
-// ==================== SETTINGS & LANGUAGE ====================
-function setLanguage(lang) { currentLang = lang; document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active')); document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active'); if(lang === 'ar') document.body.classList.add('rtl'); else document.body.classList.remove('rtl'); displayProducts(); loadInventory(); updateReports(); displayCustomers(); updateDailySales(); applyLanguageToTables(); }
-function applyLanguageToTables() { let headers = { en: { item: 'Item', size: 'Size', qty: 'Qty', price: 'Price', total: 'Total', invoice: 'Invoice', date: 'Date', customer: 'Customer', phone: 'Phone', items: 'Items', profit: 'Profit', status: 'Status', actions: 'Actions' }, ar: { item: 'المنتج', size: 'المقاس', qty: 'الكمية', price: 'السعر', total: 'الإجمالي', invoice: 'الفاتورة', date: 'التاريخ', customer: 'العميل', phone: 'الجوال', items: 'المنتجات', profit: 'الربح', status: 'الحالة', actions: 'الإجراءات' } }; let h = headers[currentLang]; let cartHeader = document.getElementById('cartHeader'); if(cartHeader) { let cells = cartHeader.getElementsByTagName('th'); if(cells.length >= 5) { cells[0].innerText = h.item; cells[1].innerText = h.size; cells[2].innerText = h.qty; cells[3].innerText = h.price; cells[4].innerText = h.total; } } }
+// ==================== SETTINGS ====================
+function setLanguage(lang) { currentLang = lang; document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active')); document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active'); if(lang === 'ar') document.body.classList.add('rtl'); else document.body.classList.remove('rtl'); displayProducts(); loadInventory(); updateReports(); displayCustomers(); updateDailySales(); }
 function setCurrency(cur) { currentCurrency = cur; displayProducts(); loadInventory(); updateCartDisplay(); updateReports(); displayCustomers(); updateDailySales(); }
 function saveCompany() { company.name = document.getElementById('companyNameSetting').value; company.logo = document.getElementById('companyLogoSetting').value; company.tagline = document.getElementById('companyTaglineSetting').value; company.address = document.getElementById('companyAddressSetting').value; company.phone = document.getElementById('companyPhoneSetting').value; saveData(); document.getElementById('companyNameDisplay').innerHTML = company.name; document.getElementById('companyLogoDisplay').innerHTML = company.logo; document.getElementById('companyTaglineDisplay').innerHTML = company.tagline; showToast('Saved'); }
-function saveTax() { tax.enabled = document.getElementById('taxEnabledToggle').checked; tax.rate = parseFloat(document.getElementById('taxRateSetting').value); tax.name = document.getElementById('taxNameSetting').value; discountEnabled = document.getElementById('discountEnabledToggle').checked; saveData(); document.getElementById('taxRateSettingVal').value = tax.rate; document.getElementById('posTaxRate').value = tax.rate; document.getElementById('taxRateDisplay').innerHTML = tax.rate; document.getElementById('taxNameLabel').innerHTML = tax.name; let taxField = document.getElementById('taxFieldGroup'); let discountField = document.getElementById('discountFieldGroup'); let taxRow = document.getElementById('taxRow'); let discountRow = document.getElementById('discountRow'); if(tax.enabled && tax.rate > 0) { taxField.style.display = 'block'; taxRow.style.display = 'block'; } else { taxField.style.display = 'none'; taxRow.style.display = 'none'; } if(discountEnabled) { discountField.style.display = 'block'; discountRow.style.display = 'block'; } else { discountField.style.display = 'none'; discountRow.style.display = 'none'; } updateTotals(); showToast('Saved'); }
+function saveTax() { tax.enabled = document.getElementById('taxEnabledToggle').checked; tax.rate = parseFloat(document.getElementById('taxRateSetting').value); tax.name = document.getElementById('taxNameSetting').value; discountEnabled = document.getElementById('discountEnabledToggle').checked; saveData(); document.getElementById('taxRateDisplay').innerHTML = tax.rate; document.getElementById('taxNameLabel').innerHTML = tax.name; let taxField = document.getElementById('taxFieldGroup'); let discountField = document.getElementById('discountFieldGroup'); let taxRow = document.getElementById('taxRow'); let discountRow = document.getElementById('discountRow'); if(tax.enabled && tax.rate > 0) { taxField.style.display = 'block'; taxRow.style.display = 'block'; } else { taxField.style.display = 'none'; taxRow.style.display = 'none'; } if(discountEnabled) { discountField.style.display = 'block'; discountRow.style.display = 'block'; } else { discountField.style.display = 'none'; discountRow.style.display = 'none'; } updateTotals(); showToast('Saved'); }
 function saveInvoice() { invoiceSettings.footer = document.getElementById('invoiceFooterSetting').value; invoiceSettings.notes = document.getElementById('invoiceNotesSetting').value; saveData(); showToast('Saved'); }
 function backup() { let data = { products, orders: allOrders, customers, company, tax, invoiceSettings, discountEnabled }; let a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: 'application/json' })); a.download = `backup_${new Date().toISOString().slice(0,19)}.json`; a.click(); showToast('Backup created'); }
 function restore(file) { let r = new FileReader(); r.onload = e => { try { let d = JSON.parse(e.target.result); if(d.products) products = d.products; if(d.orders) allOrders = d.orders; if(d.customers) customers = d.customers; if(d.company) company = d.company; if(d.tax) tax = d.tax; if(d.invoiceSettings) invoiceSettings = d.invoiceSettings; if(d.discountEnabled !== undefined) discountEnabled = d.discountEnabled; saveData(); location.reload(); } catch(err) { showToast('Invalid file'); } }; r.readAsText(file); }
@@ -420,7 +402,6 @@ function setupEvents() {
     document.getElementById('printModalBtn').onclick = printInvoice;
     document.getElementById('whatsappModalBtn').onclick = () => { if(window.currentInvoiceNo) sendWhatsApp(window.currentInvoiceNo); };
     document.getElementById('downloadModalPdfBtn').onclick = () => { if(window.currentInvoiceNo) downloadPDF(window.currentInvoiceNo); };
-    document.getElementById('shareImageBtn').onclick = shareAsImage;
     document.getElementById('saveCompanyBtn').onclick = saveCompany;
     document.getElementById('saveTaxBtn').onclick = saveTax;
     document.getElementById('saveInvoiceBtn').onclick = saveInvoice;
@@ -432,11 +413,10 @@ function setupEvents() {
     document.getElementById('cancelReceiveBtn').onclick = closeReceiveModal;
     document.getElementById('closeLedgerModal').onclick = closeLedgerModal;
     document.getElementById('shareLedgerWhatsappBtn').onclick = shareLedgerWhatsApp;
-    document.getElementById('shareLedgerImageBtn').onclick = shareLedgerImage;
     document.querySelectorAll('.mode-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentMode = btn.dataset.mode; document.getElementById('sqmFields').style.display = currentMode === 'sqm' ? 'block' : 'none'; document.getElementById('manualFields').style.display = currentMode === 'manual' ? 'block' : 'none'; document.getElementById('piecesFields').style.display = currentMode === 'pieces' ? 'block' : 'none'; }; });
     document.querySelectorAll('#productGroupFilter .group-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('#productGroupFilter .group-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentProductGroup = btn.dataset.group; displayProducts(); }; });
     document.querySelectorAll('#inventoryGroupFilter .group-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('#inventoryGroupFilter .group-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentInventoryGroup = btn.dataset.group; loadInventory(); }; });
-    document.getElementById('companyNameSetting').value = company.name; document.getElementById('companyLogoSetting').value = company.logo; document.getElementById('companyTaglineSetting').value = company.tagline; document.getElementById('companyAddressSetting').value = company.address; document.getElementById('companyPhoneSetting').value = company.phone; document.getElementById('taxEnabledToggle').checked = tax.enabled; document.getElementById('taxRateSetting').value = tax.rate; document.getElementById('taxNameSetting').value = tax.name; document.getElementById('discountEnabledToggle').checked = discountEnabled; document.getElementById('invoiceFooterSetting').value = invoiceSettings.footer; document.getElementById('invoiceNotesSetting').value = invoiceSettings.notes; document.getElementById('posTaxRate').value = tax.rate; let taxField = document.getElementById('taxFieldGroup'); let discountField = document.getElementById('discountFieldGroup'); let taxRow = document.getElementById('taxRow'); let discountRow = document.getElementById('discountRow'); if(tax.enabled && tax.rate > 0) { taxField.style.display = 'block'; taxRow.style.display = 'block'; } else { taxField.style.display = 'none'; taxRow.style.display = 'none'; } if(discountEnabled) { discountField.style.display = 'block'; discountRow.style.display = 'block'; } else { discountField.style.display = 'none'; discountRow.style.display = 'none'; } updateDailySales(); applyLanguageToTables();
+    document.getElementById('companyNameSetting').value = company.name; document.getElementById('companyLogoSetting').value = company.logo; document.getElementById('companyTaglineSetting').value = company.tagline; document.getElementById('companyAddressSetting').value = company.address; document.getElementById('companyPhoneSetting').value = company.phone; document.getElementById('taxEnabledToggle').checked = tax.enabled; document.getElementById('taxRateSetting').value = tax.rate; document.getElementById('taxNameSetting').value = tax.name; document.getElementById('discountEnabledToggle').checked = discountEnabled; document.getElementById('invoiceFooterSetting').value = invoiceSettings.footer; document.getElementById('invoiceNotesSetting').value = invoiceSettings.notes; updateDailySales();
 }
 
 loadData(); setupEvents(); displayProducts(); loadInventory(); updateCartDisplay(); updateReports(); displayCustomers(); setLanguage('en'); document.getElementById('monthPicker').value = new Date().toISOString().slice(0,7);
