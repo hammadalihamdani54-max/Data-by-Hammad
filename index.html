@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>TABUK MARBLE - Ultimate Business Management System</title>
+    <title>TABUK MARBLE - Business Management System</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
@@ -17,98 +17,78 @@
         .container { max-width: 1600px; margin: 0 auto; background: #ffffff; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); overflow: hidden; }
         .top-bar { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; border-bottom: 3px solid #ffd700; }
         .logo-area { display: flex; align-items: center; gap: 15px; }
-        .logo-icon { font-size: 50px; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3)); }
-        .logo-area h2 { color: #ffd700; font-size: 28px; font-weight: bold; }
-        .logo-area p { color: #a0c4e0; font-size: 12px; }
+        .logo-icon { font-size: 40px; }
+        .logo-area h2 { color: #ffd700; font-size: 24px; }
+        .logo-area p { color: #a0c4e0; font-size: 11px; }
         .controls { display: flex; gap: 15px; flex-wrap: wrap; }
-        .lang-btn, .currency-btn { padding: 8px 18px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,215,0,0.5); border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
-        .lang-btn.active, .currency-btn.active { background: #ffd700; color: #1a1a2e; border-color: #ffd700; }
+        .lang-btn, .currency-btn { padding: 8px 18px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,215,0,0.5); border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .lang-btn.active, .currency-btn.active { background: #ffd700; color: #1a1a2e; }
         .tabs { display: flex; background: #1a1a2e; flex-wrap: wrap; }
-        .tab-btn { flex: 1; background: transparent; color: white; border: none; padding: 15px 20px; cursor: pointer; font-size: 15px; font-weight: bold; transition: all 0.3s; border-bottom: 3px solid transparent; }
+        .tab-btn { flex: 1; background: transparent; color: white; border: none; padding: 15px 20px; cursor: pointer; font-size: 14px; font-weight: bold; border-bottom: 3px solid transparent; }
         .tab-btn.active { background: #2c3e50; color: #ffd700; border-bottom-color: #ffd700; }
         .tab-content { display: none; padding: 25px; animation: fadeIn 0.4s; min-height: 600px; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .pos-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 25px; }
+        @media (max-width: 768px) { .pos-grid { grid-template-columns: 1fr; } }
         .products-panel, .cart-panel, .report-panel, .inventory-panel, .settings-panel, .customer-panel { background: #f8f9fa; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .product-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 15px; max-height: 500px; overflow-y: auto; }
-        .product-card { background: white; padding: 12px; border-radius: 12px; cursor: pointer; transition: all 0.3s; border: 1px solid #e2e8f0; }
-        .product-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.15); border-color: #ffd700; }
+        .product-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 15px; max-height: 500px; overflow-y: auto; }
+        .product-card { background: white; padding: 10px; border-radius: 12px; cursor: pointer; border: 1px solid #e2e8f0; }
+        .product-card:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: #ffd700; }
         .group-filter { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-        .group-btn { padding: 8px 18px; background: #e2e8f0; color: #1e293b; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; }
-        .group-btn.active { background: #ffd700; color: #1a1a2e; }
+        .group-btn { padding: 8px 18px; background: #e2e8f0; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; }
+        .group-btn.active { background: #ffd700; }
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 6px; font-weight: bold; color: #1e293b; font-size: 13px; }
-        input, select, textarea { width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; transition: all 0.3s; }
-        input:focus { outline: none; border-color: #ffd700; box-shadow: 0 0 0 3px rgba(255,215,0,0.1); }
-        button { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 10px 22px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold; margin: 5px; transition: all 0.3s; }
-        button:hover { transform: translateY(-2px); filter: brightness(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .btn-success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-        .btn-danger { background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%); }
-        .btn-warning { background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%); }
-        .btn-info { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); }
-        .btn-whatsapp { background: linear-gradient(135deg, #075e54 0%, #128c7e 100%); }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 25px; }
-        .stat-card { background: linear-gradient(135deg, #1a1a2e 0%, #2c3e50 100%); color: white; padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; }
-        .stat-card .value { font-size: 34px; font-weight: bold; color: #ffd700; margin-top: 8px; }
-        .profit-card { background: linear-gradient(135deg, #0f9b0f 0%, #27ae60 100%); }
-        .search-box { margin-bottom: 15px; position: relative; }
-        .search-box input { padding-left: 35px; }
+        label { display: block; margin-bottom: 6px; font-weight: bold; font-size: 12px; }
+        input, select, textarea { width: 100%; padding: 8px 12px; border: 2px solid #e2e8f0; border-radius: 10px; }
+        input:focus { outline: none; border-color: #ffd700; }
+        button { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 8px 18px; border-radius: 10px; cursor: pointer; font-weight: bold; margin: 3px; }
+        button:hover { transform: translateY(-1px); }
+        .btn-success { background: #11998e; }
+        .btn-danger { background: #eb3349; }
+        .btn-warning { background: #f2994a; }
+        .btn-info { background: #1e3c72; }
+        .btn-whatsapp { background: #075e54; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px; }
+        .stat-card { background: linear-gradient(135deg, #1a1a2e 0%, #2c3e50 100%); color: white; padding: 15px; border-radius: 15px; text-align: center; }
+        .stat-card .value { font-size: 28px; font-weight: bold; color: #ffd700; }
+        .search-box input { padding-left: 30px; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 25px; border-radius: 20px; max-width: 1000px; width: 95%; max-height: 85vh; overflow-y: auto; }
-        .toast { position: fixed; bottom: 25px; right: 25px; background: #1a1a2e; color: #ffd700; padding: 12px 24px; border-radius: 12px; z-index: 1000; animation: slideIn 0.3s; font-weight: bold; }
-        .action-group { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-        .cart-input-section { background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #e2e8f0; }
-        .input-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; align-items: flex-end; }
-        .input-group { flex: 1; min-width: 120px; }
-        .input-group label { font-size: 11px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; }
-        .mode-buttons { display: flex; gap: 12px; margin-bottom: 20px; }
-        .mode-btn { flex: 1; background: #e2e8f0; color: #1e293b; padding: 10px; border-radius: 10px; cursor: pointer; text-align: center; }
-        .mode-btn.active { background: #ffd700; color: #1a1a2e; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 12px; overflow: hidden; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-        th { background: #1a1a2e; color: #ffd700; font-weight: bold; }
-        tr:hover { background: #f1f5f9; }
-        .total-box { margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #1a1a2e 0%, #2c3e50 100%); border-radius: 15px; text-align: right; color: white; }
-        .group-badge { display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 10px; font-weight: bold; margin-right: 8px; }
+        .modal-content { background: white; padding: 25px; border-radius: 20px; max-width: 900px; width: 95%; max-height: 85vh; overflow-y: auto; }
+        .toast { position: fixed; bottom: 25px; right: 25px; background: #1a1a2e; color: #ffd700; padding: 10px 20px; border-radius: 12px; z-index: 1000; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #1a1a2e; color: #ffd700; }
+        .total-box { margin-top: 20px; padding: 15px; background: #1a1a2e; border-radius: 15px; text-align: right; color: white; }
+        .group-badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; margin-right: 8px; }
         .group-mwad { background: #3b82f6; color: white; }
         .group-mojali { background: #f59e0b; color: white; }
         .group-mosnafar { background: #10b981; color: white; }
-        .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
-        .setting-card { background: white; padding: 20px; border-radius: 15px; border: 1px solid #e2e8f0; }
-        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 24px; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: 0.3s; border-radius: 24px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%; }
-        input:checked + .slider { background-color: #10b981; }
-        input:checked + .slider:before { transform: translateX(26px); }
-        .badge-paid { background: #10b981; color: white; padding: 3px 10px; border-radius: 20px; font-size: 11px; }
-        .badge-unpaid { background: #ef4444; color: white; padding: 3px 10px; border-radius: 20px; font-size: 11px; }
-        .badge-partial { background: #f59e0b; color: white; padding: 3px 10px; border-radius: 20px; font-size: 11px; }
-        .badge-advance { background: #8b5cf6; color: white; padding: 3px 10px; border-radius: 20px; font-size: 11px; }
-        .customer-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; border: 1px solid #e2e8f0; cursor: pointer; }
-        .customer-card:hover { border-color: #ffd700; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .advance-row { background: #eef2ff; padding: 10px; border-radius: 8px; margin-top: 8px; display: flex; justify-content: space-between; align-items: center; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        @media (max-width: 768px) { .pos-grid { grid-template-columns: 1fr; } .input-row { flex-direction: column; } }
-        .pdf-invoice { max-width: 800px; margin: 0 auto; background: white; font-family: 'Segoe UI', Arial, sans-serif; border: 2px solid #ffd700; border-radius: 15px; overflow: hidden; }
-        .pdf-header { background: linear-gradient(135deg, #1a1a2e 0%, #2c3e50 100%); color: #ffd700; padding: 25px; text-align: center; }
-        .pdf-body { padding: 25px; background: white; }
-        .pdf-info { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #ffd700; }
-        .pdf-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-        .pdf-table th { background: #1a1a2e; color: #ffd700; padding: 10px; text-align: center; }
-        .pdf-table td { padding: 8px; text-align: center; border-bottom: 1px solid #ddd; }
-        .pdf-totals { text-align: right; margin-top: 20px; padding-top: 15px; border-top: 2px solid #ffd700; }
-        .pdf-footer { text-align: center; margin-top: 20px; padding: 15px; font-size: 10px; color: #666; border-top: 1px solid #ddd; }
+        .badge-paid { background: #10b981; color: white; padding: 2px 8px; border-radius: 20px; font-size: 10px; }
+        .badge-unpaid { background: #ef4444; color: white; }
+        .badge-partial { background: #f59e0b; color: white; }
+        .customer-card { background: white; border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid #e2e8f0; }
+        .payment-green { color: #10b981; font-weight: bold; }
+        .payment-red { color: #ef4444; font-weight: bold; }
         .rtl { direction: rtl; text-align: right; }
-        .rtl .pdf-totals { text-align: left; }
+        .pdf-invoice { max-width: 800px; margin: 0 auto; background: white; border: 2px solid #ffd700; border-radius: 15px; }
+        .pdf-header { background: #1a1a2e; color: #ffd700; padding: 20px; text-align: center; }
+        .pdf-body { padding: 20px; }
+        .pdf-table { width: 100%; border-collapse: collapse; }
+        .pdf-table th, .pdf-table td { padding: 8px; border-bottom: 1px solid #ddd; text-align: center; }
+        .pdf-table th { background: #1a1a2e; color: #ffd700; }
+        .input-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; align-items: flex-end; }
+        .input-group { flex: 1; min-width: 100px; }
+        .mode-buttons { display: flex; gap: 10px; margin-bottom: 15px; }
+        .mode-btn { flex: 1; background: #e2e8f0; padding: 8px; border-radius: 10px; text-align: center; cursor: pointer; }
+        .mode-btn.active { background: #ffd700; }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="top-bar">
-        <div class="logo-area"><div class="logo-icon" id="companyLogoDisplay">🏛️</div><div><h2 id="companyNameDisplay">TABUK MARBLE</h2><p id="companyTaglineDisplay">Premium Marble Solutions</p></div></div>
-        <div class="controls"><div class="language-selector"><button class="lang-btn active" data-lang="en">🇬🇧 English</button><button class="lang-btn" data-lang="ar">🇸🇦 العربية</button></div><div class="currency-selector"><button class="currency-btn active" data-currency="SAR">🇸🇦 SAR</button><button class="currency-btn" data-currency="USD">🇺🇸 USD</button></div></div>
+        <div class="logo-area"><div class="logo-icon" id="companyLogoDisplay">🏢</div><div><h2 id="companyNameDisplay">TABUK MARBLE</h2><p id="companyTaglineDisplay">Premium Marble Solutions</p></div></div>
+        <div class="controls"><div><button class="lang-btn active" data-lang="en">English</button><button class="lang-btn" data-lang="ar">العربية</button></div><div><button class="currency-btn active" data-currency="SAR">SAR</button><button class="currency-btn" data-currency="USD">USD</button></div></div>
     </div>
     <div class="tabs">
         <button class="tab-btn active" data-tab="pos">🛒 POS</button>
@@ -120,222 +100,146 @@
         <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
     </div>
     
-    <!-- POS Tab -->
-    <div id="posTab" class="tab-content active"><div class="pos-grid"><div class="products-panel"><h3 class="i18n" data-key="products">📦 Products</h3><div class="group-filter" id="productGroupFilter"><button class="group-btn active" data-group="all" data-i18n="all">All</button><button class="group-btn" data-group="mwad" data-i18n="materials">مواد بناء</button><button class="group-btn" data-group="mojali" data-i18n="polished">حجر مجلي</button><button class="group-btn" data-group="mosnafar" data-i18n="honed">حجر مصنفر</button></div><div class="search-box"><input type="text" id="searchProduct" placeholder="Search products..."></div><div class="product-list" id="productList"></div></div><div class="cart-panel"><h3 class="i18n" data-key="cart">🛒 Shopping Cart</h3><div class="cart-input-section"><div class="mode-buttons" id="modeButtons"><div class="mode-btn active" data-mode="sqm" data-i18n="sqmMode">📐 Square Meter</div><div class="mode-btn" data-mode="pieces" data-i18n="piecesMode">🔧 Pieces</div></div><div class="input-row"><div class="input-group" style="flex:2"><label class="i18n" data-key="itemName">🏷️ Item Name</label><input type="text" id="itemName" placeholder="Select item"></div><div class="input-group"><label class="i18n" data-key="costPrice">💰 Cost Price</label><input type="number" id="costPriceItem" placeholder="Cost" step="0.01"></div></div><div id="sqmFieldsContainer"><div class="input-row"><div class="input-group"><label class="i18n" data-key="thickness">📏 Thickness (cm)</label><input type="number" id="thickness" placeholder="cm" step="0.1"></div><div class="input-group"><label class="i18n" data-key="width">📐 Width (m)</label><input type="number" id="width" placeholder="m" step="0.01"></div><div class="input-group"><label class="i18n" data-key="length">📏 Length (m)</label><input type="number" id="length" placeholder="m" step="0.01"></div><div class="input-group"><label class="i18n" data-key="priceSqm">💰 Price / sqm</label><input type="number" id="sqmPrice" placeholder="Price" step="0.01"></div></div></div><div id="piecesFieldsContainer" style="display:none;"><div class="input-row"><div class="input-group" style="flex:2"><label class="i18n" data-key="size">🔧 Size</label><input type="text" id="pieceSize" placeholder="e.g., 4*4*3mm"></div><div class="input-group"><label class="i18n" data-key="quantity">🔢 Quantity</label><input type="number" id="piecesCount" value="1" step="1" min="1"></div><div class="input-group"><label class="i18n" data-key="pricePiece">💰 Price / piece</label><input type="number" id="pieceUnitPrice" placeholder="Price" step="0.01"></div></div></div><button id="addToCartBtn" class="btn-success" style="width:100%" data-i18n="addToCart">➕ Add to Cart</button></div><div class="form-group"><label class="i18n" data-key="customerName">👤 Customer</label><input type="text" id="posCustomer" placeholder="Customer name"></div><div class="form-group"><label class="i18n" data-key="phoneNumber">📞 Phone</label><input type="tel" id="posCustomerPhone" placeholder="Phone"></div><div class="form-group"><label class="i18n" data-key="discount">🏷️ Discount %</label><input type="number" id="posDiscount" value="0" step="1" min="0" max="100"></div><div style="overflow-x: auto; max-height: 300px;"><table id="cartTable"><thead><tr><th class="i18n" data-key="itemCol">Item</th><th class="i18n" data-key="detailsCol">Details</th><th class="i18n" data-key="qtyCol">Qty</th><th class="i18n" data-key="priceCol">Price</th><th class="i18n" data-key="totalCol">Total</th><th></th></tr></thead><tbody id="cartBody"></tbody></table></div><div class="total-box"><p><strong class="i18n" data-key="subtotal">Subtotal:</strong> <span id="subtotal">SAR 0.00</span></p><p><strong class="i18n" data-key="discountLabel">Discount:</strong> <span id="discountPercent">0</span>% - <span id="discountAmount">SAR 0.00</span></p><p><strong><span id="taxNameLabel">Tax</span> (<span id="taxRateDisplay">0</span>%):</strong> <span id="taxAmount">SAR 0.00</span></p><h2><strong class="i18n" data-key="grandTotal">Total:</strong> <span id="grandTotal">SAR 0.00</span></h2></div><div><button id="confirmOrderBtn" class="btn-success" data-i18n="confirmOrder">✅ Confirm Order</button><button id="clearCartBtn" class="btn-danger" data-i18n="clearCart">🗑️ Clear</button><button id="editCartBtn" class="btn-warning" data-i18n="editItem">✏️ Edit Item</button><button id="downloadCartPdfBtn" class="btn-info" data-i18n="downloadPdf">📄 PDF</button></div></div></div></div>
+    <div id="posTab" class="tab-content active"><div class="pos-grid"><div class="products-panel"><h3>Products</h3><div class="group-filter" id="productGroupFilter"><button class="group-btn active" data-group="all">All</button><button class="group-btn" data-group="mwad">Materials</button><button class="group-btn" data-group="mojali">Polished</button><button class="group-btn" data-group="mosnafar">Honed</button></div><div class="search-box"><input type="text" id="searchProduct" placeholder="Search..."></div><div class="product-list" id="productList"></div></div><div class="cart-panel"><h3>Shopping Cart</h3><div class="mode-buttons" id="modeButtons"><div class="mode-btn active" data-mode="sqm">Square Meter (SQM)</div><div class="mode-btn" data-mode="manual">Manual Area (m²)</div><div class="mode-btn" data-mode="pieces">Pieces</div></div><div class="cart-input-section"><div class="input-row"><div class="input-group" style="flex:2"><label>Item Name</label><input type="text" id="itemName" placeholder="Select item"></div><div class="input-group"><label>Cost Price</label><input type="number" id="costPriceItem" placeholder="Cost" step="0.01"></div></div><div id="sqmFields"><div class="input-row"><div class="input-group"><label>Thickness (cm)</label><input type="number" id="thickness" step="0.1"></div><div class="input-group"><label>Width (m)</label><input type="number" id="width" step="0.01"></div><div class="input-group"><label>Length (m)</label><input type="number" id="length" step="0.01"></div><div class="input-group"><label>Price / sqm</label><input type="number" id="sqmPrice" step="0.01"></div></div></div><div id="manualFields" style="display:none"><div class="input-row"><div class="input-group"><label>Area (m²)</label><input type="number" id="manualArea" step="0.01" placeholder="e.g., 200"></div><div class="input-group"><label>Price / sqm</label><input type="number" id="manualPrice" step="0.01"></div></div></div><div id="piecesFields" style="display:none"><div class="input-row"><div class="input-group"><label>Size</label><input type="text" id="pieceSize" placeholder="Size"></div><div class="input-group"><label>Quantity</label><input type="number" id="piecesCount" value="1" step="1"></div><div class="input-group"><label>Price / piece</label><input type="number" id="pieceUnitPrice" step="0.01"></div></div></div><button id="addToCartBtn" class="btn-success" style="width:100%">+ Add to Cart</button></div><div class="form-group"><label>Customer Name</label><input type="text" id="posCustomer"></div><div class="form-group"><label>Phone Number</label><input type="tel" id="posCustomerPhone"></div><div class="form-group" id="discountFieldGroup" style="display:none"><label>Discount %</label><input type="number" id="posDiscount" value="0" step="1" min="0" max="100"></div><div style="overflow-x:auto"><table id="cartTable"><thead><tr><th>Item</th><th>Details</th><th>Qty</th><th>Price</th><th>Total</th><th></th></tr></thead><tbody id="cartBody"></tbody></table></div><div class="total-box"><p><strong>Subtotal:</strong> <span id="subtotal">SAR 0.00</span></p><p id="discountRow" style="display:none"><strong>Discount:</strong> <span id="discountPercent">0</span>% - <span id="discountAmount">SAR 0.00</span></p><p id="taxRow" style="display:none"><strong><span id="taxNameLabel">Tax</span> (<span id="taxRateDisplay">0</span>%):</strong> <span id="taxAmount">SAR 0.00</span></p><h2><strong>Total:</strong> <span id="grandTotal">SAR 0.00</span></h2></div><div><button id="confirmOrderBtn" class="btn-success">Confirm Order</button><button id="clearCartBtn" class="btn-danger">Clear</button><button id="editCartBtn" class="btn-warning">Edit Item</button><button id="downloadCartPdfBtn" class="btn-info">PDF</button></div></div></div></div>
     
-    <!-- Customers Tab -->
-    <div id="customersTab" class="tab-content"><div class="customer-panel"><h3 class="i18n" data-key="customerAccounts">👥 Customer Accounts</h3><div class="search-box"><input type="text" id="customerSearch" placeholder="Search customer..."></div><div id="customerList" style="max-height: 500px; overflow-y: auto;"></div></div></div>
-    
-    <!-- Monthly Tab -->
-    <div id="monthlyTab" class="tab-content"><div class="stats-grid"><div class="stat-card"><h3 class="i18n" data-key="totalSales">Total Sales</h3><div class="value" id="totalSales">SAR 0</div></div><div class="stat-card"><h3 class="i18n" data-key="totalOrders">Total Orders</h3><div class="value" id="totalOrders">0</div></div><div class="stat-card profit-card"><h3 class="i18n" data-key="totalProfit">Total Profit</h3><div class="value" id="totalProfit">SAR 0</div></div></div><div class="report-panel"><h3 class="i18n" data-key="monthlyTransactions">📅 Monthly Transactions</h3><div class="form-group"><label class="i18n" data-key="selectMonth">Select Month:</label><input type="month" id="monthPicker"></div><div style="overflow-x: auto;"><table id="monthlyTable"><thead><tr><th class="i18n" data-key="dateCol">Date</th><th class="i18n" data-key="invoiceCol">Invoice</th><th class="i18n" data-key="customerCol">Customer</th><th class="i18n" data-key="phoneCol">Phone</th><th class="i18n" data-key="itemsCol">Items</th><th class="i18n" data-key="totalCol">Total</th><th class="i18n" data-key="profitCol">Profit</th><th class="i18n" data-key="statusCol">Status</th><th class="i18n" data-key="actionsCol">Actions</th></tr></thead><tbody id="monthlyBody"></tbody></table></div></div></div>
-    
-    <!-- Inventory Tab -->
-    <div id="inventoryTab" class="tab-content"><div class="inventory-panel"><h3 class="i18n" data-key="inventory">📦 Inventory</h3><div class="group-filter" id="inventoryGroupFilter"><button class="group-btn active" data-group="all" data-i18n="all">All</button><button class="group-btn" data-group="mwad" data-i18n="materials">مواد بناء</button><button class="group-btn" data-group="mojali" data-i18n="polished">حجر مجلي</button><button class="group-btn" data-group="mosnafar" data-i18n="honed">حجر مصنفر</button></div><div class="search-box"><input type="text" id="inventorySearch" placeholder="Search..."></div><button id="addProductBtn" class="btn-success" data-i18n="addProduct">➕ Add Product</button><div style="overflow-x: auto;"><table id="inventoryTable"><thead><tr><th class="i18n" data-key="groupCol">Group</th><th class="i18n" data-key="nameCol">Name</th><th class="i18n" data-key="sizeCol">Size</th><th class="i18n" data-key="sellingCol">Selling</th><th class="i18n" data-key="costCol">Cost</th><th class="i18n" data-key="stockCol">Stock</th><th class="i18n" data-key="actionsCol">Actions</th></tr></thead><tbody id="inventoryBody"></tbody></table></div></div></div>
-    
-    <!-- Profit & Loss Tab -->
-    <div id="profitlossTab" class="tab-content"><div class="stats-grid"><div class="stat-card"><h3 class="i18n" data-key="revenue">Revenue</h3><div class="value" id="revenue">SAR 0</div></div><div class="stat-card"><h3 class="i18n" data-key="totalCost">Total Cost</h3><div class="value" id="totalCost">SAR 0</div></div><div class="stat-card profit-card"><h3 class="i18n" data-key="netProfit">Net Profit</h3><div class="value" id="netProfit">SAR 0</div></div><div class="stat-card"><h3 class="i18n" data-key="profitMargin">Profit Margin</h3><div class="value" id="profitMargin">0%</div></div></div></div>
-    
-    <!-- Invoices Tab -->
-    <div id="invoicesTab" class="tab-content"><div class="report-panel"><h3 class="i18n" data-key="allInvoices">📄 All Invoices</h3><div class="search-box"><input type="text" id="invoiceSearch" placeholder="Search..."></div><div style="overflow-x: auto;"><table id="invoicesTable"><thead><tr><th class="i18n" data-key="invoiceCol">Invoice</th><th class="i18n" data-key="dateCol">Date</th><th class="i18n" data-key="customerCol">Customer</th><th class="i18n" data-key="phoneCol">Phone</th><th class="i18n" data-key="itemsCol">Items</th><th class="i18n" data-key="totalCol">Total</th><th class="i18n" data-key="statusCol">Status</th><th class="i18n" data-key="actionsCol">Actions</th></tr></thead><tbody id="invoicesBody"></tbody></table></div></div></div>
-    
-    <!-- Settings Tab -->
-    <div id="settingsTab" class="tab-content"><div class="settings-panel"><h3 class="i18n" data-key="settings">⚙️ Settings</h3><div class="settings-grid"><div class="setting-card"><h4 class="i18n" data-key="company">🏢 Company</h4><div class="form-group"><label class="i18n" data-key="companyName">Name</label><input type="text" id="companyNameSetting"></div><div class="form-group"><label class="i18n" data-key="companyLogo">Logo (emoji)</label><input type="text" id="companyLogoSetting" maxlength="5"></div><div class="form-group"><label class="i18n" data-key="companyTagline">Tagline</label><input type="text" id="companyTaglineSetting"></div><div class="form-group"><label class="i18n" data-key="companyAddress">Address</label><textarea id="companyAddressSetting" rows="2"></textarea></div><div class="form-group"><label class="i18n" data-key="companyPhone">Phone</label><input type="text" id="companyPhoneSetting"></div><button id="saveCompanyBtn" class="btn-success" data-i18n="save">💾 Save</button></div><div class="setting-card"><h4 class="i18n" data-key="taxSettings">💰 Tax</h4><div class="form-group"><label class="i18n" data-key="enableTax">Enable Tax <label class="toggle-switch"><input type="checkbox" id="taxEnabledToggle"><span class="slider"></span></label></label></div><div class="form-group"><label class="i18n" data-key="taxRate">Rate (%)</label><input type="number" id="taxRateSetting" value="15"></div><div class="form-group"><label class="i18n" data-key="taxName">Name</label><input type="text" id="taxNameSetting" value="VAT"></div><button id="saveTaxBtn" class="btn-success" data-i18n="save">💾 Save</button></div><div class="setting-card"><h4 class="i18n" data-key="invoiceSettings">📄 Invoice</h4><div class="form-group"><label class="i18n" data-key="invoiceFooter">Footer</label><textarea id="invoiceFooterSetting" rows="2"></textarea></div><div class="form-group"><label class="i18n" data-key="invoiceNotes">Notes</label><textarea id="invoiceNotesSetting" rows="2"></textarea></div><button id="saveInvoiceBtn" class="btn-success" data-i18n="save">💾 Save</button></div><div class="setting-card"><h4 class="i18n" data-key="dataManagement">💾 Data</h4><button id="backupBtn" class="btn-info" data-i18n="backup">📥 Backup</button><button id="restoreBtn" class="btn-warning" data-i18n="restore">📤 Restore</button><input type="file" id="restoreFile" style="display:none;"><button id="resetBtn" class="btn-danger" data-i18n="reset">⚠️ Reset</button></div></div></div></div>
+    <div id="customersTab" class="tab-content"><div class="customer-panel"><h3>Customer Accounts</h3><div class="search-box"><input type="text" id="customerSearch" placeholder="Search..."></div><div id="customerList"></div></div></div>
+    <div id="monthlyTab" class="tab-content"><div class="stats-grid"><div class="stat-card"><h3>Total Sales</h3><div class="value" id="totalSales">SAR 0</div></div><div class="stat-card"><h3>Total Orders</h3><div class="value" id="totalOrders">0</div></div><div class="stat-card"><h3>Total Profit</h3><div class="value" id="totalProfit">SAR 0</div></div></div><div class="report-panel"><h3>Monthly Transactions</h3><input type="month" id="monthPicker"><div style="overflow-x:auto"><table id="monthlyTable"><thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Profit</th><th>Status</th><th>Actions</th></tr></thead><tbody id="monthlyBody"></tbody></table></div></div></div>
+    <div id="inventoryTab" class="tab-content"><div class="inventory-panel"><h3>Inventory</h3><div class="group-filter" id="inventoryGroupFilter"><button class="group-btn active" data-group="all">All</button><button class="group-btn" data-group="mwad">Materials</button><button class="group-btn" data-group="mojali">Polished</button><button class="group-btn" data-group="mosnafar">Honed</button></div><div class="search-box"><input type="text" id="inventorySearch" placeholder="Search..."></div><button id="addProductBtn" class="btn-success">+ Add Product</button><div style="overflow-x:auto"><table id="inventoryTable"><thead><tr><th>Group</th><th>Name</th><th>Size</th><th>Selling</th><th>Cost</th><th>Stock</th><th>Actions</th></tr></thead><tbody id="inventoryBody"></tbody></table></div></div></div>
+    <div id="profitlossTab" class="tab-content"><div class="stats-grid"><div class="stat-card"><h3>Revenue</h3><div class="value" id="revenue">SAR 0</div></div><div class="stat-card"><h3>Total Cost</h3><div class="value" id="totalCost">SAR 0</div></div><div class="stat-card"><h3>Net Profit</h3><div class="value" id="netProfit">SAR 0</div></div><div class="stat-card"><h3>Profit Margin</h3><div class="value" id="profitMargin">0%</div></div></div></div>
+    <div id="invoicesTab" class="tab-content"><div class="report-panel"><h3>All Invoices</h3><div class="search-box"><input type="text" id="invoiceSearch" placeholder="Search..."></div><div style="overflow-x:auto"><table id="invoicesTable"><thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody id="invoicesBody"></tbody></table></div></div></div>
+    <div id="settingsTab" class="tab-content"><div class="settings-panel"><h3>Settings</h3><div class="stats-grid"><div class="setting-card"><h4>Company</h4><div class="form-group"><label>Name</label><input type="text" id="companyNameSetting"></div><div class="form-group"><label>Logo Text</label><input type="text" id="companyLogoSetting" maxlength="10"></div><div class="form-group"><label>Tagline</label><input type="text" id="companyTaglineSetting"></div><div class="form-group"><label>Address</label><textarea id="companyAddressSetting" rows="2"></textarea></div><div class="form-group"><label>Phone</label><input type="text" id="companyPhoneSetting"></div><button id="saveCompanyBtn" class="btn-success">Save</button></div><div class="setting-card"><h4>Tax & Discount</h4><div class="form-group"><label>Enable Tax <input type="checkbox" id="taxEnabledToggle"></label></div><div class="form-group"><label>Tax Rate (%)</label><input type="number" id="taxRateSetting" value="15"></div><div class="form-group"><label>Tax Name</label><input type="text" id="taxNameSetting" value="VAT"></div><div class="form-group"><label>Enable Discount in POS</label><input type="checkbox" id="discountEnabledToggle"></div><button id="saveTaxBtn" class="btn-success">Save</button></div><div class="setting-card"><h4>Invoice</h4><div class="form-group"><label>Footer</label><textarea id="invoiceFooterSetting" rows="2"></textarea></div><div class="form-group"><label>Notes</label><textarea id="invoiceNotesSetting" rows="2"></textarea></div><button id="saveInvoiceBtn" class="btn-success">Save</button></div><div class="setting-card"><h4>Data</h4><button id="backupBtn" class="btn-info">Backup</button><button id="restoreBtn" class="btn-warning">Restore</button><input type="file" id="restoreFile" style="display:none"><button id="resetBtn" class="btn-danger">Reset All</button></div></div></div></div>
 </div>
 
-<div id="invoiceModal" class="modal"><div class="modal-content"><div id="invoiceDetails"></div><div style="text-align:center;margin-top:20px"><button id="closeModalBtn" class="btn-info" data-i18n="close">Close</button><button id="printModalBtn" class="btn-success" data-i18n="print">🖨️ Print</button><button id="whatsappModalBtn" class="btn-whatsapp" data-i18n="whatsapp">📱 WhatsApp</button><button id="downloadModalPdfBtn" class="btn-info" data-i18n="downloadPdf">📄 Download PDF</button></div></div></div>
-<div id="receivePaymentModal" class="modal"><div class="modal-content"><h3 id="receivePaymentTitle">Receive Payment</h3><div class="form-group"><label>Amount Received (SAR)</label><input type="number" id="receiveAmountInput" step="0.01" placeholder="Enter amount"></div><div class="form-group"><label>Notes (Advance / Partial / Full)</label><input type="text" id="receiveNotesInput" placeholder="e.g., Advance payment"></div><div style="text-align:center;margin-top:20px"><button id="confirmReceiveBtn" class="btn-success">Confirm</button><button id="cancelReceiveBtn" class="btn-danger">Cancel</button></div></div></div>
+<div id="invoiceModal" class="modal"><div class="modal-content"><div id="invoiceDetails"></div><div style="text-align:center"><button id="closeModalBtn">Close</button><button id="printModalBtn">Print</button><button id="whatsappModalBtn">WhatsApp</button><button id="downloadModalPdfBtn">Download PDF</button></div></div></div>
+<div id="receivePaymentModal" class="modal"><div class="modal-content"><h3>Receive Payment</h3><div class="form-group"><label>Amount (SAR)</label><input type="number" id="receiveAmountInput" step="0.01"></div><div class="form-group"><label>Notes</label><input type="text" id="receiveNotesInput"></div><div style="text-align:center"><button id="confirmReceiveBtn" class="btn-success">Confirm</button><button id="cancelReceiveBtn" class="btn-danger">Cancel</button></div></div></div>
+<div id="shareLedgerModal" class="modal"><div class="modal-content"><h3>Share Customer Ledger</h3><div id="ledgerDetails"></div><div style="text-align:center"><button id="closeLedgerModal">Close</button><button id="shareLedgerWhatsappBtn" class="btn-whatsapp">Share via WhatsApp</button></div></div></div>
 <div id="pdfTemplate" style="position:fixed;top:-9999px;left:-9999px;"></div>
 
 <script>
 // ==================== TRANSLATIONS ====================
-const translations = {
-    en: {
-        products: "📦 Products", cart: "🛒 Shopping Cart", all: "All", materials: "Materials", polished: "Polished", honed: "Honed",
-        sqmMode: "📐 Square Meter", piecesMode: "🔧 Pieces", itemName: "🏷️ Item Name", costPrice: "💰 Cost Price",
-        thickness: "📏 Thickness (cm)", width: "📐 Width (m)", length: "📏 Length (m)", priceSqm: "💰 Price / sqm",
-        size: "🔧 Size", quantity: "🔢 Quantity", pricePiece: "💰 Price / piece", addToCart: "➕ Add to Cart",
-        customerName: "👤 Customer", phoneNumber: "📞 Phone", discount: "🏷️ Discount %",
-        itemCol: "Item", detailsCol: "Details", qtyCol: "Qty", priceCol: "Price", totalCol: "Total",
-        subtotal: "Subtotal:", discountLabel: "Discount:", grandTotal: "Total:", confirmOrder: "✅ Confirm Order",
-        clearCart: "🗑️ Clear", editItem: "✏️ Edit Item", downloadPdf: "📄 PDF",
-        customerAccounts: "👥 Customer Accounts", totalSales: "Total Sales", totalOrders: "Total Orders", totalProfit: "Total Profit",
-        monthlyTransactions: "📅 Monthly Transactions", selectMonth: "Select Month:", dateCol: "Date", invoiceCol: "Invoice",
-        customerCol: "Customer", phoneCol: "Phone", itemsCol: "Items", profitCol: "Profit", statusCol: "Status", actionsCol: "Actions",
-        inventory: "📦 Inventory", addProduct: "➕ Add Product", groupCol: "Group", nameCol: "Name", sizeCol: "Size",
-        sellingCol: "Selling", costCol: "Cost", stockCol: "Stock", revenue: "Revenue", totalCost: "Total Cost",
-        netProfit: "Net Profit", profitMargin: "Profit Margin", allInvoices: "📄 All Invoices",
-        settings: "⚙️ Settings", company: "🏢 Company", companyName: "Name", companyLogo: "Logo (emoji)",
-        companyTagline: "Tagline", companyAddress: "Address", companyPhone: "Phone", save: "💾 Save",
-        taxSettings: "💰 Tax", enableTax: "Enable Tax", taxRate: "Rate (%)", taxName: "Name",
-        invoiceSettings: "📄 Invoice", invoiceFooter: "Footer", invoiceNotes: "Notes",
-        dataManagement: "💾 Data", backup: "📥 Backup", restore: "📤 Restore", reset: "⚠️ Reset",
-        close: "Close", print: "🖨️ Print", whatsapp: "📱 WhatsApp", paid: "Paid", unpaid: "Unpaid", partial: "Partial", advance: "Advance",
-        receivePayment: "Receive Payment", amountReceived: "Amount Received (SAR)", notes: "Notes", confirm: "Confirm", cancel: "Cancel",
-        remaining: "Remaining", advanceGiven: "Advance Given", totalDue: "Total Due", totalPaid: "Total Paid"
-    },
-    ar: {
-        products: "📦 المنتجات", cart: "🛒 سلة المشتريات", all: "الكل", materials: "مواد بناء", polished: "حجر مجلي", honed: "حجر مصنفر",
-        sqmMode: "📐 متر مربع", piecesMode: "🔧 قطع", itemName: "🏷️ اسم المنتج", costPrice: "💰 سعر التكلفة",
-        thickness: "📏 السمك (سم)", width: "📐 العرض (م)", length: "📏 الطول (م)", priceSqm: "💰 السعر / م²",
-        size: "🔧 المقاس", quantity: "🔢 الكمية", pricePiece: "💰 السعر / قطعة", addToCart: "➕ أضف للسلة",
-        customerName: "👤 العميل", phoneNumber: "📞 الجوال", discount: "🏷️ الخصم %",
-        itemCol: "المنتج", detailsCol: "التفاصيل", qtyCol: "الكمية", priceCol: "السعر", totalCol: "الإجمالي",
-        subtotal: "المجموع:", discountLabel: "الخصم:", grandTotal: "الإجمالي:", confirmOrder: "✅ تأكيد الطلب",
-        clearCart: "🗑️ تفريغ", editItem: "✏️ تعديل", downloadPdf: "📄 PDF",
-        customerAccounts: "👥 حسابات العملاء", totalSales: "إجمالي المبيعات", totalOrders: "إجمالي الطلبات", totalProfit: "إجمالي الربح",
-        monthlyTransactions: "📅 المعاملات الشهرية", selectMonth: "اختر الشهر:", dateCol: "التاريخ", invoiceCol: "الفاتورة",
-        customerCol: "العميل", phoneCol: "الجوال", itemsCol: "المنتجات", profitCol: "الربح", statusCol: "الحالة", actionsCol: "الإجراءات",
-        inventory: "📦 المخزون", addProduct: "➕ أضف منتج", groupCol: "المجموعة", nameCol: "الاسم", sizeCol: "المقاس",
-        sellingCol: "البيع", costCol: "التكلفة", stockCol: "المخزون", revenue: "الإيرادات", totalCost: "إجمالي التكلفة",
-        netProfit: "صافي الربح", profitMargin: "هامش الربح", allInvoices: "📄 جميع الفواتير",
-        settings: "⚙️ الإعدادات", company: "🏢 الشركة", companyName: "الاسم", companyLogo: "الشعار (رمز)",
-        companyTagline: "الشعار النصي", companyAddress: "العنوان", companyPhone: "الهاتف", save: "💾 حفظ",
-        taxSettings: "💰 الضريبة", enableTax: "تفعيل الضريبة", taxRate: "النسبة %", taxName: "الاسم",
-        invoiceSettings: "📄 الفاتورة", invoiceFooter: "تذييل", invoiceNotes: "ملاحظات",
-        dataManagement: "💾 البيانات", backup: "📥 نسخ احتياطي", restore: "📤 استعادة", reset: "⚠️ إعادة تعيين",
-        close: "إغلاق", print: "🖨️ طباعة", whatsapp: "📱 واتساب", paid: "مدفوع", unpaid: "غير مدفوع", partial: "جزئي", advance: "سلفة",
-        receivePayment: "استلام مبلغ", amountReceived: "المبلغ المستلم (ريال)", notes: "ملاحظات", confirm: "تأكيد", cancel: "إلغاء",
-        remaining: "المتبقي", advanceGiven: "سلفة مدفوعة", totalDue: "إجمالي المستحق", totalPaid: "إجمالي المدفوع"
-    }
-};
-
-// ==================== DATA ====================
+const translations = { en: { all: "All", materials: "Materials", polished: "Polished", honed: "Honed", paid: "Paid", unpaid: "Unpaid", partial: "Partial" }, ar: { all: "الكل", materials: "مواد بناء", polished: "حجر مجلي", honed: "حجر مصنفر", paid: "مدفوع", unpaid: "غير مدفوع", partial: "جزئي" } };
+let currentLang = 'en', currentCurrency = 'SAR', currentMode = 'sqm';
 let cart = [], allOrders = [], products = [], customers = [];
-let currentCurrency = 'SAR', currentLanguage = 'en';
-let currentProductGroup = 'all', currentInventoryGroup = 'all';
-let currentMode = 'sqm';
-let currentReceiveInvoice = null;
+let company = { name: "TABUK MARBLE", logo: "🏢", tagline: "Premium Marble Solutions", address: "Tabuk, KSA", phone: "0598074287" };
+let tax = { enabled: false, rate: 15, name: "VAT" };
+let discountEnabled = false;
+let invoiceSettings = { footer: "Thank you!", notes: "" };
+let currentReceiveInvoice = null, currentShareCustomer = null;
 
-let companySettings = { name: 'TABUK MARBLE', logo: '🏛️', tagline: 'Premium Marble Solutions', address: 'Tabuk, Saudi Arabia', phone: '0598074287' };
-let taxSettings = { enabled: true, rate: 15, name: 'VAT' };
-let invoiceSettings = { footer: 'Thank you for choosing TABUK MARBLE!', notes: '' };
-
-// ==================== ALL PRODUCTS (Based on user data) ====================
+// ==================== BUILD PRODUCTS (Complete as per user data) ====================
 function buildProducts() {
-    const prods = [];
-    let id = 1;
-    
-    // ===== MATERIALS (مواد بناء) =====
-    const materials = [
-        { name: "زاویہ اپ ڈاون", size: "4*4*3mm", stock: 9200, sell: 0, cost: 0 },
-        { name: "زاویہ اپ ڈاون", size: "4*4*2mm", stock: 6600, sell: 0, cost: 0 },
-        { name: "زاویہ اپ ڈاون", size: "4*3*3mm", stock: 4300, sell: 0, cost: 0 },
-        { name: "زاویہ اپ ڈاون", size: "4*3*2mm", stock: 2500, sell: 0, cost: 0 },
-        { name: "زاویہ اپ ڈاون", size: "4*5*3mm", stock: 1200, sell: 0, cost: 0 },
-        { name: "زاویہ اپ ڈاون", size: "4*6*3mm", stock: 850, sell: 0, cost: 0 },
-        { name: "زاویہ اپ ڈاون", size: "4*8*3mm", stock: 420, sell: 0, cost: 0 },
-        { name: "زاویہ اپ ڈاون", size: "4*10*3mm", stock: 400, sell: 0, cost: 0 },
-        { name: "زاویہ اپ ڈاون", size: "5*5*3mm", stock: 0, sell: 0, cost: 0 },
-        { name: "زاویہ اپ ڈاون", size: "4*4*3mm (مط)", stock: 0, sell: 0, cost: 0 },
-        { name: "مسمار مغلوب", size: "10*40", stock: 4800, sell: 0, cost: 0 },
-        { name: "مسمار مغلوب", size: "10*50", stock: 4800, sell: 0, cost: 0 },
-        { name: "مسمار مغلوب", size: "10*60", stock: 3500, sell: 0, cost: 0 },
-        { name: "مسمار مغلوب", size: "10*80", stock: 1500, sell: 0, cost: 0 },
-        { name: "مسمار مغلوب", size: "10*100", stock: 1440, sell: 0, cost: 0 },
-        { name: "براغی سقف", size: "10*72", stock: 2200, sell: 0, cost: 0 },
-        { name: "براغی سقف", size: "10*92", stock: 2100, sell: 0, cost: 0 },
-        { name: "براغی سقف", size: "10*112", stock: 1920, sell: 0, cost: 0 },
-        { name: "براغی سقف", size: "10*115", stock: 2200, sell: 0, cost: 0 },
-        { name: "براغی سقف", size: "10*202", stock: 1040, sell: 0, cost: 0 },
-        { name: "جولی ابو جمل", size: "Standard", stock: 5, sell: 0, cost: 0 },
-        { name: "جولی گلیڈتیر", size: "Standard", stock: 0, sell: 0, cost: 0 },
-        { name: "دسک حجر احمر اے ایس", size: "7 بوسہ", stock: 0, sell: 0, cost: 0 },
-        { name: "دسک حجر احمر اے ایس", size: "4.50 بوسہ", stock: 7, sell: 0, cost: 0 },
-        { name: "دسک جرانیت ایے وا", size: "7 بوسہ", stock: 3, sell: 0, cost: 0 },
-        { name: "دسک بوش", size: "9 بوسہ", stock: 20, sell: 0, cost: 0 },
-        { name: "دسک حجر احمر اے ایس", size: "9 بوسہ", stock: 0, sell: 0, cost: 0 },
-        { name: "ریشہ ہلتی", size: "20cm", stock: 0, sell: 0, cost: 0 },
-        { name: "ریشہ ہلتی", size: "15cm", stock: 24, sell: 0, cost: 0 },
-        { name: "ریشہ ہلتی", size: "10cm", stock: 1, sell: 0, cost: 0 },
-        { name: "ریشہ دریل", size: "4mm", stock: 12, sell: 0, cost: 0 },
-        { name: "ریشہ دریل", size: "6mm", stock: 10, sell: 0, cost: 0 },
-        { name: "ریشہ دریل", size: "10mm", stock: 16, sell: 0, cost: 0 },
-        { name: "گمتا چوڑی", size: "Standard", stock: 7, sell: 0, cost: 0 },
-        { name: "گمتا سادہ", size: "Standard", stock: 7, sell: 0, cost: 0 },
-        { name: "بکرا", size: "Standard", stock: 1, sell: 0, cost: 0 }
+    let prods = []; let id = 1;
+    // Materials
+    const mats = [
+        ["زاویہ اپ ڈاون","4*4*3mm",9200],["زاویہ اپ ڈاون","4*4*2mm",6600],["زاویہ اپ ڈاون","4*3*3mm",4300],["زاویہ اپ ڈاون","4*3*2mm",2500],
+        ["زاویہ اپ ڈاون","4*5*3mm",1200],["زاویہ اپ ڈاون","4*6*3mm",850],["زاویہ اپ ڈاون","4*8*3mm",420],["زاویہ اپ ڈاون","4*10*3mm",400],
+        ["زاویہ اپ ڈاون","5*5*3mm",0],["مسمار مغلوب","10*40",4800],["مسمار مغلوب","10*50",4800],["مسمار مغلوب","10*60",3500],
+        ["مسمار مغلوب","10*80",1500],["مسمار مغلوب","10*100",1440],["براغی سقف","10*72",2200],["براغی سقف","10*92",2100],
+        ["براغی سقف","10*112",1920],["براغی سقف","10*115",2200],["براغی سقف","10*202",1040],["جولی ابو جمل","Standard",5],
+        ["جولی گلیڈتیر","Standard",0],["دسک حجر احمر اے ایس","7 بوسہ",0],["دسک حجر احمر اے ایس","4.50 بوسہ",7],
+        ["دسک جرانیت ایے وا","7 بوسہ",3],["دسک بوش","9 بوسہ",20],["دسک حجر احمر اے ایس","9 بوسہ",0],["ریشہ ہلتی","20cm",0],
+        ["ریشہ ہلتی","15cm",24],["ریشہ ہلتی","10cm",1],["ریشہ دریل","4mm",12],["ریشہ دریل","6mm",10],["ریشہ دریل","10mm",16],
+        ["گمتا چوڑی","Standard",7],["گمتا سادہ","Standard",7],["بکرا","Standard",1]
     ];
+    mats.forEach(m => { prods.push({ id: id++, name: m[0], size: m[1], group: 'mwad', sellingPrice: 0, costPrice: 0, stock: m[2], type: 'pieces' }); });
     
-    materials.forEach(m => {
-        prods.push({ id: id++, name: m.name, size: m.size, group: 'mwad', sellingPrice: m.sell, costPrice: m.cost, stock: m.stock, type: 'pieces' });
-    });
-    
-    // ===== HONED (مصنفر) =====
-    const honedSizes = ["3*7*..", "3*10*..", "3*15*..", "3*18*..", "3*20*..", "3*25*..", "3*27*..", "3*30*..", "3*32*..", "3*35*..", "3*37*..", "3*40*..", "3*50*..", "3*60*.."];
+    // Honed (مصنفر) - All sizes from 3*7 to 3*60
+    const honedSizes = ["3*7", "3*10", "3*15", "3*18", "3*20", "3*25", "3*27", "3*30", "3*32", "3*35", "3*37", "3*40", "3*50", "3*60"];
     const honedTypes = ["ابیض مصنفر مبروم", "ابیض مصنفر سادہ", "ابیض مصنفر غرفہ رومانی"];
     honedTypes.forEach(type => {
-        honedSizes.forEach(size => {
-            prods.push({ id: id++, name: type, size: size, group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 });
-        });
+        honedSizes.forEach(size => { prods.push({ id: id++, name: type, size: size, group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 50, type: 'sqm', thickness: 3 }); });
     });
-    // Special honed products
-    const specialHoned = [
-        { name: "ابیض مصنفر فرزا 1*2", size: "3*40*80", sell: 65, cost: 55 },
-        { name: "ابیض مصنفر فرزا 1*2", size: "3*40*60", sell: 65, cost: 55 },
-        { name: "ابیض مصنفر فرزا 1*2", size: "3*50*100", sell: 70, cost: 60 },
-        { name: "ابیض مصنفر فرزا 1*2", size: "3*40*100", sell: 68, cost: 58 },
-        { name: "ابیض مصنفر مبروم", size: "4*7*..", sell: 60, cost: 50 },
-        { name: "ابیض مصنفر مبروم", size: "5*7*..", sell: 65, cost: 55 },
-        { name: "ابیض مصنفر مشطوف", size: "3*30*..", sell: 70, cost: 60 },
-        { name: "پیانو ابیض مصنفر", size: "3*20*50", sell: 55, cost: 45 },
-        { name: "پیانو ابیض مصنفر", size: "3*25*50", sell: 60, cost: 50 },
-        { name: "پیانو ابیض مصنفر", size: "3*30*60", sell: 65, cost: 55 },
-        { name: "پیانو ابیض مصنفر", size: "5*25*50", sell: 70, cost: 60 }
-    ];
-    specialHoned.forEach(s => {
-        prods.push({ id: id++, name: s.name, size: s.size, group: 'mosnafar', sellingPrice: s.sell, costPrice: s.cost, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 });
-    });
+    // Special Honed
+    const specialHoned = [["ابیض مصنفر فرزا 1*2","3*40*80",65],["ابیض مصنفر فرزا 1*2","3*40*60",65],["ابیض مصنفر فرزا 1*2","3*50*100",70],["ابیض مصنفر فرزا 1*2","3*40*100",68],["ابیض مصنفر مبروم","4*7",60],["ابیض مصنفر مبروم","5*7",65],["ابیض مصنفر مشطوف","3*30",70],["پیانو ابیض مصنفر","3*20*50",55],["پیانو ابیض مصنفر","3*25*50",60],["پیانو ابیض مصنفر","3*30*60",65],["پیانو ابیض مصنفر","5*25*50",70]];
+    specialHoned.forEach(s => { prods.push({ id: id++, name: s[0], size: s[1], group: 'mosnafar', sellingPrice: s[2], costPrice: s[2]-10, stock: 50, type: 'sqm', thickness: 3 }); });
     
-    // ===== POLISHED (مجلی) =====
-    const polishedSizes = ["3*7*..", "3*10*..", "3*15*..", "3*18*..", "3*20*..", "3*25*..", "3*27*..", "3*30*..", "3*32*..", "3*35*..", "3*37*..", "3*40*..", "3*50*..", "3*60*.."];
+    // Polished (مجلی)
+    const polishedSizes = ["3*7", "3*10", "3*15", "3*18", "3*20", "3*25", "3*27", "3*30", "3*32", "3*35", "3*37", "3*40", "3*50", "3*60"];
     const polishedTypes = ["ابیض مجلی مبروم", "ابیض مجلی سادہ", "ابیض مجلی غرفہ رومانی"];
     polishedTypes.forEach(type => {
-        polishedSizes.forEach(size => {
-            prods.push({ id: id++, name: type, size: size, group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 });
-        });
+        polishedSizes.forEach(size => { prods.push({ id: id++, name: type, size: size, group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 50, type: 'sqm', thickness: 3 }); });
     });
-    // Special polished products
-    const specialPolished = [
-        { name: "ابیض مجلی فرزا 1*2", size: "3*40*80", sell: 75, cost: 65 },
-        { name: "ابیض مجلی فرزا 1*2", size: "3*40*60", sell: 75, cost: 65 },
-        { name: "ابیض مجلی فرزا 1*2", size: "3*30*30", sell: 70, cost: 60 },
-        { name: "ابیض مجلی مشطوف", size: "3*30*..", sell: 80, cost: 70 },
-        { name: "ابیض بشارتہ فرزا 1*2", size: "3*40*80", sell: 85, cost: 75 },
-        { name: "ابیض بشارتہ فرزا 1*2", size: "3*40*60", sell: 85, cost: 75 },
-        { name: "ابیض بشارتہ فرزا 1*2", size: "3*30*60", sell: 80, cost: 70 },
-        { name: "ابیض بشارتہ مشطوف B", size: "3*30*60", sell: 85, cost: 75 },
-        { name: "ابیض بشارتہ A", size: "3*40*80", sell: 90, cost: 80 },
-        { name: "ابیض بشارتہ A", size: "4*6*75", sell: 95, cost: 85 },
-        { name: "KAREEMI HJAR SADA", size: "3*40*..", sell: 70, cost: 60 },
-        { name: "MNHOOD ABIAZ", size: "3*20*1.20", sell: 65, cost: 55 },
-        { name: "MNHOOD ABIAZ", size: "3*15*1.20", sell: 60, cost: 50 }
-    ];
-    specialPolished.forEach(s => {
-        prods.push({ id: id++, name: s.name, size: s.size, group: 'mojali', sellingPrice: s.sell, costPrice: s.cost, stock: 2000, type: 'sqm', thickness: 3, width: 0.4, length: 0.8 });
-    });
-    
+    const specialPolished = [["ابیض مجلی فرزا 1*2","3*40*80",75],["ابیض مجلی فرزا 1*2","3*40*60",75],["ابیض مجلی فرزا 1*2","3*30*30",70],["ابیض مجلی مشطوف","3*30",80],["ابیض بشارتہ فرزا 1*2","3*40*80",85],["ابیض بشارتہ فرزا 1*2","3*40*60",85],["ابیض بشارتہ فرزا 1*2","3*30*60",80],["ابیض بشارتہ مشطوف B","3*30*60",85],["ابیض بشارتہ A","3*40*80",90],["ابیض بشارتہ A","4*6*75",95],["KAREEMI HJAR SADA","3*40",70],["MNHOOD ABIAZ","3*20*1.20",65],["MNHOOD ABIAZ","3*15*1.20",60]];
+    specialPolished.forEach(s => { prods.push({ id: id++, name: s[0], size: s[1], group: 'mojali', sellingPrice: s[2], costPrice: s[2]-10, stock: 50, type: 'sqm', thickness: 3 }); });
     return prods;
 }
 
-// ==================== HELPERS ====================
-function formatNumber(num) { if(currentLanguage === 'ar') return String(num).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); return num; }
-function formatCurrency(amount) { if(isNaN(amount)) amount = 0; let r = currentCurrency === 'SAR' ? 1 : 0.27; let s = currentCurrency === 'SAR' ? 'SAR ' : '$ '; let c = (amount * r).toFixed(2); return s + formatNumber(c); }
-function getGroupName(g) { if(currentLanguage === 'ar') return g === 'mwad' ? 'مواد بناء' : (g === 'mojali' ? 'حجر مجلي' : 'حجر مصنفر'); return g === 'mwad' ? 'Materials' : (g === 'mojali' ? 'Polished' : 'Honed'); }
-function saveData() { localStorage.setItem('tabuk_products', JSON.stringify(products)); localStorage.setItem('tabuk_orders', JSON.stringify(allOrders)); localStorage.setItem('tabuk_customers', JSON.stringify(customers)); localStorage.setItem('tabuk_company', JSON.stringify(companySettings)); localStorage.setItem('tabuk_tax', JSON.stringify(taxSettings)); localStorage.setItem('tabuk_invoice', JSON.stringify(invoiceSettings)); }
-function loadData() { let p = localStorage.getItem('tabuk_products'); if(p && JSON.parse(p).length) products = JSON.parse(p); else products = buildProducts(); let o = localStorage.getItem('tabuk_orders'); if(o) allOrders = JSON.parse(o); let c = localStorage.getItem('tabuk_customers'); if(c) customers = JSON.parse(c); let cs = localStorage.getItem('tabuk_company'); if(cs) companySettings = JSON.parse(cs); let tx = localStorage.getItem('tabuk_tax'); if(tx) taxSettings = JSON.parse(tx); let inv = localStorage.getItem('tabuk_invoice'); if(inv) invoiceSettings = JSON.parse(inv); }
-function showToast(msg) { let t = document.createElement('div'); t.className = 'toast'; t.innerHTML = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
-function applyLanguage() { document.querySelectorAll('.i18n').forEach(el => { let key = el.dataset.key; if(key && translations[currentLanguage][key]) { if(el.tagName === 'BUTTON' || el.tagName === 'H3' || el.tagName === 'H4') el.innerHTML = translations[currentLanguage][key]; else if(el.tagName === 'TH') el.innerHTML = translations[currentLanguage][key]; else el.innerText = translations[currentLanguage][key]; } }); document.getElementById('taxNameLabel').innerText = taxSettings.name; if(currentLanguage === 'ar') document.body.classList.add('rtl'); else document.body.classList.remove('rtl'); displayProducts(); loadInventory(); updateReports(); displayCustomers(); }
+function formatNumber(n) { if(currentLang === 'ar') return n.toFixed(2).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); return n.toFixed(2); }
+function formatCurrency(amt) { let r = currentCurrency === 'SAR' ? 1 : 0.27; let sym = currentCurrency === 'SAR' ? 'SAR ' : '$ '; return sym + formatNumber(amt * r); }
+function getGroupName(g) { if(currentLang === 'ar') return g === 'mwad' ? 'مواد بناء' : (g === 'mojali' ? 'حجر مجلي' : 'حجر مصنفر'); return g === 'mwad' ? 'Materials' : (g === 'mojali' ? 'Polished' : 'Honed'); }
+function saveData() { localStorage.setItem('tabuk_products', JSON.stringify(products)); localStorage.setItem('tabuk_orders', JSON.stringify(allOrders)); localStorage.setItem('tabuk_customers', JSON.stringify(customers)); localStorage.setItem('tabuk_company', JSON.stringify(company)); localStorage.setItem('tabuk_tax', JSON.stringify(tax)); localStorage.setItem('tabuk_invoice', JSON.stringify(invoiceSettings)); localStorage.setItem('tabuk_discountEnabled', discountEnabled); }
+function loadData() { let p = localStorage.getItem('tabuk_products'); products = (p && JSON.parse(p).length) ? JSON.parse(p) : buildProducts(); let o = localStorage.getItem('tabuk_orders'); if(o) allOrders = JSON.parse(o); let c = localStorage.getItem('tabuk_customers'); if(c) customers = JSON.parse(c); let comp = localStorage.getItem('tabuk_company'); if(comp) company = JSON.parse(comp); let t = localStorage.getItem('tabuk_tax'); if(t) tax = JSON.parse(t); let inv = localStorage.getItem('tabuk_invoice'); if(inv) invoiceSettings = JSON.parse(inv); let de = localStorage.getItem('tabuk_discountEnabled'); if(de !== null) discountEnabled = de === 'true'; }
+function showToast(msg) { let t = document.createElement('div'); t.className = 'toast'; t.innerText = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
 
-// ==================== CUSTOMER ACCOUNT MANAGEMENT (with Phone Uniqueness) ====================
+// ==================== PRODUCT DISPLAY ====================
+let currentProductGroup = 'all', currentInventoryGroup = 'all';
+function displayProducts() {
+    let search = document.getElementById('searchProduct').value.toLowerCase();
+    let filtered = products.filter(p => (currentProductGroup === 'all' || p.group === currentProductGroup) && (p.name.toLowerCase().includes(search) || p.size.toLowerCase().includes(search)));
+    let container = document.getElementById('productList'); container.innerHTML = '';
+    filtered.forEach(p => { let cls = p.group === 'mwad' ? 'group-mwad' : (p.group === 'mojali' ? 'group-mojali' : 'group-mosnafar'); let price = p.sellingPrice > 0 ? formatCurrency(p.sellingPrice) : 'Set Price'; let div = document.createElement('div'); div.className = 'product-card'; div.innerHTML = `<span class="group-badge ${cls}">${getGroupName(p.group)}</span><h4>${p.name}</h4><div>${p.size}</div><div>${price}${p.type === 'sqm' ? '/sqm' : '/pc'}</div><div>Stock: ${p.stock}</div>`; div.onclick = () => { document.getElementById('itemName').value = p.name; document.getElementById('costPriceItem').value = p.costPrice; if(p.type === 'sqm') { document.querySelector('.mode-btn[data-mode="sqm"]').click(); document.getElementById('thickness').value = p.thickness || 3; document.getElementById('width').value = 0.4; document.getElementById('length').value = 0.8; document.getElementById('sqmPrice').value = p.sellingPrice; } else { document.querySelector('.mode-btn[data-mode="pieces"]').click(); document.getElementById('pieceSize').value = p.size; document.getElementById('pieceUnitPrice').value = p.sellingPrice; document.getElementById('piecesCount').value = 1; } showToast(p.name + ' loaded'); }; container.appendChild(div); });
+}
+function loadInventory() {
+    let search = document.getElementById('inventorySearch').value.toLowerCase();
+    let filtered = products.filter(p => (currentInventoryGroup === 'all' || p.group === currentInventoryGroup) && (p.name.toLowerCase().includes(search) || p.size.toLowerCase().includes(search)));
+    let tb = document.getElementById('inventoryBody'); tb.innerHTML = '';
+    filtered.forEach(p => { let r = tb.insertRow(); r.insertCell(0).innerHTML = `<span class="group-badge ${p.group === 'mwad' ? 'group-mwad' : (p.group === 'mojali' ? 'group-mojali' : 'group-mosnafar')}">${getGroupName(p.group)}</span>`; r.insertCell(1).innerHTML = p.name; r.insertCell(2).innerHTML = p.size; r.insertCell(3).innerHTML = `<span style="cursor:pointer;color:#3b82f6" onclick="editField(${p.id},'sellingPrice')">✏️ ${formatCurrency(p.sellingPrice)}</span>`; r.insertCell(4).innerHTML = `<span style="cursor:pointer;color:#8b5cf6" onclick="editField(${p.id},'costPrice')">✏️ ${formatCurrency(p.costPrice)}</span>`; r.insertCell(5).innerHTML = `<span style="cursor:pointer;color:#10b981" onclick="editField(${p.id},'stock')">✏️ ${p.stock}</span>`; let c = r.insertCell(6); let d = document.createElement('button'); d.innerHTML = 'Delete'; d.style.background = '#e74c3c'; d.onclick = () => { if(confirm('Delete?')) { products = products.filter(x => x.id !== p.id); saveData(); loadInventory(); displayProducts(); } }; c.appendChild(d); });
+}
+window.editField = (id, field) => { let p = products.find(x => x.id === id); if(p) { let v = prompt(`Edit ${field}:`, p[field]); if(v !== null && !isNaN(parseFloat(v))) { p[field] = parseFloat(v); saveData(); loadInventory(); displayProducts(); showToast(`${field} updated`); } } };
+function showAddProduct() { let type = confirm('Marble (SQM) - OK, Fitting (Pieces) - Cancel') ? 'sqm' : 'pieces'; let g = prompt('Group: 1-Materials, 2-Polished, 3-Honed'); let gn = 'mwad'; if(g === '2') gn = 'mojali'; else if(g === '3') gn = 'mosnafar'; let name = prompt('Name:'); if(!name) return; let id = Math.max(...products.map(p => p.id), 0) + 1; let np = { id, name, size: prompt('Size:'), group: gn, sellingPrice: parseFloat(prompt('Selling:')), costPrice: parseFloat(prompt('Cost:')) || 0, stock: parseInt(prompt('Stock:')) || (gn === 'mwad' ? 2000 : 50), type }; if(type === 'sqm') np.thickness = parseFloat(prompt('Thickness cm:')) || 3; products.push(np); saveData(); displayProducts(); loadInventory(); showToast('Product added'); }
+
+// ==================== CART ====================
+function addToCart() {
+    let name = document.getElementById('itemName').value; if(!name) { showToast('Select item first'); return; }
+    let cost = parseFloat(document.getElementById('costPriceItem').value) || 0;
+    if(currentMode === 'sqm') {
+        let t = parseFloat(document.getElementById('thickness').value), w = parseFloat(document.getElementById('width').value), l = parseFloat(document.getElementById('length').value), p = parseFloat(document.getElementById('sqmPrice').value);
+        if(!t || !w || !l || !p) { showToast('Fill all SQM fields'); return; }
+        let area = w * l, total = area * p;
+        cart.push({ id: Date.now(), name, type: 'sqm', size: `${w}m x ${l}m (${t}cm)`, qty: area.toFixed(2) + ' m²', sellingPrice: p, costPrice: cost || p * 0.7, total });
+    } else if(currentMode === 'manual') {
+        let area = parseFloat(document.getElementById('manualArea').value), p = parseFloat(document.getElementById('manualPrice').value);
+        if(!area || !p) { showToast('Enter area and price'); return; }
+        cart.push({ id: Date.now(), name, type: 'manual', size: 'Manual Area', qty: area.toFixed(2) + ' m²', sellingPrice: p, costPrice: cost || p * 0.7, total: area * p });
+    } else {
+        let size = document.getElementById('pieceSize').value, qty = parseFloat(document.getElementById('piecesCount').value), p = parseFloat(document.getElementById('pieceUnitPrice').value);
+        if(!size || !qty || !p) { showToast('Fill all fields'); return; }
+        cart.push({ id: Date.now(), name, type: 'pieces', size, qty: qty + ' pcs', sellingPrice: p, costPrice: cost || p * 0.6, total: qty * p });
+    }
+    updateCartDisplay(); showToast('Added to cart');
+}
+function updateCartDisplay() {
+    let tb = document.getElementById('cartBody'); if(cart.length === 0) { tb.innerHTML = '<tr><td colspan="6">Empty cart</td></tr>'; updateTotals(); return; }
+    tb.innerHTML = ''; let sub = 0;
+    cart.forEach((item, idx) => { sub += item.total; let r = tb.insertRow(); r.insertCell(0).innerHTML = item.name; r.insertCell(1).innerHTML = item.size; r.insertCell(2).innerHTML = item.qty; r.insertCell(3).innerHTML = formatCurrency(item.sellingPrice); r.insertCell(4).innerHTML = formatCurrency(item.total); let btn = document.createElement('button'); btn.innerHTML = 'X'; btn.style.background = '#e74c3c'; btn.onclick = () => { cart.splice(idx, 1); updateCartDisplay(); }; r.insertCell(5).appendChild(btn); });
+    updateTotals(sub);
+}
+function updateTotals(sub) { if(sub === undefined) sub = cart.reduce((s,i)=>s+i.total,0); let dp = discountEnabled ? parseFloat(document.getElementById('posDiscount').value) || 0 : 0; let da = sub * dp / 100; let ad = sub - da; let ta = tax.enabled ? ad * tax.rate / 100 : 0; let gt = ad + ta; document.getElementById('subtotal').innerHTML = formatCurrency(sub); document.getElementById('discountAmount').innerHTML = formatCurrency(da); document.getElementById('discountPercent').innerHTML = dp; document.getElementById('taxAmount').innerHTML = formatCurrency(ta); document.getElementById('grandTotal').innerHTML = formatCurrency(gt); }
+function editCartItem() { if(cart.length === 0) return; let idx = prompt(`Item number (1-${cart.length}):`); if(idx && idx > 0 && idx <= cart.length) { let newPrice = prompt('New price:', cart[idx-1].sellingPrice); if(newPrice && !isNaN(newPrice)) { cart[idx-1].sellingPrice = parseFloat(newPrice); cart[idx-1].total = cart[idx-1].type === 'pieces' ? parseFloat(cart[idx-1].qty) * parseFloat(newPrice) : parseFloat(cart[idx-1].qty) * parseFloat(newPrice); updateCartDisplay(); showToast('Updated'); } } }
+function clearCart() { if(confirm('Clear cart?')) { cart = []; updateCartDisplay(); } }
+
+// ==================== ORDERS & CUSTOMERS ====================
 function getCustomerByPhone(phone) { return customers.find(c => c.phone === phone); }
 function updateCustomerAccount(order) {
     let cust = getCustomerByPhone(order.customerPhone);
-    if(!cust && order.customerPhone) { cust = { name: order.customer, phone: order.customerPhone, totalDue: 0, totalPaid: 0, advanceBalance: 0, invoices: [] }; customers.push(cust); }
-    else if(!cust) { cust = { name: order.customer, phone: order.customerPhone, totalDue: 0, totalPaid: 0, advanceBalance: 0, invoices: [] }; customers.push(cust); }
+    if(!cust) { cust = { name: order.customer, phone: order.customerPhone, invoices: [] }; customers.push(cust); }
     let existing = cust.invoices.find(i => i.invoiceNo === order.invoiceNo);
-    if(!existing) { cust.invoices.push({ invoiceNo: order.invoiceNo, date: order.date, amount: order.total, paid: order.paid || 0, status: (order.paid >= order.total) ? 'paid' : (order.paid > 0 ? 'partial' : 'unpaid'), payments: order.payments || [] }); }
-    cust.totalDue = cust.invoices.reduce((s, i) => s + (i.amount - i.paid), 0);
-    cust.totalPaid = cust.invoices.reduce((s, i) => s + i.paid, 0);
+    if(!existing) cust.invoices.push({ invoiceNo: order.invoiceNo, date: order.date, amount: order.total, paid: order.paid || 0, status: order.status, payments: order.payments || [] });
     saveData(); displayCustomers();
+}
+function confirmOrder() {
+    if(cart.length === 0) { showToast('Cart empty'); return; }
+    let cust = document.getElementById('posCustomer').value || 'Walk-in';
+    let phone = document.getElementById('posCustomerPhone').value || '';
+    let dp = discountEnabled ? parseFloat(document.getElementById('posDiscount').value) || 0 : 0;
+    let sub = cart.reduce((s,i)=>s+i.total,0), da = sub * dp / 100, ad = sub - da, ta = tax.enabled ? ad * tax.rate / 100 : 0, total = ad + ta;
+    let cost = cart.reduce((s,i)=>s + (i.costPrice * (i.type === 'pieces' ? parseFloat(i.qty) : parseFloat(i.qty))), 0);
+    let invNo = 'INV-' + String(allOrders.length + 1).padStart(4, '0');
+    cart.forEach(i => { let p = products.find(pr => pr.name === i.name); if(p && p.stock > 0) p.stock--; });
+    let order = { invoiceNo: invNo, date: new Date().toISOString(), customer: cust, customerPhone: phone, items: [...cart], subtotal: sub, discountPercent: dp, discountAmount: da, taxAmount: ta, total, cost, profit: total - cost, status: 'unpaid', paid: 0, payments: [] };
+    allOrders.push(order); updateCustomerAccount(order); saveData();
+    showToast('Order confirmed! ' + invNo);
+    cart = []; updateCartDisplay(); displayProducts(); loadInventory(); updateReports(); displayCustomers();
 }
 function addPaymentToInvoice(invoiceNo, amount, notes) {
     let order = allOrders.find(o => o.invoiceNo === invoiceNo);
@@ -346,171 +250,116 @@ function addPaymentToInvoice(invoiceNo, amount, notes) {
     if(order.paid >= order.total) order.status = 'paid';
     else if(order.paid > 0) order.status = 'partial';
     let cust = getCustomerByPhone(order.customerPhone);
-    if(cust) {
-        let inv = cust.invoices.find(i => i.invoiceNo === invoiceNo);
-        if(inv) { inv.paid = order.paid; inv.status = order.status; inv.payments = order.payments; }
-        cust.totalDue = cust.invoices.reduce((s,i)=>s+(i.amount-i.paid),0);
-        cust.totalPaid = cust.invoices.reduce((s,i)=>s+i.paid,0);
-    }
-    saveData();
-    showToast(`${translations[currentLanguage].receivePayment}: ${formatCurrency(amount)} - ${notes}`);
+    if(cust) { let inv = cust.invoices.find(i => i.invoiceNo === invoiceNo); if(inv) { inv.paid = order.paid; inv.status = order.status; inv.payments = order.payments; } }
+    saveData(); updateReports(); displayCustomers();
+    showToast(`Received: ${formatCurrency(amount)} - ${notes}`);
     return true;
 }
-function openReceivePayment(invoiceNo) { currentReceiveInvoice = invoiceNo; document.getElementById('receivePaymentModal').style.display = 'flex'; document.getElementById('receiveAmountInput').value = ''; document.getElementById('receiveNotesInput').value = ''; }
+function openReceivePayment(invoiceNo) { currentReceiveInvoice = invoiceNo; document.getElementById('receivePaymentModal').style.display = 'flex'; }
 function closeReceiveModal() { document.getElementById('receivePaymentModal').style.display = 'none'; currentReceiveInvoice = null; }
-function confirmReceivePayment() {
-    let amount = parseFloat(document.getElementById('receiveAmountInput').value);
-    let notes = document.getElementById('receiveNotesInput').value || 'Payment received';
-    if(isNaN(amount) || amount <= 0) { showToast('Enter valid amount'); return; }
-    if(currentReceiveInvoice) { addPaymentToInvoice(currentReceiveInvoice, amount, notes); updateReports(); displayCustomers(); closeReceiveModal(); }
-}
+function confirmReceivePayment() { let amt = parseFloat(document.getElementById('receiveAmountInput').value); let notes = document.getElementById('receiveNotesInput').value || 'Payment'; if(isNaN(amt) || amt <= 0) { showToast('Enter valid amount'); return; } if(currentReceiveInvoice) addPaymentToInvoice(currentReceiveInvoice, amt, notes); closeReceiveModal(); }
 function displayCustomers() {
     let search = document.getElementById('customerSearch').value.toLowerCase();
     let filtered = customers.filter(c => c.name.toLowerCase().includes(search) || (c.phone && c.phone.includes(search)));
-    let container = document.getElementById('customerList'); if(!container) return;
-    container.innerHTML = '';
-    filtered.forEach(c => { let due = c.totalDue; let cls = due > 0 ? 'badge-unpaid' : 'badge-paid'; let div = document.createElement('div'); div.className = 'customer-card'; div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${c.name}</strong><br><small>📞 ${c.phone || '-'}</small></div><div><span class="${cls}">${translations[currentLanguage].totalDue}: ${formatCurrency(due)}</span><br><small>${translations[currentLanguage].totalPaid}: ${formatCurrency(c.totalPaid)}</small></div></div><div style="margin-top:10px">${c.invoices.map(i => `<div style="font-size:12px;border-top:1px solid #eee;padding:5px">${i.invoiceNo} - ${formatCurrency(i.amount)} | ${translations[currentLanguage].totalPaid}: ${formatCurrency(i.paid)} | <span class="${i.status === 'paid' ? 'badge-paid' : (i.status === 'partial' ? 'badge-partial' : 'badge-unpaid')}">${translations[currentLanguage][i.status] || i.status}</span> <button onclick="window.receivePaymentForInvoice('${i.invoiceNo}')" class="btn-success" style="padding:2px 8px;font-size:10px">💰 ${translations[currentLanguage].receivePayment}</button> <button onclick="window.viewInvoiceFromCustomer('${i.invoiceNo}')" class="btn-info" style="padding:2px 8px;font-size:10px">👁️ ${translations[currentLanguage].view}</button></div>`).join('')}</div>`; container.appendChild(div); });
+    let container = document.getElementById('customerList'); container.innerHTML = '';
+    filtered.forEach(c => { let totalDue = c.invoices.reduce((s,i)=>s+(i.amount - i.paid),0); let totalPaid = c.invoices.reduce((s,i)=>s+i.paid,0); let div = document.createElement('div'); div.className = 'customer-card'; div.innerHTML = `<div style="display:flex;justify-content:space-between"><div><strong>${c.name}</strong><br>📞 ${c.phone || '-'}</div><div><span class="${totalDue > 0 ? 'badge-unpaid' : 'badge-paid'}">Due: ${formatCurrency(totalDue)}</span><br>Paid: ${formatCurrency(totalPaid)}</div></div><div>${c.invoices.map(i => `<div style="font-size:11px;border-top:1px solid #eee;padding:5px">${i.invoiceNo} | Total: ${formatCurrency(i.amount)} | Paid: ${formatCurrency(i.paid)} | <span class="badge-${i.status === 'paid' ? 'paid' : (i.status === 'partial' ? 'partial' : 'unpaid')}">${translations[currentLang][i.status] || i.status}</span> <button onclick="window.receiveForInvoice('${i.invoiceNo}')" class="btn-success" style="padding:2px 6px">Receive</button> <button onclick="window.viewInvoice('${i.invoiceNo}')" class="btn-info" style="padding:2px 6px">View</button> <button onclick="window.shareLedger('${c.phone}')" class="btn-whatsapp" style="padding:2px 6px">Share Ledger</button></div>`).join('')}</div>`; container.appendChild(div); });
 }
-window.receivePaymentForInvoice = (invNo) => openReceivePayment(invNo);
-window.viewInvoiceFromCustomer = viewFullInvoice;
+window.receiveForInvoice = openReceivePayment;
+window.viewInvoice = viewFullInvoice;
+function shareLedger(phone) {
+    let cust = customers.find(c => c.phone === phone);
+    if(!cust) return;
+    let details = `<h4>${cust.name} - ${cust.phone}</h4><table style="width:100%"><tr><th>Invoice</th><th>Total</th><th>Received</th><th>Remaining</th></tr>`;
+    let totalRemaining = 0;
+    cust.invoices.forEach(i => { let rem = i.amount - i.paid; totalRemaining += rem; details += `<tr><td>${i.invoiceNo}</td><td>${formatCurrency(i.amount)}</td><td>${formatCurrency(i.paid)}</td><td class="${rem > 0 ? 'payment-red' : 'payment-green'}">${formatCurrency(rem)}</td></tr>`; });
+    details += `<tr style="background:#f0f0f0"><td><strong>Total</strong></td><td>${formatCurrency(cust.invoices.reduce((s,i)=>s+i.amount,0))}</td><td>${formatCurrency(cust.invoices.reduce((s,i)=>s+i.paid,0))}</td><td class="${totalRemaining > 0 ? 'payment-red' : 'payment-green'}">${formatCurrency(totalRemaining)}</td></tr></table>`;
+    document.getElementById('ledgerDetails').innerHTML = details;
+    currentShareCustomer = cust;
+    document.getElementById('shareLedgerModal').style.display = 'flex';
+}
+window.shareLedger = shareLedger;
+function closeLedgerModal() { document.getElementById('shareLedgerModal').style.display = 'none'; }
+function shareLedgerWhatsApp() {
+    if(!currentShareCustomer) return;
+    let msg = `Ledger for ${currentShareCustomer.name} (${currentShareCustomer.phone}):\n`;
+    currentShareCustomer.invoices.forEach(i => { let rem = i.amount - i.paid; msg += `${i.invoiceNo}: Total ${formatCurrency(i.amount)} | Received ${formatCurrency(i.paid)} | Remaining ${formatCurrency(rem)}\n`; });
+    let totalRem = currentShareCustomer.invoices.reduce((s,i)=>s+(i.amount-i.paid),0);
+    msg += `\nTotal Remaining: ${formatCurrency(totalRem)}`;
+    let p = currentShareCustomer.phone.replace(/\D/g,''); if(p.startsWith('05')) p = '966' + p.substring(1);
+    window.open(`https://wa.me/${p}?text=${encodeURIComponent(msg)}`);
+}
 
-// ==================== PRODUCTS ====================
-function displayProducts() {
-    let s = document.getElementById('searchProduct').value.toLowerCase();
-    let f = products.filter(p => (currentProductGroup === 'all' || p.group === currentProductGroup) && (p.name.toLowerCase().includes(s) || p.size.toLowerCase().includes(s)));
-    let c = document.getElementById('productList'); c.innerHTML = '';
-    f.forEach(p => { let cls = p.group === 'mwad' ? 'group-mwad' : (p.group === 'mojali' ? 'group-mojali' : 'group-mosnafar'); let price = p.sellingPrice > 0 ? formatCurrency(p.sellingPrice) : 'Set Price'; let div = document.createElement('div'); div.className = 'product-card'; div.innerHTML = `<span class="group-badge ${cls}">${getGroupName(p.group)}</span><h4>${p.name}</h4><div>${p.size}</div><div style="color:#27ae60">${price}${p.type === 'sqm' ? '/sqm' : '/pc'}</div><div>Stock: ${p.stock}</div>`; div.onclick = () => { document.getElementById('itemName').value = p.name; document.getElementById('costPriceItem').value = p.costPrice; if(p.type === 'sqm') { document.querySelector('.mode-btn[data-mode="sqm"]').click(); document.getElementById('thickness').value = p.thickness || 3; document.getElementById('width').value = p.width || 0.4; document.getElementById('length').value = p.length || 0.8; document.getElementById('sqmPrice').value = p.sellingPrice; } else { document.querySelector('.mode-btn[data-mode="pieces"]').click(); document.getElementById('pieceSize').value = p.size; document.getElementById('pieceUnitPrice').value = p.sellingPrice; document.getElementById('piecesCount').value = 1; } showToast(p.name + ' loaded'); }; c.appendChild(div); });
-}
-function loadInventory() {
-    let s = document.getElementById('inventorySearch').value.toLowerCase();
-    let f = products.filter(p => (currentInventoryGroup === 'all' || p.group === currentInventoryGroup) && (p.name.toLowerCase().includes(s) || p.size.toLowerCase().includes(s)));
-    let tb = document.getElementById('inventoryBody'); tb.innerHTML = '';
-    f.forEach(p => { let r = tb.insertRow(); r.insertCell(0).innerHTML = `<span class="group-badge ${p.group === 'mwad' ? 'group-mwad' : (p.group === 'mojali' ? 'group-mojali' : 'group-mosnafar')}">${getGroupName(p.group)}</span>`; r.insertCell(1).innerHTML = p.name; r.insertCell(2).innerHTML = p.size; r.insertCell(3).innerHTML = `<span style="cursor:pointer;color:#3b82f6" onclick="editField(${p.id},'sellingPrice')">✏️ ${formatCurrency(p.sellingPrice)}</span>`; r.insertCell(4).innerHTML = `<span style="cursor:pointer;color:#8b5cf6" onclick="editField(${p.id},'costPrice')">✏️ ${formatCurrency(p.costPrice)}</span>`; r.insertCell(5).innerHTML = `<span style="cursor:pointer;color:#10b981" onclick="editField(${p.id},'stock')">✏️ ${p.stock}</span>`; let c = r.insertCell(6); let d = document.createElement('button'); d.innerHTML = '🗑️'; d.style.background = '#e74c3c'; d.onclick = () => { if(confirm('Delete?')) { products = products.filter(x => x.id !== p.id); saveData(); loadInventory(); displayProducts(); } }; c.appendChild(d); });
-}
-window.editField = (id, field) => { let p = products.find(x => x.id === id); if(p) { let v = prompt(`Edit ${field}:`, p[field]); if(v !== null && !isNaN(v)) { p[field] = parseFloat(v); saveData(); loadInventory(); displayProducts(); showToast(`${field} updated`); } } };
-function showAddProduct() { let type = confirm('Marble (SQM) - OK, Fitting (Pieces) - Cancel') ? 'sqm' : 'pieces'; let g = prompt('Group: 1-Materials, 2-Polished, 3-Honed'); let gn = 'mwad'; if(g === '2') gn = 'mojali'; else if(g === '3') gn = 'mosnafar'; let name = prompt('Name:'); if(!name) return; let id = Math.max(...products.map(p => p.id), 0) + 1; let np = { id, name, size: prompt('Size:'), group: gn, sellingPrice: parseFloat(prompt('Selling:')), costPrice: parseFloat(prompt('Cost:')) || 0, stock: parseInt(prompt('Stock:')) || 2000, type }; if(type === 'sqm') { np.thickness = parseFloat(prompt('Thickness cm:')) || 3; np.width = parseFloat(prompt('Width m:')) || 0.4; np.length = parseFloat(prompt('Length m:')) || 0.8; } products.push(np); saveData(); displayProducts(); loadInventory(); showToast('Product added'); }
-
-// ==================== CART ====================
-function addToCart() {
-    let name = document.getElementById('itemName').value; if(!name) { showToast('Select item first'); return; }
-    let cost = parseFloat(document.getElementById('costPriceItem').value) || 0;
-    if(currentMode === 'sqm') {
-        let t = parseFloat(document.getElementById('thickness').value), w = parseFloat(document.getElementById('width').value), l = parseFloat(document.getElementById('length').value), p = parseFloat(document.getElementById('sqmPrice').value);
-        if(!t || !w || !l || !p) { showToast('Fill all SQM fields'); return; }
-        let area = w * l, total = area * p;
-        cart.push({ id: Date.now(), name, type: 'sqm', size: `${w}m x ${l}m (${t}cm)`, qty: area.toFixed(2) + ' sqm', sellingPrice: p, costPrice: cost || p * 0.7, total });
-    } else {
-        let size = document.getElementById('pieceSize').value, qty = parseFloat(document.getElementById('piecesCount').value), p = parseFloat(document.getElementById('pieceUnitPrice').value);
-        if(!size || !qty || !p) { showToast('Fill all fields'); return; }
-        cart.push({ id: Date.now(), name, type: 'pieces', size, qty: qty + ' pcs', sellingPrice: p, costPrice: cost || p * 0.6, total: qty * p });
-    }
-    updateCartDisplay(); showToast('Added');
-}
-function updateCartDisplay() {
-    let tb = document.getElementById('cartBody'); if(cart.length === 0) { tb.innerHTML = '<tr><td colspan="6">Empty</td></tr>'; updateTotals(); return; }
-    tb.innerHTML = ''; let sub = 0;
-    cart.forEach((item, idx) => { sub += item.total; let r = tb.insertRow(); r.insertCell(0).innerHTML = item.name; r.insertCell(1).innerHTML = item.size; r.insertCell(2).innerHTML = item.qty; r.insertCell(3).innerHTML = formatCurrency(item.sellingPrice); r.insertCell(4).innerHTML = formatCurrency(item.total); let btn = document.createElement('button'); btn.innerHTML = '❌'; btn.style.background = '#e74c3c'; btn.onclick = () => { cart.splice(idx, 1); updateCartDisplay(); }; r.insertCell(5).appendChild(btn); });
-    updateTotals(sub);
-}
-function updateTotals(sub) { if(!sub && sub !== 0) sub = cart.reduce((s,i)=>s+i.total,0); let dp = parseFloat(document.getElementById('posDiscount').value) || 0; let da = sub * dp / 100; let ad = sub - da; let ta = taxSettings.enabled ? ad * taxSettings.rate / 100 : 0; let gt = ad + ta; document.getElementById('subtotal').innerHTML = formatCurrency(sub); document.getElementById('discountAmount').innerHTML = formatCurrency(da); document.getElementById('taxAmount').innerHTML = formatCurrency(ta); document.getElementById('grandTotal').innerHTML = formatCurrency(gt); }
-function editCartItem() { if(cart.length === 0) { showToast('Cart empty'); return; } let idx = prompt(`Enter item number (1-${cart.length}):`); if(idx && idx > 0 && idx <= cart.length) { let item = cart[idx-1]; let np = prompt('New price:', item.sellingPrice); if(np && !isNaN(np)) { item.sellingPrice = parseFloat(np); item.total = (item.type === 'sqm' ? parseFloat(item.qty) * item.sellingPrice : parseInt(item.qty) * item.sellingPrice); updateCartDisplay(); showToast('Item updated'); } } }
-function clearCart() { if(confirm('Clear cart?')) { cart = []; updateCartDisplay(); } }
-
-// ==================== ORDERS ====================
-function confirmOrder() {
-    if(cart.length === 0) { showToast('Cart empty'); return; }
-    let cust = document.getElementById('posCustomer').value || 'Walk-in Customer';
-    let phone = document.getElementById('posCustomerPhone').value || '';
-    let dp = parseFloat(document.getElementById('posDiscount').value) || 0;
-    let sub = cart.reduce((s,i)=>s+i.total,0), da = sub * dp / 100, ad = sub - da, ta = taxSettings.enabled ? ad * taxSettings.rate / 100 : 0, total = ad + ta;
-    let cost = cart.reduce((s,i)=>s + (i.costPrice * (i.type === 'sqm' ? parseFloat(i.qty) : parseInt(i.qty))), 0);
-    let invNo = 'INV-' + String(allOrders.length + 1).padStart(4, '0');
-    cart.forEach(i => { let p = products.find(pr => pr.name === i.name && pr.size === i.size); if(p && p.stock) p.stock--; });
-    let order = { invoiceNo: invNo, date: new Date().toISOString(), customer: cust, customerPhone: phone, items: [...cart], subtotal: sub, discountPercent: dp, discountAmount: da, taxAmount: ta, total, cost, profit: total - cost, status: 'unpaid', paid: 0, payments: [] };
-    allOrders.push(order);
-    updateCustomerAccount(order);
-    saveData();
-    showToast('Order confirmed! ' + invNo);
-    cart = []; updateCartDisplay(); displayProducts(); loadInventory(); updateReports(); displayCustomers();
-}
+// ==================== REPORTS ====================
 function updateReports() {
     let ts = allOrders.reduce((s,o)=>s+o.total,0), tp = allOrders.reduce((s,o)=>s+o.profit,0);
     document.getElementById('totalSales').innerHTML = formatCurrency(ts); document.getElementById('totalOrders').innerHTML = allOrders.length; document.getElementById('totalProfit').innerHTML = formatCurrency(tp);
-    let rev = ts, cost = allOrders.reduce((s,o)=>s+o.cost,0), profit = rev - cost, margin = rev ? (profit/rev*100).toFixed(2) : 0;
-    document.getElementById('revenue').innerHTML = formatCurrency(rev); document.getElementById('totalCost').innerHTML = formatCurrency(cost); document.getElementById('netProfit').innerHTML = formatCurrency(profit); document.getElementById('profitMargin').innerHTML = margin + '%';
+    let cost = allOrders.reduce((s,o)=>s+o.cost,0), profit = ts - cost, margin = ts ? (profit/ts*100).toFixed(2) : 0;
+    document.getElementById('revenue').innerHTML = formatCurrency(ts); document.getElementById('totalCost').innerHTML = formatCurrency(cost); document.getElementById('netProfit').innerHTML = formatCurrency(profit); document.getElementById('profitMargin').innerHTML = margin + '%';
     loadMonthlyData(); displayInvoices();
 }
 function loadMonthlyData() {
     let m = document.getElementById('monthPicker').value; if(!m) return;
     let f = allOrders.filter(o => o.date.substring(0,7) === m), tb = document.getElementById('monthlyBody'); tb.innerHTML = '';
-    f.forEach(o => { let r = tb.insertRow(); r.insertCell(0).innerHTML = new Date(o.date).toLocaleDateString(); r.insertCell(1).innerHTML = o.invoiceNo; r.insertCell(2).innerHTML = o.customer; r.insertCell(3).innerHTML = o.customerPhone || '-'; r.insertCell(4).innerHTML = o.items.length; r.insertCell(5).innerHTML = formatCurrency(o.total); r.insertCell(6).innerHTML = formatCurrency(o.profit); r.insertCell(7).innerHTML = `<span class="${o.status === 'paid' ? 'badge-paid' : (o.status === 'partial' ? 'badge-partial' : 'badge-unpaid')}">${translations[currentLanguage][o.status] || o.status}</span>`; let c = r.insertCell(8); let v = makeBtn('👁️', '#3498db', () => viewFullInvoice(o.invoiceNo)); let e = makeBtn('✏️', '#9b59b6', () => editFullInvoice(o.invoiceNo)); let d = makeBtn('🗑️', '#e74c3c', () => deleteInvoice(o.invoiceNo)); let s = makeBtn('📱', '#25d366', () => sendWhatsApp(o.invoiceNo)); let rcv = makeBtn('💰', '#10b981', () => openReceivePayment(o.invoiceNo)); c.appendChild(v); c.appendChild(e); c.appendChild(d); c.appendChild(s); c.appendChild(rcv); });
+    f.forEach(o => { let r = tb.insertRow(); r.insertCell(0).innerHTML = new Date(o.date).toLocaleDateString(); r.insertCell(1).innerHTML = o.invoiceNo; r.insertCell(2).innerHTML = o.customer; r.insertCell(3).innerHTML = o.customerPhone || '-'; r.insertCell(4).innerHTML = o.items.length; r.insertCell(5).innerHTML = formatCurrency(o.total); r.insertCell(6).innerHTML = formatCurrency(o.profit); r.insertCell(7).innerHTML = `<span class="badge-${o.status === 'paid' ? 'paid' : (o.status === 'partial' ? 'partial' : 'unpaid')}">${translations[currentLang][o.status] || o.status}</span>`; let c = r.insertCell(8); let v = makeBtn('View', '#3498db', () => viewFullInvoice(o.invoiceNo)); let rcv = makeBtn('Pay', '#10b981', () => openReceivePayment(o.invoiceNo)); let s = makeBtn('WhatsApp', '#25d366', () => sendWhatsApp(o.invoiceNo)); c.appendChild(v); c.appendChild(rcv); c.appendChild(s); });
 }
 function displayInvoices() {
-    let s = document.getElementById('invoiceSearch').value.toLowerCase();
-    let f = allOrders.filter(o => o.invoiceNo.toLowerCase().includes(s) || o.customer.toLowerCase().includes(s)).reverse(), tb = document.getElementById('invoicesBody'); tb.innerHTML = '';
-    f.forEach(o => { let r = tb.insertRow(); r.insertCell(0).innerHTML = o.invoiceNo; r.insertCell(1).innerHTML = new Date(o.date).toLocaleDateString(); r.insertCell(2).innerHTML = o.customer; r.insertCell(3).innerHTML = o.customerPhone || '-'; r.insertCell(4).innerHTML = o.items.length; r.insertCell(5).innerHTML = formatCurrency(o.total); r.insertCell(6).innerHTML = `<span class="${o.status === 'paid' ? 'badge-paid' : (o.status === 'partial' ? 'badge-partial' : 'badge-unpaid')}">${translations[currentLanguage][o.status] || o.status}</span>`; let c = r.insertCell(7); let v = makeBtn('👁️', '#3498db', () => viewFullInvoice(o.invoiceNo)); let e = makeBtn('✏️', '#9b59b6', () => editFullInvoice(o.invoiceNo)); let d = makeBtn('🗑️', '#e74c3c', () => deleteInvoice(o.invoiceNo)); let s = makeBtn('📱', '#25d366', () => sendWhatsApp(o.invoiceNo)); let rcv = makeBtn('💰', '#10b981', () => openReceivePayment(o.invoiceNo)); c.appendChild(v); c.appendChild(e); c.appendChild(d); c.appendChild(s); c.appendChild(rcv); });
+    let search = document.getElementById('invoiceSearch').value.toLowerCase();
+    let f = allOrders.filter(o => o.invoiceNo.toLowerCase().includes(search) || o.customer.toLowerCase().includes(search)).reverse(), tb = document.getElementById('invoicesBody'); tb.innerHTML = '';
+    f.forEach(o => { let r = tb.insertRow(); r.insertCell(0).innerHTML = o.invoiceNo; r.insertCell(1).innerHTML = new Date(o.date).toLocaleDateString(); r.insertCell(2).innerHTML = o.customer; r.insertCell(3).innerHTML = o.customerPhone || '-'; r.insertCell(4).innerHTML = o.items.length; r.insertCell(5).innerHTML = formatCurrency(o.total); r.insertCell(6).innerHTML = `<span class="badge-${o.status === 'paid' ? 'paid' : (o.status === 'partial' ? 'partial' : 'unpaid')}">${translations[currentLang][o.status] || o.status}</span>`; let c = r.insertCell(7); let v = makeBtn('View', '#3498db', () => viewFullInvoice(o.invoiceNo)); let rcv = makeBtn('Pay', '#10b981', () => openReceivePayment(o.invoiceNo)); c.appendChild(v); c.appendChild(rcv); });
 }
-function makeBtn(txt, color, fn) { let b = document.createElement('button'); b.innerHTML = txt; b.style.cssText = `background:${color}; padding:5px 10px; font-size:12px; margin:2px`; b.onclick = fn; return b; }
-function editFullInvoice(invNo) {
-    let o = allOrders.find(x => x.invoiceNo === invNo); if(!o) return;
-    let nc = prompt('Customer name:', o.customer); if(nc) o.customer = nc;
-    let np = prompt('Phone:', o.customerPhone); if(np !== null) o.customerPhone = np;
-    let nd = prompt('Discount %:', o.discountPercent);
-    if(nd !== null && !isNaN(nd)) { o.discountPercent = parseFloat(nd); o.discountAmount = o.subtotal * o.discountPercent / 100; let ad = o.subtotal - o.discountAmount; o.taxAmount = taxSettings.enabled ? ad * taxSettings.rate / 100 : 0; o.total = ad + o.taxAmount; o.profit = o.total - o.cost; saveData(); updateReports(); showToast('Invoice updated'); }
-}
-function deleteInvoice(invNo) { if(confirm('Delete?')) { allOrders = allOrders.filter(x => x.invoiceNo !== invNo); customers.forEach(c => { c.invoices = c.invoices.filter(i => i.invoiceNo !== invNo); c.totalDue = c.invoices.reduce((s,i)=>s+(i.amount-i.paid),0); c.totalPaid = c.invoices.reduce((s,i)=>s+i.paid,0); }); saveData(); updateReports(); displayCustomers(); showToast('Deleted'); } }
-function sendWhatsApp(invNo) { let o = allOrders.find(x => x.invoiceNo === invNo); if(!o || !o.customerPhone) { showToast('No phone'); return; } let p = o.customerPhone.replace(/\D/g,''); if(p.length === 10 && p.startsWith('05')) p = '966' + p.substring(1); let msg = `${companySettings.name} Invoice ${o.invoiceNo}%0ATotal: ${formatCurrency(o.total)}%0A${invoiceSettings.footer}`; window.open(`https://wa.me/${p}?text=${msg}`); }
+function makeBtn(txt, color, fn) { let b = document.createElement('button'); b.innerText = txt; b.style.background = color; b.style.margin = '2px'; b.onclick = fn; return b; }
+function sendWhatsApp(invNo) { let o = allOrders.find(x => x.invoiceNo === invNo); if(!o || !o.customerPhone) { showToast('No phone'); return; } let p = o.customerPhone.replace(/\D/g,''); if(p.startsWith('05')) p = '966' + p.substring(1); let msg = `${company.name} Invoice ${o.invoiceNo}%0ATotal: ${formatCurrency(o.total)}%0A${invoiceSettings.footer}`; window.open(`https://wa.me/${p}?text=${msg}`); }
 
-// ==================== INVOICE VIEW & PDF ====================
+// ==================== INVOICE PDF (Full Arabic support) ====================
 function viewFullInvoice(invNo) {
     let o = allOrders.find(x => x.invoiceNo === invNo); if(!o) return;
-    let items = '<table class="pdf-table"><thead><tr><th>Item</th><th>Details</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>';
-    o.items.forEach(i => { items += `<tr><td>${i.name}</td><td>${i.size}</td><td>${i.qty}</td><td>${formatCurrency(i.sellingPrice)}</td><td>${formatCurrency(i.total)}</td></tr>`; });
-    items += '</tbody></table>';
+    let remaining = o.total - (o.paid || 0);
+    let nameToShow = remaining > 0 ? o.customer : company.name;
+    let nameText = remaining > 0 ? `To: ${o.customer}` : `To Company: ${company.name} (Advance/Paid Extra)`;
+    let itemsHtml = '<table class="pdf-table"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>';
+    o.items.forEach(i => { itemsHtml += `<tr><td>${i.name}</td><td>${i.size}</td><td>${i.qty}</td><td>${formatCurrency(i.sellingPrice)}</td><td>${formatCurrency(i.total)}</td></tr>`; });
+    itemsHtml += '</tbody></table>';
     let paymentsHtml = '';
     if(o.payments && o.payments.length) {
-        paymentsHtml = '<div style="margin-top:15px;background:#f0f0f0;padding:10px;border-radius:8px"><strong>Payment History:</strong><br>' + o.payments.map(p => `${new Date(p.date).toLocaleString()}: ${formatCurrency(p.amount)} - ${p.notes}`).join('<br>') + '</div>';
+        paymentsHtml = '<div style="margin-top:15px;background:#f0f0f0;padding:10px"><strong>Payment History:</strong><br>' + o.payments.map(p => { let cls = p.amount > 0 ? 'payment-green' : 'payment-red'; return `<span class="${cls}">${new Date(p.date).toLocaleString()}: ${formatCurrency(p.amount)} - ${p.notes}</span>`; }).join('<br>') + '</div>';
     }
-    document.getElementById('invoiceDetails').innerHTML = `<div class="pdf-invoice ${currentLanguage === 'ar' ? 'rtl' : ''}"><div class="pdf-header"><h1>${companySettings.logo} ${companySettings.name}</h1><p>${companySettings.tagline}</p><p>${companySettings.address}</p><p>Tel: ${companySettings.phone}</p></div><div class="pdf-body"><div class="pdf-info"><strong>Invoice:</strong> ${o.invoiceNo}<br><strong>Date:</strong> ${new Date(o.date).toLocaleString()}<br><strong>Customer:</strong> ${o.customer}<br><strong>Phone:</strong> ${o.customerPhone}</div>${items}<div class="pdf-totals"><p>Subtotal: ${formatCurrency(o.subtotal)}</p><p>Discount: ${o.discountPercent}% - ${formatCurrency(o.discountAmount)}</p><p>${taxSettings.name}: ${formatCurrency(o.taxAmount)}</p><h3>Total: ${formatCurrency(o.total)}</h3><p>Status: ${translations[currentLanguage][o.status] || o.status} | Paid: ${formatCurrency(o.paid || 0)} | Remaining: ${formatCurrency((o.total - (o.paid || 0)))}</p>${paymentsHtml}${invoiceSettings.notes ? `<p><em>${invoiceSettings.notes}</em></p>` : ''}</div><div class="pdf-footer">${invoiceSettings.footer}<br>${companySettings.address}</div></div></div>`;
-    document.getElementById('invoiceModal').style.display = 'flex'; window.currentInvoiceNo = invNo;
+    let docHtml = `<div class="pdf-inline" style="font-family:Arial;max-width:800px;margin:auto;border:2px solid #ffd700;border-radius:15px"><div style="background:#1a1a2e;color:#ffd700;padding:20px;text-align:center"><h2>${company.logo} ${company.name}</h2><p>${company.tagline}</p><p>${company.address} | Tel: ${company.phone}</p></div><div style="padding:20px"><div style="background:#f8f9fa;padding:15px;border-radius:10px"><strong>Invoice:</strong> ${o.invoiceNo}<br><strong>Date:</strong> ${new Date(o.date).toLocaleString()}<br><strong>Customer:</strong> ${o.customer}<br><strong>Phone:</strong> ${o.customerPhone}<br><strong>${nameText}</strong><br><strong>Remaining Amount:</strong> <span class="${remaining > 0 ? 'payment-red' : 'payment-green'}">${formatCurrency(Math.abs(remaining))}</span> ${remaining > 0 ? '(To be paid by customer)' : '(To be returned to customer)'}</div>${itemsHtml}<div class="pdf-totals" style="text-align:right;margin-top:20px;border-top:2px solid #ffd700;padding-top:10px"><p>Subtotal: ${formatCurrency(o.subtotal)}</p>${o.discountPercent > 0 ? `<p>Discount (${o.discountPercent}%): -${formatCurrency(o.discountAmount)}</p>` : ''}${tax.enabled ? `<p>${tax.name} (${tax.rate}%): ${formatCurrency(o.taxAmount)}</p>` : ''}<h3>Total: ${formatCurrency(o.total)}</h3><p>Paid: ${formatCurrency(o.paid || 0)} | Remaining: ${formatCurrency(remaining)}</p>${paymentsHtml}${invoiceSettings.notes ? `<p><em>${invoiceSettings.notes}</em></p>` : ''}</div><div style="text-align:center;margin-top:20px;font-size:10px;color:#666;border-top:1px solid #ddd;padding-top:10px">${invoiceSettings.footer}<br>${company.address}</div></div></div>`;
+    if(currentLang === 'ar') docHtml = docHtml.replace(/Item/g, 'المنتج').replace(/Size/g, 'المقاس').replace(/Qty/g, 'الكمية').replace(/Price/g, 'السعر').replace(/Total/g, 'الإجمالي');
+    document.getElementById('invoiceDetails').innerHTML = docHtml;
+    document.getElementById('invoiceModal').style.display = 'flex';
 }
 async function downloadPDF(invNo) {
     let o = allOrders.find(x => x.invoiceNo === invNo); if(!o) return;
-    let items = ''; o.items.forEach(i => { items += `<tr><td>${i.name}</td><td>${i.size}</td><td>${i.qty}</td><td>${formatCurrency(i.sellingPrice)}</td><td>${formatCurrency(i.total)}</td></tr>`; });
-    let paymentsHtml = '';
-    if(o.payments && o.payments.length) {
-        paymentsHtml = '<div style="margin-top:15px;background:#f0f0f0;padding:10px;border-radius:8px"><strong>Payment History:</strong><br>' + o.payments.map(p => `${new Date(p.date).toLocaleString()}: ${formatCurrency(p.amount)} - ${p.notes}`).join('<br>') + '</div>';
-    }
-    let html = `<div class="pdf-invoice ${currentLanguage === 'ar' ? 'rtl' : ''}"><div class="pdf-header"><h1>${companySettings.logo} ${companySettings.name}</h1><p>${companySettings.tagline}</p><p>${companySettings.address}</p><p>Tel: ${companySettings.phone}</p></div><div class="pdf-body"><div class="pdf-info"><strong>Invoice:</strong> ${o.invoiceNo}<br><strong>Date:</strong> ${new Date(o.date).toLocaleString()}<br><strong>Customer:</strong> ${o.customer}<br><strong>Phone:</strong> ${o.customerPhone}</div><table class="pdf-table"><thead><tr><th>Item</th><th>Details</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${items}</tbody></table><div class="pdf-totals"><p>Subtotal: ${formatCurrency(o.subtotal)}</p><p>Discount: ${o.discountPercent}% - ${formatCurrency(o.discountAmount)}</p><p>${taxSettings.name}: ${formatCurrency(o.taxAmount)}</p><h3>Total: ${formatCurrency(o.total)}</h3><p>Status: ${translations[currentLanguage][o.status] || o.status} | Paid: ${formatCurrency(o.paid || 0)} | Remaining: ${formatCurrency((o.total - (o.paid || 0)))}</p>${paymentsHtml}${invoiceSettings.notes ? `<p><em>${invoiceSettings.notes}</em></p>` : ''}</div><div class="pdf-footer">${invoiceSettings.footer}<br>${companySettings.address}</div></div></div>`;
+    let remaining = o.total - (o.paid || 0);
+    let nameToShow = remaining > 0 ? o.customer : company.name;
+    let nameText = remaining > 0 ? `To: ${o.customer}` : `To Company: ${company.name}`;
+    let itemsHtml = '<table class="pdf-table"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>';
+    o.items.forEach(i => { itemsHtml += `<tr><td>${i.name}</td><td>${i.size}</td><td>${i.qty}</td><td>${formatCurrency(i.sellingPrice)}</td><td>${formatCurrency(i.total)}</td></tr>`; });
+    itemsHtml += '</tbody></table>';
+    let html = `<div style="font-family:Arial;max-width:800px;margin:auto;border:2px solid #ffd700;border-radius:15px"><div style="background:#1a1a2e;color:#ffd700;padding:20px;text-align:center"><h2>${company.logo} ${company.name}</h2><p>${company.tagline}</p><p>${company.address} | Tel: ${company.phone}</p></div><div style="padding:20px"><div style="background:#f8f9fa;padding:15px;border-radius:10px"><strong>Invoice:</strong> ${o.invoiceNo}<br><strong>Date:</strong> ${new Date(o.date).toLocaleString()}<br><strong>Customer:</strong> ${o.customer}<br><strong>Phone:</strong> ${o.customerPhone}<br><strong>${nameText}</strong><br><strong>Remaining:</strong> ${formatCurrency(Math.abs(remaining))}</div>${itemsHtml}<div style="text-align:right;margin-top:20px;border-top:2px solid #ffd700;padding-top:10px"><p>Subtotal: ${formatCurrency(o.subtotal)}</p>${o.discountPercent > 0 ? `<p>Discount: -${formatCurrency(o.discountAmount)}</p>` : ''}${tax.enabled ? `<p>${tax.name}: ${formatCurrency(o.taxAmount)}</p>` : ''}<h3>Total: ${formatCurrency(o.total)}</h3><p>Paid: ${formatCurrency(o.paid || 0)}</p></div><div style="text-align:center;margin-top:20px;font-size:10px;color:#666">${invoiceSettings.footer}</div></div></div>`;
     let tpl = document.getElementById('pdfTemplate'); tpl.innerHTML = html;
-    try { let canvas = await html2canvas(tpl, { scale: 2, backgroundColor: '#ffffff' }); let imgData = canvas.toDataURL('image/png'); let { jsPDF } = window.jspdf; let imgWidth = 190, imgHeight = (canvas.height * imgWidth) / canvas.width; let doc = new jsPDF('p', 'mm', 'a4'); doc.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight); doc.save(`${companySettings.name}_${o.invoiceNo}.pdf`); showToast('PDF Downloaded!'); } catch(e) { showToast('Error'); }
+    try { let canvas = await html2canvas(tpl, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); let { jsPDF } = window.jspdf; let imgWidth = 190, imgHeight = (canvas.height * imgWidth) / canvas.width; let doc = new jsPDF('p', 'mm', 'a4'); doc.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight); doc.save(`${company.name}_${o.invoiceNo}.pdf`); showToast('PDF Downloaded'); } catch(e) { showToast('Error'); }
 }
-async function downloadCartPDF() {
-    if(cart.length === 0) { showToast('Cart empty'); return; }
-    let cust = document.getElementById('posCustomer').value, phone = document.getElementById('posCustomerPhone').value, dp = parseFloat(document.getElementById('posDiscount').value) || 0;
-    let sub = cart.reduce((s,i)=>s+i.total,0), da = sub * dp / 100, ad = sub - da, ta = taxSettings.enabled ? ad * taxSettings.rate / 100 : 0, total = ad + ta;
-    let items = ''; cart.forEach(i => { items += `<tr><td>${i.name}</td><td>${i.size}</td><td>${i.qty}</td><td>${formatCurrency(i.sellingPrice)}</td><td>${formatCurrency(i.total)}</td></tr>`; });
-    let html = `<div class="pdf-invoice ${currentLanguage === 'ar' ? 'rtl' : ''}"><div class="pdf-header"><h1>${companySettings.logo} ${companySettings.name}</h1><p>${companySettings.tagline}</p><p>${companySettings.address}</p><p>Tel: ${companySettings.phone}</p></div><div class="pdf-body"><div class="pdf-info"><strong>Invoice: PREVIEW</strong><br><strong>Date:</strong> ${new Date().toLocaleString()}<br><strong>Customer:</strong> ${cust}<br><strong>Phone:</strong> ${phone}</div><table class="pdf-table"><thead><tr><th>Item</th><th>Details</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${items}</tbody></table><div class="pdf-totals"><p>Subtotal: ${formatCurrency(sub)}</p><p>Discount: ${dp}% - ${formatCurrency(da)}</p><p>${taxSettings.name}: ${formatCurrency(ta)}</p><h3>Total: ${formatCurrency(total)}</h3>${invoiceSettings.notes ? `<p><em>${invoiceSettings.notes}</em></p>` : ''}</div><div class="pdf-footer">${invoiceSettings.footer}<br>${companySettings.address}</div></div></div>`;
+async function downloadCartPDF() { if(cart.length === 0) return; let cust = document.getElementById('posCustomer').value; let phone = document.getElementById('posCustomerPhone').value; let dp = discountEnabled ? parseFloat(document.getElementById('posDiscount').value) || 0 : 0; let sub = cart.reduce((s,i)=>s+i.total,0), da = sub * dp / 100, ad = sub - da, ta = tax.enabled ? ad * tax.rate / 100 : 0, total = ad + ta; let itemsHtml = ''; cart.forEach(i => { itemsHtml += `<tr><td>${i.name}</td><td>${i.size}</td><td>${i.qty}</td><td>${formatCurrency(i.sellingPrice)}</td><td>${formatCurrency(i.total)}</td></tr>`; }); let html = `<div style="font-family:Arial;border:2px solid #ffd700;border-radius:15px"><div style="background:#1a1a2e;color:#ffd700;padding:20px;text-align:center"><h2>${company.logo} ${company.name}</h2><p>${company.tagline}</p></div><div style="padding:20px"><h3>Cart Preview</h3><p>Customer: ${cust} | Phone: ${phone}</p><table style="width:100%;border-collapse:collapse"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${itemsHtml}</tbody></table><div style="text-align:right;margin-top:20px"><p>Subtotal: ${formatCurrency(sub)}</p>${dp > 0 ? `<p>Discount: ${dp}% - ${formatCurrency(da)}</p>` : ''}${tax.enabled ? `<p>${tax.name}: ${formatCurrency(ta)}</p>` : ''}<h3>Total: ${formatCurrency(total)}</h3></div></div></div>`;
     let tpl = document.getElementById('pdfTemplate'); tpl.innerHTML = html;
-    try { let canvas = await html2canvas(tpl, { scale: 2, backgroundColor: '#ffffff' }); let imgData = canvas.toDataURL('image/png'); let { jsPDF } = window.jspdf; let imgWidth = 190, imgHeight = (canvas.height * imgWidth) / canvas.width; let doc = new jsPDF('p', 'mm', 'a4'); doc.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight); doc.save(`${companySettings.name}_Cart_Preview.pdf`); showToast('PDF Downloaded!'); } catch(e) { showToast('Error'); }
+    try { let canvas = await html2canvas(tpl, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); let { jsPDF } = window.jspdf; let imgWidth = 190, imgHeight = (canvas.height * imgWidth) / canvas.width; let doc = new jsPDF('p', 'mm', 'a4'); doc.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight); doc.save(`${company.name}_Cart.pdf`); showToast('PDF Downloaded'); } catch(e) { showToast('Error'); }
 }
 
-// ==================== SETTINGS & LANGUAGE ====================
-function setLanguage(lang) { currentLanguage = lang; document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active')); document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active'); applyLanguage(); }
-function setCurrency(cur) { currentCurrency = cur; document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active')); document.querySelector(`.currency-btn[data-currency="${cur}"]`).classList.add('active'); displayProducts(); updateCartDisplay(); loadInventory(); updateReports(); displayCustomers(); }
-function saveCompany() { companySettings = { name: document.getElementById('companyNameSetting').value, logo: document.getElementById('companyLogoSetting').value || '🏛️', tagline: document.getElementById('companyTaglineSetting').value, address: document.getElementById('companyAddressSetting').value, phone: document.getElementById('companyPhoneSetting').value }; saveData(); document.getElementById('companyNameDisplay').innerHTML = companySettings.name; document.getElementById('companyLogoDisplay').innerHTML = companySettings.logo; document.getElementById('companyTaglineDisplay').innerHTML = companySettings.tagline; showToast('Saved'); }
-function saveTax() { taxSettings = { enabled: document.getElementById('taxEnabledToggle').checked, rate: parseFloat(document.getElementById('taxRateSetting').value), name: document.getElementById('taxNameSetting').value }; saveData(); document.getElementById('taxRateDisplay').innerHTML = taxSettings.rate; document.getElementById('taxNameLabel').innerText = taxSettings.name; updateTotals(); showToast('Saved'); }
-function saveInvoice() { invoiceSettings = { footer: document.getElementById('invoiceFooterSetting').value, notes: document.getElementById('invoiceNotesSetting').value }; saveData(); showToast('Saved'); }
-function backup() { let data = { products, orders: allOrders, customers, companySettings, taxSettings, invoiceSettings }; let a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: 'application/json' })); a.download = `tabuk_backup_${new Date().toISOString().slice(0,19)}.json`; a.click(); showToast('Backup created'); }
+// ==================== SETTINGS ====================
+function setLanguage(lang) { currentLang = lang; document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active')); document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active'); displayProducts(); loadInventory(); updateReports(); displayCustomers(); if(lang === 'ar') document.body.classList.add('rtl'); else document.body.classList.remove('rtl'); }
+function setCurrency(cur) { currentCurrency = cur; displayProducts(); loadInventory(); updateCartDisplay(); updateReports(); displayCustomers(); }
+function saveCompany() { company.name = document.getElementById('companyNameSetting').value; company.logo = document.getElementById('companyLogoSetting').value; company.tagline = document.getElementById('companyTaglineSetting').value; company.address = document.getElementById('companyAddressSetting').value; company.phone = document.getElementById('companyPhoneSetting').value; saveData(); document.getElementById('companyNameDisplay').innerHTML = company.name; document.getElementById('companyLogoDisplay').innerHTML = company.logo; document.getElementById('companyTaglineDisplay').innerHTML = company.tagline; showToast('Saved'); }
+function saveTax() { tax.enabled = document.getElementById('taxEnabledToggle').checked; tax.rate = parseFloat(document.getElementById('taxRateSetting').value); tax.name = document.getElementById('taxNameSetting').value; discountEnabled = document.getElementById('discountEnabledToggle').checked; saveData(); document.getElementById('taxRateDisplay').innerHTML = tax.rate; document.getElementById('taxNameLabel').innerHTML = tax.name; if(tax.enabled) document.getElementById('taxRow').style.display = 'block'; else document.getElementById('taxRow').style.display = 'none'; if(discountEnabled) { document.getElementById('discountRow').style.display = 'block'; document.getElementById('discountFieldGroup').style.display = 'block'; } else { document.getElementById('discountRow').style.display = 'none'; document.getElementById('discountFieldGroup').style.display = 'none'; } updateTotals(); showToast('Saved'); }
+function saveInvoice() { invoiceSettings.footer = document.getElementById('invoiceFooterSetting').value; invoiceSettings.notes = document.getElementById('invoiceNotesSetting').value; saveData(); showToast('Saved'); }
+function backup() { let data = { products, orders: allOrders, customers, company, tax, invoiceSettings, discountEnabled }; let a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: 'application/json' })); a.download = `backup_${new Date().toISOString().slice(0,19)}.json`; a.click(); showToast('Backup created'); }
 function restore(file) { let r = new FileReader(); r.onload = e => { try { let d = JSON.parse(e.target.result); if(d.products) products = d.products; if(d.orders) allOrders = d.orders; if(d.customers) customers = d.customers; saveData(); location.reload(); } catch(err) { showToast('Invalid file'); } }; r.readAsText(file); }
-function resetAll() { if(confirm('RESET ALL DATA? Type CONFIRM')) { if(prompt('Type CONFIRM:') === 'CONFIRM') { localStorage.clear(); location.reload(); } } }
+function resetAll() { if(prompt('Type CONFIRM to reset all data:') === 'CONFIRM') { localStorage.clear(); location.reload(); } }
 function closeModal() { document.getElementById('invoiceModal').style.display = 'none'; }
-function printInvoice() { let w = window.open('', '_blank'); w.document.write(`<html><head><title>Invoice</title><style>body{padding:20px} table{width:100%;border-collapse:collapse} th,td{padding:10px;border-bottom:1px solid #ddd} th{background:#1a1a2e;color:#ffd700}</style></head><body>${document.getElementById('invoiceDetails').innerHTML}</body></html>`); w.document.close(); w.print(); }
+function printInvoice() { let w = window.open('', '_blank'); w.document.write(`<html><head><title>Invoice</title><style>body{padding:20px} table{width:100%;border-collapse:collapse} th,td{padding:10px;border-bottom:1px solid #ddd}</style></head><body>${document.getElementById('invoiceDetails').innerHTML}</body></html>`); w.document.close(); w.print(); }
 
 // ==================== INIT ====================
-loadData(); setupEvents(); displayProducts(); loadInventory(); updateCartDisplay(); updateReports(); displayCustomers(); applyLanguage(); let d = new Date(); let mp = document.getElementById('monthPicker'); if(mp) mp.value = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
 function setupEvents() {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.onclick = () => { document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); document.getElementById(btn.dataset.tab + 'Tab').classList.add('active'); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); if(btn.dataset.tab === 'inventory') loadInventory(); if(btn.dataset.tab === 'monthly') loadMonthlyData(); if(btn.dataset.tab === 'customers') displayCustomers(); });
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.onclick = () => { document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); document.getElementById(btn.dataset.tab + 'Tab').classList.add('active'); if(btn.dataset.tab === 'inventory') loadInventory(); if(btn.dataset.tab === 'monthly') loadMonthlyData(); if(btn.dataset.tab === 'customers') displayCustomers(); });
     document.querySelectorAll('.lang-btn').forEach(btn => btn.onclick = () => setLanguage(btn.dataset.lang));
     document.querySelectorAll('.currency-btn').forEach(btn => btn.onclick = () => setCurrency(btn.dataset.currency));
     document.getElementById('addToCartBtn').onclick = addToCart;
@@ -538,11 +387,15 @@ function setupEvents() {
     document.getElementById('resetBtn').onclick = resetAll;
     document.getElementById('confirmReceiveBtn').onclick = confirmReceivePayment;
     document.getElementById('cancelReceiveBtn').onclick = closeReceiveModal;
-    document.querySelectorAll('.mode-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentMode = btn.dataset.mode; document.getElementById('sqmFieldsContainer').style.display = currentMode === 'sqm' ? 'block' : 'none'; document.getElementById('piecesFieldsContainer').style.display = currentMode === 'sqm' ? 'none' : 'block'; }; });
+    document.getElementById('closeLedgerModal').onclick = closeLedgerModal;
+    document.getElementById('shareLedgerWhatsappBtn').onclick = shareLedgerWhatsApp;
+    document.querySelectorAll('.mode-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentMode = btn.dataset.mode; document.getElementById('sqmFields').style.display = currentMode === 'sqm' ? 'block' : 'none'; document.getElementById('manualFields').style.display = currentMode === 'manual' ? 'block' : 'none'; document.getElementById('piecesFields').style.display = currentMode === 'pieces' ? 'block' : 'none'; }; });
     document.querySelectorAll('#productGroupFilter .group-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('#productGroupFilter .group-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentProductGroup = btn.dataset.group; displayProducts(); }; });
     document.querySelectorAll('#inventoryGroupFilter .group-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('#inventoryGroupFilter .group-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentInventoryGroup = btn.dataset.group; loadInventory(); }; });
-    document.getElementById('companyNameSetting').value = companySettings.name; document.getElementById('companyLogoSetting').value = companySettings.logo; document.getElementById('companyTaglineSetting').value = companySettings.tagline; document.getElementById('companyAddressSetting').value = companySettings.address; document.getElementById('companyPhoneSetting').value = companySettings.phone; document.getElementById('taxEnabledToggle').checked = taxSettings.enabled; document.getElementById('taxRateSetting').value = taxSettings.rate; document.getElementById('taxNameSetting').value = taxSettings.name; document.getElementById('invoiceFooterSetting').value = invoiceSettings.footer; document.getElementById('invoiceNotesSetting').value = invoiceSettings.notes;
+    document.getElementById('companyNameSetting').value = company.name; document.getElementById('companyLogoSetting').value = company.logo; document.getElementById('companyTaglineSetting').value = company.tagline; document.getElementById('companyAddressSetting').value = company.address; document.getElementById('companyPhoneSetting').value = company.phone; document.getElementById('taxEnabledToggle').checked = tax.enabled; document.getElementById('taxRateSetting').value = tax.rate; document.getElementById('taxNameSetting').value = tax.name; document.getElementById('discountEnabledToggle').checked = discountEnabled; document.getElementById('invoiceFooterSetting').value = invoiceSettings.footer; document.getElementById('invoiceNotesSetting').value = invoiceSettings.notes; if(tax.enabled) document.getElementById('taxRow').style.display = 'block'; if(discountEnabled) { document.getElementById('discountRow').style.display = 'block'; document.getElementById('discountFieldGroup').style.display = 'block'; }
 }
+
+loadData(); setupEvents(); displayProducts(); loadInventory(); updateCartDisplay(); updateReports(); displayCustomers(); setLanguage('en'); let d = new Date(); document.getElementById('monthPicker').value = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
 </script>
 </body>
 </html>
