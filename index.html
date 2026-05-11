@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>TABUK MARBLE - Business Management System</title>
+    <title>TABUK MARBLE - Complete System</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
@@ -164,33 +164,21 @@
 
     <!-- CUSTOMERS TAB -->
     <div id="customersTab" class="tab-content">
-        <div class="panel">
-            <h3>Customer Accounts</h3>
-            <div class="search-box"><input type="text" id="customerSearch" placeholder="Search..." onkeyup="displayCustomers()"></div>
-            <div id="customerList"></div>
-        </div>
+        <div class="panel"><h3>Customer Accounts</h3><div class="search-box"><input type="text" id="customerSearch" placeholder="Search..." onkeyup="displayCustomers()"></div><div id="customerList"></div></div>
     </div>
 
     <!-- DAILY TAB -->
     <div id="dailyTab" class="tab-content">
-        <div class="panel">
-            <h3>Daily Sales Report</h3>
-            <div class="stats-grid">
-                <div class="stat-card"><h4>Today's Sales</h4><div class="value" id="todaySales">SAR 0</div></div>
-                <div class="stat-card"><h4>Today's Orders</h4><div class="value" id="todayOrders">0</div></div>
-                <div class="stat-card"><h4>Today's Profit</h4><div class="value" id="todayProfit">SAR 0</div></div>
-            </div>
-            <div class="form-group"><label>Select Date:</label><input type="date" id="dailyDatePicker"></div>
-            <button onclick="loadDailyData()" class="btn-info">Load Report</button>
-            <div id="dailyList" style="margin-top:12px; max-height:350px; overflow-y:auto"></div>
-            <div id="dailyTotalBox" style="margin-top:12px; padding:12px; background:#1a1a2e; border-radius:10px; color:white; text-align:right"></div>
+        <div class="panel"><h3>Daily Sales Report</h3>
+            <div class="stats-grid"><div class="stat-card"><h4>Today's Sales</h4><div class="value" id="todaySales">SAR 0</div></div><div class="stat-card"><h4>Today's Orders</h4><div class="value" id="todayOrders">0</div></div><div class="stat-card"><h4>Today's Profit</h4><div class="value" id="todayProfit">SAR 0</div></div></div>
+            <div class="form-group"><label>Select Date:</label><input type="date" id="dailyDatePicker"></div><button onclick="loadDailyData()" class="btn-info">Load Report</button>
+            <div id="dailyList" style="margin-top:12px; max-height:350px; overflow-y:auto"></div><div id="dailyTotalBox" style="margin-top:12px; padding:12px; background:#1a1a2e; border-radius:10px; color:white; text-align:right"></div>
         </div>
     </div>
 
     <!-- INVENTORY TAB -->
     <div id="inventoryTab" class="tab-content">
-        <div class="panel">
-            <h3>Inventory</h3>
+        <div class="panel"><h3>Inventory</h3>
             <div class="group-filter" id="inventoryFilter">
                 <button class="group-btn active" data-group="all" onclick="filterInventory('all')">All</button>
                 <button class="group-btn" data-group="mwad" onclick="filterInventory('mwad')">MWAD</button>
@@ -205,44 +193,27 @@
 
     <!-- INVOICES TAB -->
     <div id="invoicesTab" class="tab-content">
-        <div class="panel">
-            <h3>All Invoices</h3>
-            <div class="search-box"><input type="text" id="invoiceSearch" placeholder="Search..." onkeyup="displayInvoices()"></div>
-            <div style="overflow-x:auto"><table id="invoicesTable"><thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody id="invoicesBody"></tbody></table></div>
-        </div>
+        <div class="panel"><h3>All Invoices</h3><div class="search-box"><input type="text" id="invoiceSearch" placeholder="Search..." onkeyup="displayInvoices()"></div>
+        <div style="overflow-x:auto"><table id="invoicesTable"><thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody id="invoicesBody"></tbody></table></div></div>
     </div>
 
     <!-- MONTHLY TAB -->
     <div id="monthlyTab" class="tab-content">
-        <div class="panel">
-            <h3>Monthly Transactions</h3>
-            <div class="form-group"><label>Select Month:</label><input type="month" id="monthPicker"></div>
-            <div style="overflow-x:auto"><table id="monthlyTable"><thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Profit</th><th>Status</th><th>Actions</th></tr></thead><tbody id="monthlyBody"></tbody></table></div>
-        </div>
+        <div class="panel"><h3>Monthly Transactions</h3><div class="form-group"><label>Select Month:</label><input type="month" id="monthPicker"></div>
+        <div style="overflow-x:auto"><table id="monthlyTable"><thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Profit</th><th>Status</th><th>Actions</th></tr></thead><tbody id="monthlyBody"></tbody></table></div></div>
     </div>
 
     <!-- PROFIT & LOSS TAB -->
     <div id="profitlossTab" class="tab-content">
-        <div class="panel">
-            <h3>Profit & Loss Statement</h3>
-            <div class="stats-grid">
-                <div class="stat-card"><h4>Total Revenue</h4><div class="value" id="totalRevenue">SAR 0</div></div>
-                <div class="stat-card"><h4>Total Cost</h4><div class="value" id="totalCostValue">SAR 0</div></div>
-                <div class="stat-card"><h4>Net Profit</h4><div class="value" id="netProfitValue">SAR 0</div></div>
-                <div class="stat-card"><h4>Profit Margin</h4><div class="value" id="profitMarginValue">0%</div></div>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-card"><h4>Today's Sale</h4><div class="value" id="todaySaleValue">SAR 0</div></div>
-                <div class="stat-card"><h4>This Month Sale</h4><div class="value" id="monthSaleValue">SAR 0</div></div>
-                <div class="stat-card"><h4>Total Orders</h4><div class="value" id="totalOrderCount">0</div></div>
-            </div>
+        <div class="panel"><h3>Profit & Loss Statement</h3>
+            <div class="stats-grid"><div class="stat-card"><h4>Total Revenue</h4><div class="value" id="totalRevenue">SAR 0</div></div><div class="stat-card"><h4>Total Cost</h4><div class="value" id="totalCostValue">SAR 0</div></div><div class="stat-card"><h4>Net Profit</h4><div class="value" id="netProfitValue">SAR 0</div></div><div class="stat-card"><h4>Profit Margin</h4><div class="value" id="profitMarginValue">0%</div></div></div>
+            <div class="stats-grid"><div class="stat-card"><h4>Today's Sale</h4><div class="value" id="todaySaleValue">SAR 0</div></div><div class="stat-card"><h4>This Month Sale</h4><div class="value" id="monthSaleValue">SAR 0</div></div><div class="stat-card"><h4>Total Orders</h4><div class="value" id="totalOrderCount">0</div></div></div>
         </div>
     </div>
 
     <!-- SETTINGS TAB -->
     <div id="settingsTab" class="tab-content">
-        <div class="panel">
-            <h3>Settings</h3>
+        <div class="panel"><h3>Settings</h3>
             <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px">
                 <div><h4>Company</h4><div class="form-group"><label>Name</label><input type="text" id="companyNameSetting"></div><div class="form-group"><label>Logo</label><input type="text" id="companyLogoSetting"></div><div class="form-group"><label>Tagline</label><input type="text" id="companyTaglineSetting"></div><div class="form-group"><label>Address</label><input type="text" id="companyAddressSetting"></div><div class="form-group"><label>Phone</label><input type="text" id="companyPhoneSetting"></div><button onclick="saveCompanySettings()" class="btn-success">Save</button></div>
                 <div><h4>Tax</h4><div class="form-group"><label><input type="checkbox" id="taxEnable"> Enable Tax</label></div><div class="form-group"><label>Rate (%)</label><input type="number" id="taxRate" value="15"></div><div class="form-group"><label>Name</label><input type="text" id="taxName" value="VAT"></div><button onclick="saveTaxSettings()" class="btn-success">Save</button></div>
@@ -268,15 +239,53 @@ let taxEnabled = false, taxRate = 15, taxName = "VAT";
 let company = { name: "TABUK MARBLE", logo: "🏢", tagline: "Premium Marble Solutions", address: "Tabuk, KSA", phone: "0598074287" };
 let invoiceFooter = "Thank you for choosing TABUK MARBLE!";
 
-// ==================== BUILD PRODUCTS ====================
+// ==================== BUILD ALL PRODUCTS (COMPLETE) ====================
 function buildProducts() {
     let prods = []; let id = 1;
-    const mats = [["زاویہ اپ ڈاون","4*4*3mm",9200],["زاویہ اپ ڈاون","4*4*2mm",6600],["زاویہ اپ ڈاون","4*3*3mm",4300],["زاویہ اپ ڈاون","4*3*2mm",2500],["زاویہ اپ ڈاون","4*5*3mm",1200],["زاویہ اپ ڈاون","4*6*3mm",850],["زاویہ اپ ڈاون","4*8*3mm",420],["زاویہ اپ ڈاون","4*10*3mm",400],["مسمار مغلوب","10*40",4800],["مسمار مغلوب","10*50",4800],["مسمار مغلوب","10*60",3500],["مسمار مغلوب","10*80",1500],["مسمار مغلوب","10*100",1440],["براغی سقف","10*72",2200],["براغی سقف","10*92",2100],["براغی سقف","10*112",1920],["براغی سقف","10*115",2200],["جولی ابو جمل","Standard",5],["دسک بوش","9 بوسہ",20],["ریشہ ہلتی","15cm",24],["ریشہ دریل","6mm",10],["گمتا چوڑی","Standard",7],["بکرا","Standard",1]];
-    mats.forEach(m => { prods.push({ id: id++, name: m[0], size: m[1], group: 'mwad', sellingPrice: 0, costPrice: 0, stock: m[2], type: 'pieces' }); });
-    const honed = [["ابیض مصنفر فرزا 1*2","3*40*80",65],["(C)ابیض مصنفر فرزا 1*2","3*40*60",65],["(B)ابیض مصنفر فرزا 1*2","3*50*100",70],["ابیض مصنفر مبروم","3*30",60],["ابیض مصنفر مبروم","3*40",60],["ابیض مصنفر سادہ","3*30",60],["ابیض مصنفر غرفہ رومانی","3*30",65],["پیانو ابیض مصنفر","3*20*50",55],["پیانو ابیض مصنفر","3*25*50",60]];
-    honed.forEach(h => { prods.push({ id: id++, name: h[0], size: h[1], group: 'mosnafar', sellingPrice: h[2], costPrice: h[2]-10, stock: 50, type: 'sqm', thickness: 3 }); });
-    const polished = [["(A)ابیض مجلی فرزا 1*2","3*40*80",75],["(C)ابیض مجلی فرزا 1*2","3*40*60",75],["(B)ابیض مجلی فرزا 1*2","3*40*80",75],["ابیض مجلی مبروم","3*30",70],["ابیض مجلی مبروم","3*40",70],["ابیض مجلی سادہ","3*30",70],["ابیض مجلی غرفہ رومانی","3*30",75],["ابیض بشارتہ فرزا 1*2","3*40*80",85],["ابیض بشارتہ A","3*40*80",90],["MNHOOD ABIAZ","3*20*1.20",65]];
-    polished.forEach(p => { prods.push({ id: id++, name: p[0], size: p[1], group: 'mojali', sellingPrice: p[2], costPrice: p[2]-10, stock: 50, type: 'sqm', thickness: 3 }); });
+    
+    // ===== MWAD MATERIALS (Complete) =====
+    const materials = [
+        ["زاویہ اپ ڈاون","4*4*3mm",9200],["زاویہ اپ ڈاون","4*4*2mm",6600],["زاویہ اپ ڈاون","4*3*3mm",4300],["زاویہ اپ ڈاون","4*3*2mm",2500],
+        ["زاویہ اپ ڈاون","4*5*3mm",1200],["زاویہ اپ ڈاون","4*6*3mm",850],["زاویہ اپ ڈاون","4*8*3mm",420],["زاویہ اپ ڈاون","4*10*3mm",400],
+        ["زاویہ اپ ڈاون","5*5*3mm",0],["زاویہ اپ ڈاون","4*4*3mm (مط)",0],["مسمار مغلوب","10*40",4800],["مسمار مغلوب","10*50",4800],
+        ["مسمار مغلوب","10*60",3500],["مسمار مغلوب","10*80",1500],["مسمار مغلوب","10*100",1440],["براغی سقف","10*72",2200],
+        ["براغی سقف","10*92",2100],["براغی سقف","10*112",1920],["براغی سقف","10*115",2200],["براغی سقف","10*202",1040],
+        ["جولی ابو جمل","Standard",5],["جولی گلیڈتیر","Standard",0],["دسک حجر احمر اے ایس","7 بوسہ",0],["دسک حجر احمر اے ایس","4.50 بوسہ",7],
+        ["دسک جرانیت ایے وا","7 بوسہ",3],["دسک بوش","9 بوسہ",20],["دسک حجر احمر اے ایس","9 بوسہ",0],["ریشہ ہلتی","20cm",0],
+        ["ریشہ ہلتی","15cm",24],["ریشہ ہلتی","10cm",1],["ریشہ دریل","4mm",12],["ریشہ دریل","6mm",10],["ریشہ دریل","10mm",16],
+        ["گمتا چوڑی","Standard",7],["گمتا سادہ","Standard",7],["بکرا","Standard",1]
+    ];
+    materials.forEach(m => { prods.push({ id: id++, name: m[0], size: m[1], group: 'mwad', sellingPrice: 0, costPrice: 0, stock: m[2], type: 'pieces' }); });
+    
+    // ===== ABIAZ MUSANFR (Honed) - Complete =====
+    const honedSizes = ["3*7", "3*10", "3*15", "3*18", "3*20", "3*25", "3*27", "3*30", "3*32", "3*35", "3*37", "3*40", "3*50", "3*60", "4*7", "5*7"];
+    const honedTypes = ["ابیض مصنفر مبروم", "ابیض مصنفر سادہ", "ابیض مصنفر غرفہ رومانی"];
+    honedTypes.forEach(type => { honedSizes.forEach(size => { prods.push({ id: id++, name: type, size: size, group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 50, type: 'sqm', thickness: 3 }); }); });
+    
+    const honedSpecial = [
+        ["ابیض مصنفر فرزا 1*2","3*40*80",65],["(C)ابیض مصنفر فرزا 1*2","3*40*60",65],["(B)ابیض مصنفر فرزا 1*2","3*50*100",70],
+        ["(B)ابیض مصنفر فرزا 1*2","3*40*1.00",65],["(B)ابیض مصنفرفرزتین1*2","3*40*80",70],["ابیض مصنفر فرزا 1*2","3*40*100",68],
+        ["ابیض مصنفر مشطوف","3*30*1.00",65],["ابیض مصنفر مبروم مفروز","3*25*1.00",65],["پیانو ابیض مصنفر","3*20*50",55],
+        ["پیانو ابیض مصنفر","3*25*50",60],["پیانو ابیض مصنفر","3*30*60",65],["پیانو ابیض مصنفر","5*25*50",70]
+    ];
+    honedSpecial.forEach(s => { prods.push({ id: id++, name: s[0], size: s[1], group: 'mosnafar', sellingPrice: s[2], costPrice: s[2]-10, stock: 50, type: 'sqm', thickness: 3 }); });
+    
+    // ===== ABIAZ MAJLI (Polished) - Complete =====
+    const polishedSizes = ["3*7", "3*10", "3*15", "3*18", "3*20", "3*25", "3*27", "3*30", "3*32", "3*35", "3*37", "3*40", "3*50", "3*60"];
+    const polishedTypes = ["ابیض مجلی مبروم", "ابیض مجلی سادہ", "ابیض مجلی غرفہ رومانی"];
+    polishedTypes.forEach(type => { polishedSizes.forEach(size => { prods.push({ id: id++, name: type, size: size, group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 50, type: 'sqm', thickness: 3 }); }); });
+    
+    const polishedSpecial = [
+        ["(A)ابیض مجلی فرزا 1*2","3*40*80",75],["(C)ابیض مجلی فرزا 1*2","3*40*60",75],["(B)ابیض مجلی فرزا 1*2","3*40*80",75],
+        ["(A)ابیض مجلی فرزا 1*2","3*30*30",70],["ابیض مجلی مشطوف","3*30*1.00",80],["ابیض بشارتہ فرزا 1*2","3*40*80",85],
+        ["ابیض بشارتہ فرزا 1*2","3*40*60",85],["ابیض بشارتہ فرزا 1*2","3*30*60",80],["B ابیض بشارتہ فرزا 1*2","3*40*1.00",85],
+        ["ابیض بشارتہ مشطوف B","3*30*60",85],["ابیض بشارتہ A","3*40*80",90],["KAREEMI HJAR SADA","3*40*1.00",70],
+        ["C ابیض بشارتہ مشطوف","3*40*60",85],["C ابیض بشارتہ مشطوف","3*50*50",85],["ابیض بشارتہ A","4*60*75",95],
+        ["ابیض منحوت","3*20*1.20",65],["MNHOOD ABIAZ","3*15*1.20",60]
+    ];
+    polishedSpecial.forEach(s => { prods.push({ id: id++, name: s[0], size: s[1], group: 'mojali', sellingPrice: s[2], costPrice: s[2]-10, stock: 50, type: 'sqm', thickness: 3 }); });
+    
+    console.log("Total Products Loaded:", prods.length);
     return prods;
 }
 
@@ -434,16 +443,16 @@ function viewInvoice(invNo) {
     document.getElementById('invoiceModal').style.display = 'flex';
     currentInvoiceNo = invNo;
 }
-async function downloadInvoicePDF() { if(!currentInvoiceNo) return; let o = orders.find(x => x.invoiceNo === currentInvoiceNo); if(!o) return; let itemsHtml = ''; o.items.forEach(i => { itemsHtml += `<tr><td style="padding:6px">${i.name}</td><td style="padding:6px">${i.size}</td><td style="padding:6px">${i.qty}</td><td style="padding:6px">${formatCurrency(i.price)}</td><td style="padding:6px">${formatCurrency(i.total)}</td><tr>`; }); let remaining = o.total - (o.paid || 0); let html = `<div style="font-family:Arial;max-width:650px;margin:auto;border:2px solid #ffd700;border-radius:10px"><div style="background:#1a1a2e;color:#ffd700;padding:12px;text-align:center"><h2>${company.logo} ${company.name}</h2><p>${company.tagline}</p><p>${company.address}</p></div><div style="padding:12px"><div style="background:#f8f9fa;padding:10px;border-radius:8px"><strong>${currentLang === 'ar' ? 'الفاتورة' : 'Invoice'}:</strong> ${o.invoiceNo}<br><strong>${currentLang === 'ar' ? 'التاريخ' : 'Date'}:</strong> ${new Date(o.date).toLocaleString()}<br><strong>${currentLang === 'ar' ? 'العميل' : 'Customer'}:</strong> ${o.customer}<br><strong>${currentLang === 'ar' ? 'الجوال' : 'Phone'}:</strong> ${o.customerPhone}</div><table style="width:100%"><thead><tr style="background:#1a1a2e;color:#ffd700"><th>${currentLang === 'ar' ? 'المنتج' : 'Item'}</th><th>${currentLang === 'ar' ? 'المقاس' : 'Size'}</th><th>${currentLang === 'ar' ? 'الكمية' : 'Qty'}</th><th>${currentLang === 'ar' ? 'السعر' : 'Price'}</th><th>${currentLang === 'ar' ? 'الإجمالي' : 'Total'}</th></tr></thead><tbody>${itemsHtml}</tbody></table><div style="text-align:right;margin-top:12px;border-top:2px solid #ffd700;padding-top:8px"><h3>${currentLang === 'ar' ? 'الإجمالي' : 'Total'}: ${formatCurrency(o.total)}</h3><p>${currentLang === 'ar' ? 'مدفوع' : 'Paid'}: ${formatCurrency(o.paid || 0)}</p><p><strong>${currentLang === 'ar' ? 'المتبقي' : 'Remaining'}: ${formatCurrency(Math.abs(remaining))}</strong></p></div><div style="text-align:center;margin-top:12px;font-size:9px;color:#666">${invoiceFooter}</div></div></div>`;
+async function downloadInvoicePDF() { if(!currentInvoiceNo) return; let o = orders.find(x => x.invoiceNo === currentInvoiceNo); if(!o) return; let itemsHtml = ''; o.items.forEach(i => { itemsHtml += `<tr><td style="padding:6px">${i.name}</td><td style="padding:6px">${i.size}</td><td style="padding:6px">${i.qty}</td><td style="padding:6px">${formatCurrency(i.price)}</td><td style="padding:6px">${formatCurrency(i.total)}</td></td>`; }); let remaining = o.total - (o.paid || 0); let html = `<div style="font-family:Arial;max-width:650px;margin:auto;border:2px solid #ffd700;border-radius:10px"><div style="background:#1a1a2e;color:#ffd700;padding:12px;text-align:center"><h2>${company.logo} ${company.name}</h2><p>${company.tagline}</p><p>${company.address}</p></div><div style="padding:12px"><div style="background:#f8f9fa;padding:10px;border-radius:8px"><strong>${currentLang === 'ar' ? 'الفاتورة' : 'Invoice'}:</strong> ${o.invoiceNo}<br><strong>${currentLang === 'ar' ? 'التاريخ' : 'Date'}:</strong> ${new Date(o.date).toLocaleString()}<br><strong>${currentLang === 'ar' ? 'العميل' : 'Customer'}:</strong> ${o.customer}<br><strong>${currentLang === 'ar' ? 'الجوال' : 'Phone'}:</strong> ${o.customerPhone}</div><table style="width:100%"><thead><tr style="background:#1a1a2e;color:#ffd700"><th>${currentLang === 'ar' ? 'المنتج' : 'Item'}</th><th>${currentLang === 'ar' ? 'المقاس' : 'Size'}</th><th>${currentLang === 'ar' ? 'الكمية' : 'Qty'}</th><th>${currentLang === 'ar' ? 'السعر' : 'Price'}</th><th>${currentLang === 'ar' ? 'الإجمالي' : 'Total'}</th></tr></thead><tbody>${itemsHtml}</tbody></table><div style="text-align:right;margin-top:12px;border-top:2px solid #ffd700;padding-top:8px"><h3>${currentLang === 'ar' ? 'الإجمالي' : 'Total'}: ${formatCurrency(o.total)}</h3><p>${currentLang === 'ar' ? 'مدفوع' : 'Paid'}: ${formatCurrency(o.paid || 0)}</p><p><strong>${currentLang === 'ar' ? 'المتبقي' : 'Remaining'}: ${formatCurrency(Math.abs(remaining))}</strong></p></div><div style="text-align:center;margin-top:12px;font-size:9px;color:#666">${invoiceFooter}</div></div></div>`;
     let tpl = document.getElementById('pdfTemplate'); tpl.innerHTML = html;
     try { let canvas = await html2canvas(tpl, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); let { jsPDF } = window.jspdf; let imgWidth = 190, imgHeight = (canvas.height * imgWidth) / canvas.width; let doc = new jsPDF('p', 'mm', 'a4'); doc.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight); doc.save(`${company.name}_${o.invoiceNo}.pdf`); showToast('PDF Downloaded'); } catch(e) { showToast('Error: ' + e.message); } }
 async function shareInvoiceAsImage() { if(!currentInvoiceNo) return; let el = document.getElementById('invoicePrint'); if(!el) return; let canvas = await html2canvas(el, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); let w = window.open('', '_blank'); w.document.write(`<html><body style="margin:0"><img src="${imgData}" style="max-width:100%"></body></html>`); w.document.close(); showToast('Image ready - share from new tab'); }
-async function shareInvoiceFromInv(invNo) { let o = orders.find(x => x.invoiceNo === invNo); if(!o) return; let itemsHtml = ''; o.items.forEach(i => { itemsHtml += `<tr><td style="padding:4px">${i.name}</td><td style="padding:4px">${i.size}</td><td style="padding:4px">${i.qty}</td><td style="padding:4px">${formatCurrency(i.price)}</td><td style="padding:4px">${formatCurrency(i.total)}</td></tr>`; }); let remaining = o.total - (o.paid || 0); let div = document.createElement('div'); div.style.cssText = 'font-family:Arial;max-width:500px;margin:auto;background:white;padding:12px;border:2px solid #ffd700;border-radius:10px'; div.innerHTML = `<div style="background:#1a1a2e;color:#ffd700;padding:8px;text-align:center"><h3>${company.logo} ${company.name}</h3></div><div style="padding:8px"><strong>Invoice:</strong> ${o.invoiceNo}<br><strong>Date:</strong> ${new Date(o.date).toLocaleString()}<br><strong>Customer:</strong> ${o.customer}<br><strong>Phone:</strong> ${o.customerPhone}</div><table style="width:100%;margin-top:8px"><thead><tr style="background:#ffd700"><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${itemsHtml}</tbody></table><div style="text-align:right;margin-top:8px;border-top:1px solid #ffd700;padding-top:6px"><h3>Total: ${formatCurrency(o.total)}</h3><p>Paid: ${formatCurrency(o.paid||0)}</p><p><strong>Remaining: ${formatCurrency(Math.abs(remaining))}</strong></p></div>`;
+async function shareInvoiceFromInv(invNo) { let o = orders.find(x => x.invoiceNo === invNo); if(!o) return; let itemsHtml = ''; o.items.forEach(i => { itemsHtml += `<tr><td style="padding:4px">${i.name}</td><td style="padding:4px">${i.size}</td><td style="padding:4px">${i.qty}</td><td style="padding:4px">${formatCurrency(i.price)}</td><td style="padding:4px">${formatCurrency(i.total)}</td><tr>`; }); let remaining = o.total - (o.paid || 0); let div = document.createElement('div'); div.style.cssText = 'font-family:Arial;max-width:500px;margin:auto;background:white;padding:12px;border:2px solid #ffd700;border-radius:10px'; div.innerHTML = `<div style="background:#1a1a2e;color:#ffd700;padding:8px;text-align:center"><h3>${company.logo} ${company.name}</h3></div><div style="padding:8px"><strong>Invoice:</strong> ${o.invoiceNo}<br><strong>Date:</strong> ${new Date(o.date).toLocaleString()}<br><strong>Customer:</strong> ${o.customer}<br><strong>Phone:</strong> ${o.customerPhone}</div><table style="width:100%;margin-top:8px"><thead><tr style="background:#ffd700"><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${itemsHtml}</tbody></table><div style="text-align:right;margin-top:8px;border-top:1px solid #ffd700;padding-top:6px"><h3>Total: ${formatCurrency(o.total)}</h3><p>Paid: ${formatCurrency(o.paid||0)}</p><p><strong>Remaining: ${formatCurrency(Math.abs(remaining))}</strong></p></div>`;
     document.body.appendChild(div); let canvas = await html2canvas(div, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); document.body.removeChild(div); let w = window.open('', '_blank'); w.document.write(`<html><body style="margin:0"><img src="${imgData}" style="max-width:100%"></body></html>`); w.document.close(); showToast('Image ready - share from new tab'); }
 function sendInvoiceWhatsApp() { let o = orders.find(x => x.invoiceNo === currentInvoiceNo); if(!o || !o.customerPhone) { showToast('No phone number'); return; } let p = o.customerPhone.replace(/\D/g,''); if(p.startsWith('05')) p = '966' + p.substring(1); let msg = `${company.name} Invoice ${o.invoiceNo}%0ATotal: ${formatCurrency(o.total)}%0A${invoiceFooter}`; window.open(`https://wa.me/${p}?text=${msg}`); }
 function printInvoice() { let w = window.open('', '_blank'); w.document.write(`<html><head><title>Invoice</title><style>body{padding:15px} table{width:100%} th,td{padding:6px;border-bottom:1px solid #ddd}</style></head><body>${document.getElementById('invoiceDetails').innerHTML}</body></html>`); w.document.close(); w.print(); }
 function closeModal() { document.getElementById('invoiceModal').style.display = 'none'; }
-async function generateCartPDF() { if(cart.length === 0) { showToast('Cart empty'); return; } let cust = document.getElementById('customerName').value; let sub = cart.reduce((s,i)=>s+i.total,0); let tax = taxEnabled ? sub * taxRate / 100 : 0; let total = sub + tax; let itemsHtml = ''; cart.forEach(i => { itemsHtml += `<tr><td style="padding:6px">${i.name}</td><td style="padding:6px">${i.size}</td><td style="padding:6px">${i.qty}</td><td style="padding:6px">${formatCurrency(i.price)}</td><td style="padding:6px">${formatCurrency(i.total)}</td></table>`; }); let html = `<div style="font-family:Arial;max-width:600px;margin:auto;border:2px solid #ffd700;border-radius:10px"><div style="background:#1a1a2e;color:#ffd700;padding:10px;text-align:center"><h3>${company.name} - Cart Preview</h3></div><div style="padding:12px"><p><strong>Customer:</strong> ${cust}</p><table style="width:100%"><thead><tr style="background:#ffd700"><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${itemsHtml}</tbody></table><div style="text-align:right;margin-top:10px"><h3>Total: ${formatCurrency(total)}</h3></div></div></div>`;
+async function generateCartPDF() { if(cart.length === 0) { showToast('Cart empty'); return; } let cust = document.getElementById('customerName').value; let sub = cart.reduce((s,i)=>s+i.total,0); let tax = taxEnabled ? sub * taxRate / 100 : 0; let total = sub + tax; let itemsHtml = ''; cart.forEach(i => { itemsHtml += `<tr><td style="padding:6px">${i.name}<tr><td style="padding:6px">${i.size}</td><td style="padding:6px">${i.qty}</td><td style="padding:6px">${formatCurrency(i.price)}</td><td style="padding:6px">${formatCurrency(i.total)}</td></tr>`; }); let html = `<div style="font-family:Arial;max-width:600px;margin:auto;border:2px solid #ffd700;border-radius:10px"><div style="background:#1a1a2e;color:#ffd700;padding:10px;text-align:center"><h3>${company.name} - Cart Preview</h3></div><div style="padding:12px"><p><strong>Customer:</strong> ${cust}</p><table style="width:100%"><thead><tr style="background:#ffd700"><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${itemsHtml}</tbody></table><div style="text-align:right;margin-top:10px"><h3>Total: ${formatCurrency(total)}</h3></div></div></div>`;
     let tpl = document.getElementById('pdfTemplate'); tpl.innerHTML = html;
     try { let canvas = await html2canvas(tpl, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); let { jsPDF } = window.jspdf; let imgWidth = 190, imgHeight = (canvas.height * imgWidth) / canvas.width; let doc = new jsPDF('p', 'mm', 'a4'); doc.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight); doc.save(`${company.name}_Cart.pdf`); showToast('PDF Downloaded'); } catch(e) { showToast('Error'); } }
 
