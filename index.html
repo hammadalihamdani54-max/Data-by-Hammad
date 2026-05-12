@@ -143,13 +143,13 @@
     </div></div>
 
     <!-- INVOICES TAB -->
-    <div id="invoicesTab" class="tab-content"><div class="panel"><h3>All Invoices</h3><input type="text" id="invoiceSearch" placeholder="Search..." onkeyup="displayInvoices()" style="width:100%;margin-bottom:10px;"><div style="overflow-x:auto"><table id="invoicesTable"><thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody id="invoicesBody"></tbody></td></div></div></div>
+    <div id="invoicesTab" class="tab-content"><div class="panel"><h3>All Invoices</h3><input type="text" id="invoiceSearch" placeholder="Search..." onkeyup="displayInvoices()" style="width:100%;margin-bottom:10px;"><div style="overflow-x:auto"><table id="invoicesTable"><thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody id="invoicesBody"></tbody></table></div></div></div>
 
     <!-- DAILY REPORT TAB -->
-    <div id="dailyTab" class="tab-content"><div class="panel"><h3>Daily Sales Report</h3><div><label>Date:</label><input type="date" id="dailyDate" onchange="loadDailyReport()" style="width:200px"></div><div id="dailyList" style="margin-top:15px"></div><div id="dailyTotal" style="margin-top:15px;padding:12px;background:#1a1a2e;color:white;border-radius:8px;text-align:right"></div></div></div>
+    <div id="dailyTab" class="tab-content"><div class="panel"><h3>Daily Sales Report</h3><div><label>Select Date:</label><input type="date" id="dailyDate" onchange="loadDailyReport()" style="width:200px;margin-bottom:15px;"></div><div id="dailyList" style="margin-top:10px;"></div><div id="dailyTotal" style="margin-top:15px;padding:12px;background:#1a1a2e;color:white;border-radius:8px;text-align:right"></div></div></div>
 
     <!-- MONTHLY REPORT TAB -->
-    <div id="monthlyTab" class="tab-content"><div class="panel"><h3>Monthly Transactions</h3><div><label>Month:</label><input type="month" id="monthPicker" onchange="loadMonthlyReport()" style="width:200px"></div><div style="overflow-x:auto;margin-top:15px"><table id="monthlyTable"><thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Profit</th><th>Status</th><th>Actions</th></tr></thead><tbody id="monthlyBody"></tbody></table></div></div></div>
+    <div id="monthlyTab" class="tab-content"><div class="panel"><h3>Monthly Transactions</h3><div><label>Select Month:</label><input type="month" id="monthPicker" onchange="loadMonthlyReport()" style="width:200px;margin-bottom:15px;"></div><div style="overflow-x:auto;margin-top:10px"><table id="monthlyTable"><thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Profit</th><th>Status</th><th>Actions</th></td></thead><tbody id="monthlyBody"></tbody></table></div></div></div>
 
     <!-- SETTINGS TAB -->
     <div id="settingsTab" class="tab-content"><div class="panel"><h3>Settings</h3><div class="form-group"><label>Company Name</label><input type="text" id="companyNameSetting"></div><div class="form-group"><label>Tax Rate (%)</label><input type="number" id="taxRateSetting" value="15"></div><div class="form-group"><label><input type="checkbox" id="taxEnableCheck"> Enable Tax</label></div><button onclick="saveSettings()" class="btn-success">Save</button><button onclick="backupData()" class="btn-info">Backup</button><button onclick="resetAll()" class="btn-danger">Reset All</button></div></div>
@@ -170,41 +170,35 @@ let taxEnabled = true, taxRate = 15;
 let companyName = "TABUK MARBLE";
 let currentInvoiceNo = null, currentPayInvoice = null, currentEditInvoice = null;
 
-// ==================== ALL PRODUCTS (COMPLETE) ==================
+// ==================== ALL PRODUCTS ==================
 function buildProducts() {
     let prods = []; let id = 1;
-    // مواد بناء
     let mwad = [["زاویہ اپ ڈاون","4*4*3mm",9200],["زاویہ اپ ڈاون","4*4*2mm",6600],["زاویہ اپ ڈاون","4*3*3mm",4300],["زاویہ اپ ڈاون","4*3*2mm",2500],["زاویہ اپ ڈاون","4*5*3mm",1200],["زاویہ اپ ڈاون","4*6*3mm",850],["زاویہ اپ ڈاون","4*8*3mm",420],["زاویہ اپ ڈاون","4*10*3mm",400],["مسمار مغلوب","10*40",4800],["مسمار مغلوب","10*50",4800],["مسمار مغلوب","10*60",3500],["مسمار مغلوب","10*80",1500],["مسمار مغلوب","10*100",1440],["براغی سقف","10*72",2200],["براغی سقف","10*92",2100],["براغی سقف","10*112",1920],["براغی سقف","10*115",2200],["براغی سقف","10*202",1040],["جولی ابو جمل","Standard",5],["جولی گلیڈتیر","Standard",0],["دسک حجر احمر","7 بوسہ",0],["دسک حجر احمر","4.50 بوسہ",7],["دسک جرانیت","7 بوسہ",3],["دسک بوش","9 بوسہ",20],["ریشہ ہلتی","20cm",0],["ریشہ ہلتی","15cm",24],["ریشہ ہلتی","10cm",1],["ریشہ دریل","4mm",12],["ریشہ دریل","6mm",10],["ریشہ دریل","10mm",16],["گمتا چوڑی","Standard",7],["گمتا سادہ","Standard",7],["بکرا","Standard",1]];
     mwad.forEach(m => { prods.push({ id: id++, name: m[0], size: m[1], group: 'mwad', selling: 0, cost: 0, stock: m[2], type: 'pieces' }); });
-    // حجر مجلي
     let mojaliSizes = ["3*7","3*10","3*15","3*18","3*20","3*25","3*27","3*30","3*32","3*35","3*37","3*40","3*50","3*60"];
     mojaliSizes.forEach(size => { prods.push({ id: id++, name: "ابیض مجلی مبروم", size: size, group: 'mojali', selling: 65, cost: 50, stock: 50, type: 'sqm' }); });
     mojaliSizes.forEach(size => { prods.push({ id: id++, name: "ابیض مجلی سادہ", size: size, group: 'mojali', selling: 60, cost: 45, stock: 50, type: 'sqm' }); });
-    let mojaliSpecial = [["(A) ابیض مجلی فرزا 1*2","3*40*80",75],["(C) ابیض مجلی فرزا 1*2","3*40*60",75],["(B) ابیض مجلی فرزا 1*2","3*40*80",75],["ابیض مجلی مشطوف","3*30",70],["ابیض بشارتہ فرزا","3*40*80",85],["MNHOOD ABIAZ","3*20*1.20",65]];
+    let mojaliSpecial = [["(A) ابیض مجلی فرزا","3*40*80",75],["(C) ابیض مجلی فرزا","3*40*60",75],["ابیض مجلی مشطوف","3*30",70],["ابیض بشارتہ فرزا","3*40*80",85],["MNHOOD ABIAZ","3*20*1.20",65]];
     mojaliSpecial.forEach(m => { prods.push({ id: id++, name: m[0], size: m[1], group: 'mojali', selling: m[2], cost: m[2]-12, stock: 50, type: 'sqm' }); });
-    // حجر مصنفر
     let mosnafarSizes = ["3*7","3*10","3*15","3*18","3*20","3*25","3*27","3*30","3*32","3*35","3*37","3*40","3*50","3*60","4*7","5*7"];
     mosnafarSizes.forEach(size => { prods.push({ id: id++, name: "ابیض مصنفر مبروم", size: size, group: 'mosnafar', selling: 55, cost: 42, stock: 50, type: 'sqm' }); });
     mosnafarSizes.forEach(size => { prods.push({ id: id++, name: "ابیض مصنفر سادہ", size: size, group: 'mosnafar', selling: 50, cost: 38, stock: 50, type: 'sqm' }); });
-    let mosnafarSpecial = [["ابیض مصنفر فرزا 1*2","3*40*80",65],["پیانو ابیض مصنفر","3*20*50",55]];
+    let mosnafarSpecial = [["ابیض مصنفر فرزا","3*40*80",65],["پیانو ابیض مصنفر","3*20*50",55]];
     mosnafarSpecial.forEach(m => { prods.push({ id: id++, name: m[0], size: m[1], group: 'mosnafar', selling: m[2], cost: m[2]-10, stock: 50, type: 'sqm' }); });
     return prods;
 }
 
-// ==================== HELPERS ==================
 function formatNumber(n) { let v = n.toFixed(2); if(currentLang === 'ar') return v.replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); return v; }
 function formatCurrency(amt) { let r = currentCurrency === 'SAR' ? 1 : 0.27; let s = currentCurrency === 'SAR' ? 'SAR ' : '$ '; return s + formatNumber(amt * r); }
 function showToast(msg) { let t = document.createElement('div'); t.className='toast'; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2000); }
 function saveData() { localStorage.setItem('products', JSON.stringify(products)); localStorage.setItem('orders', JSON.stringify(orders)); localStorage.setItem('customers', JSON.stringify(customers)); localStorage.setItem('taxEnabled', taxEnabled); localStorage.setItem('taxRate', taxRate); localStorage.setItem('companyName', companyName); }
 function loadData() { let p = localStorage.getItem('products'); products = (p && JSON.parse(p).length) ? JSON.parse(p) : buildProducts(); let o = localStorage.getItem('orders'); if(o) orders = JSON.parse(o); let c = localStorage.getItem('customers'); if(c) customers = JSON.parse(c); let te = localStorage.getItem('taxEnabled'); if(te !== null) taxEnabled = te === 'true'; let tr = localStorage.getItem('taxRate'); if(tr) taxRate = parseFloat(tr); let cn = localStorage.getItem('companyName'); if(cn) companyName = cn; }
 
-// ==================== UI ==================
 function setLanguage(lang) { currentLang = lang; document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active')); document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active'); if(lang==='ar') document.body.classList.add('rtl'); else document.body.classList.remove('rtl'); displayProducts(); displayCustomers(); displayInvoices(); loadInventory(); loadMonthlyReport(); loadDailyReport(); updateCartDisplay(); }
 function setCurrency(cur) { currentCurrency = cur; document.querySelectorAll('.currency-btn').forEach(b=>b.classList.remove('active')); document.querySelector(`.currency-btn[data-currency="${cur}"]`).classList.add('active'); displayProducts(); displayCustomers(); displayInvoices(); loadInventory(); loadMonthlyReport(); loadDailyReport(); updateCartDisplay(); }
 function setMode(mode) { currentMode = mode; document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active')); document.querySelectorAll('.mode-btn')[mode==='sqm'?0:mode==='manual'?1:2].classList.add('active'); document.getElementById('sqmFields').style.display = mode==='sqm'?'block':'none'; document.getElementById('manualFields').style.display = mode==='manual'?'block':'none'; document.getElementById('piecesFields').style.display = mode==='pieces'?'block':'none'; }
 function showTab(tab) { document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active')); document.getElementById(tab+'Tab').classList.add('active'); document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); event.target.classList.add('active'); if(tab==='inventory') loadInventory(); if(tab==='invoices') displayInvoices(); if(tab==='customers') displayCustomers(); if(tab==='daily') loadDailyReport(); if(tab==='monthly') loadMonthlyReport(); }
 
-// ==================== PRODUCTS ==================
 function displayProducts() {
     let search = document.getElementById('searchProduct').value.toLowerCase();
     let filtered = products.filter(p => (currentGroup==='all' || p.group===currentGroup) && (p.name.toLowerCase().includes(search) || p.size.toLowerCase().includes(search)));
@@ -221,7 +215,6 @@ function loadInventory() {
 }
 function editProduct(id,field) { let p=products.find(x=>x.id===id); if(p){ let v=prompt(`Edit ${field}:`,p[field]); if(v!==null && !isNaN(parseFloat(v))){ p[field]=parseFloat(v); saveData(); loadInventory(); displayProducts(); showToast('Updated'); } } }
 
-// ==================== CART ==================
 function addToCart() {
     let name = document.getElementById('itemName').value; if(!name){ showToast('Select item'); return; }
     cartHistory.push(JSON.parse(JSON.stringify(cart)));
@@ -271,7 +264,6 @@ function confirmOrder() {
     cart=[]; cartHistory=[]; updateCartDisplay(); displayProducts(); loadInventory(); displayCustomers(); displayInvoices(); loadMonthlyReport(); loadDailyReport();
 }
 
-// ==================== CUSTOMERS & INVOICES ==================
 function displayCustomers() {
     let search=document.getElementById('customerSearch').value.toLowerCase();
     let filtered=customers.filter(c=>c.name.toLowerCase().includes(search)||(c.phone && c.phone.includes(search)));
@@ -298,32 +290,67 @@ function saveEdit() { let o=orders.find(x=>x.invoiceNo===currentEditInvoice); if
 function closeEditModal() { document.getElementById('editModal').style.display='none'; }
 function deleteInvoice(invNo) { if(confirm('Delete invoice?')){ orders=orders.filter(o=>o.invoiceNo!==invNo); customers.forEach(c=>{ c.invoices=c.invoices.filter(i=>i.invoiceNo!==invNo); }); customers=customers.filter(c=>c.invoices.length>0); saveData(); displayCustomers(); displayInvoices(); loadMonthlyReport(); loadDailyReport(); showToast('Deleted'); } }
 
-// ==================== REPORTS ==================
 function loadDailyReport() {
-    let date=document.getElementById('dailyDate').value||new Date().toISOString().slice(0,10);
-    let dayOrders=orders.filter(o=>o.date.slice(0,10)===date);
-    let total=dayOrders.reduce((s,o)=>s+o.total,0);
-    let profit=dayOrders.reduce((s,o)=>s+o.profit,0);
-    let container=document.getElementById('dailyList'); container.innerHTML='';
-    dayOrders.forEach(o=>{ let div=document.createElement('div'); div.className='daily-card'; div.innerHTML=`<div><b>${o.invoiceNo}</b> | ${new Date(o.date).toLocaleTimeString()}<br>Customer: ${o.customer}<br>Total: ${formatCurrency(o.total)} | Paid: ${formatCurrency(o.paid||0)} | Status: <span class="badge badge-${o.status}">${o.status}</span><div class="action-btns"><button onclick="viewInvoice('${o.invoiceNo}')" class="btn-info">View</button><button onclick="openPayment('${o.invoiceNo}')" class="btn-success">Pay</button><button onclick="shareInvoice('${o.invoiceNo}')" class="btn-whatsapp">Share</button></div></div>`; container.appendChild(div); });
-    document.getElementById('dailyTotal').innerHTML=`<b>Daily Summary</b><br>Total Sales: ${formatCurrency(total)}<br>Total Profit: ${formatCurrency(profit)}<br>Orders: ${dayOrders.length}`;
+    let date = document.getElementById('dailyDate').value;
+    if(!date){
+        let today = new Date();
+        date = today.toISOString().slice(0,10);
+        document.getElementById('dailyDate').value = date;
+    }
+    let dayOrders = orders.filter(o => o.date.slice(0,10) === date);
+    let total = dayOrders.reduce((s,o) => s + o.total, 0);
+    let profit = dayOrders.reduce((s,o) => s + o.profit, 0);
+    let container = document.getElementById('dailyList');
+    container.innerHTML = '';
+    if(dayOrders.length === 0){
+        container.innerHTML = '<div style="text-align:center;padding:20px;">No orders found for this date</div>';
+    } else {
+        dayOrders.forEach(o => {
+            let div = document.createElement('div');
+            div.className = 'daily-card';
+            div.innerHTML = `<div><b>${o.invoiceNo}</b> | ${new Date(o.date).toLocaleTimeString()}<br>Customer: ${o.customer}<br>Total: ${formatCurrency(o.total)} | Paid: ${formatCurrency(o.paid||0)} | Status: <span class="badge badge-${o.status}">${o.status}</span><div class="action-btns"><button onclick="viewInvoice('${o.invoiceNo}')" class="btn-info">View</button><button onclick="openPayment('${o.invoiceNo}')" class="btn-success">Pay</button><button onclick="shareInvoice('${o.invoiceNo}')" class="btn-whatsapp">Share</button></div></div>`;
+            container.appendChild(div);
+        });
+    }
+    document.getElementById('dailyTotal').innerHTML = `<b>Daily Summary</b><br>Total Sales: ${formatCurrency(total)}<br>Total Profit: ${formatCurrency(profit)}<br>Orders: ${dayOrders.length}`;
 }
 function loadMonthlyReport() {
-    let m=document.getElementById('monthPicker').value; if(!m) return;
-    let filtered=orders.filter(o=>o.date.substring(0,7)===m);
-    let tb=document.getElementById('monthlyBody'); tb.innerHTML='';
-    filtered.forEach(o=>{ let r=tb.insertRow(); r.insertCell(0).innerHTML=new Date(o.date).toLocaleDateString(); r.insertCell(1).innerHTML=o.invoiceNo; r.insertCell(2).innerHTML=o.customer; r.insertCell(3).innerHTML=o.phone||'-'; r.insertCell(4).innerHTML=o.items.length; r.insertCell(5).innerHTML=formatCurrency(o.total); r.insertCell(6).innerHTML=formatCurrency(o.profit); r.insertCell(7).innerHTML=`<span class="badge badge-${o.status}">${o.status}</span>`; let c=r.insertCell(8); c.innerHTML=`<div class="action-btns"><button onclick="viewInvoice('${o.invoiceNo}')" class="btn-info">View</button><button onclick="editInvoice('${o.invoiceNo}')" class="btn-warning">Edit</button><button onclick="openPayment('${o.invoiceNo}')" class="btn-success">Pay</button><button onclick="shareInvoice('${o.invoiceNo}')" class="btn-whatsapp">Share</button></div>`; });
+    let m = document.getElementById('monthPicker').value;
+    if(!m){
+        let today = new Date();
+        m = today.toISOString().slice(0,7);
+        document.getElementById('monthPicker').value = m;
+    }
+    let filtered = orders.filter(o => o.date.substring(0,7) === m);
+    let tb = document.getElementById('monthlyBody');
+    tb.innerHTML = '';
+    if(filtered.length === 0){
+        tb.innerHTML = '<tr><td colspan="9" style="text-align:center">No orders found for this month</td></tr>';
+        return;
+    }
+    filtered.forEach(o => {
+        let r = tb.insertRow();
+        r.insertCell(0).innerHTML = new Date(o.date).toLocaleDateString();
+        r.insertCell(1).innerHTML = o.invoiceNo;
+        r.insertCell(2).innerHTML = o.customer;
+        r.insertCell(3).innerHTML = o.phone || '-';
+        r.insertCell(4).innerHTML = o.items.length;
+        r.insertCell(5).innerHTML = formatCurrency(o.total);
+        r.insertCell(6).innerHTML = formatCurrency(o.profit);
+        r.insertCell(7).innerHTML = `<span class="badge badge-${o.status}">${o.status}</span>`;
+        let c = r.insertCell(8);
+        c.innerHTML = `<div class="action-btns"><button onclick="viewInvoice('${o.invoiceNo}')" class="btn-info">View</button><button onclick="editInvoice('${o.invoiceNo}')" class="btn-warning">Edit</button><button onclick="openPayment('${o.invoiceNo}')" class="btn-success">Pay</button><button onclick="shareInvoice('${o.invoiceNo}')" class="btn-whatsapp">Share</button></div>`;
+    });
 }
 
-// ==================== INVOICE VIEW & SHARE ==================
 function viewInvoice(invNo) {
     let o=orders.find(x=>x.invoiceNo===invNo); if(!o) return;
-    let items='<table style="width:100%"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>';
-    o.items.forEach(i=>{ items+=`<tr><td>${i.name}</td><td>${i.size}</td><td>${i.qty}</td><td>${formatCurrency(i.price)}</td><td>${formatCurrency(i.total)}</td><tr>`; });
-    items+='</tbody><tr>';
+    let items='<table style="width:100%"><thead></td><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>';
+    o.items.forEach(i=>{ items+=`<tr><td>${i.name}</td><td>${i.size}</td><td>${i.qty}</td><td>${formatCurrency(i.price)}</td><td>${formatCurrency(i.total)}</td></tr>`; });
+    items+='</tbody></table>';
     let rem=o.total-(o.paid||0);
     let html=`<div id="invoicePrint" class="invoice-box"><div class="header"><h2>🏢 ${companyName}</h2></div><div class="body"><div><b>Invoice:</b> ${o.invoiceNo}<br><b>Date:</b> ${new Date(o.date).toLocaleString()}<br><b>Customer:</b> ${o.customer}<br><b>Phone:</b> ${o.phone}</div>${items}<div style="text-align:right;margin-top:10px"><h3>Total: ${formatCurrency(o.total)}</h3><p>Paid: ${formatCurrency(o.paid||0)}</p><p><b>Balance: ${formatCurrency(Math.abs(rem))}</b></p>${rem>0?'<p>Due from customer</p>':(rem<0?'<p>Refund to customer</p>':'<p>Settled ✓</p>')}</div></div></div>`;
-    if(currentLang==='ar'){ html=html.replace('Item','المنتج').replace('Size','المقاس').replace('Qty','الكمية').replace('Price','السعر').replace('Total','الإجمالي').replace('Invoice','الفاتورة').replace('Date','التاريخ').replace('Customer','العميل').replace('Phone','الجوال').replace('Total','الإجمالي').replace('Paid','مدفوع').replace('Balance','المتبقي').replace('Due from customer','مستحق على العميل').replace('Refund to customer','مردود للعميل').replace('Settled','مستحق'); }
+    if(currentLang==='ar'){ html=html.replace('Item','المنتج').replace('Size','المقاس').replace('Qty','الكمية').replace('Price','السعر').replace('Total','الإجمالي').replace('Invoice','الفاتورة').replace('Date','التاريخ').replace('Customer','العميل').replace('Phone','الجوال'); }
     document.getElementById('invoiceDetails').innerHTML=html;
     document.getElementById('invoiceModal').style.display='flex';
     currentInvoiceNo=invNo;
@@ -337,16 +364,14 @@ async function shareInvoice(invNo) { let o=orders.find(x=>x.invoiceNo===invNo); 
 function sendWhatsApp() { let o=orders.find(x=>x.invoiceNo===currentInvoiceNo); if(!o || !o.phone){ showToast('No phone'); return; } let p=o.phone.replace(/\D/g,''); if(p.startsWith('05')) p='966'+p.substring(1); let msg=`${companyName} Invoice ${o.invoiceNo}%0ATotal: ${formatCurrency(o.total)}%0A${currentLang==='ar'?'شكرا':'Thank you'}`; window.open(`https://wa.me/${p}?text=${msg}`); }
 function printInvoice() { let w=window.open('','_blank'); w.document.write(`<html><head><title>Invoice</title><style>body{padding:20px} table{width:100%} th,td{padding:8px;border-bottom:1px solid #ddd} th{background:#1a1a2e;color:#ffd700}</style></head><body>${document.getElementById('invoiceDetails').innerHTML}</body></html>`); w.document.close(); w.print(); }
 function closeModal() { document.getElementById('invoiceModal').style.display='none'; }
-async function generateCartPDF() { if(cart.length===0){ showToast('Cart empty'); return; } let cust=document.getElementById('customerName').value; let sub=cart.reduce((s,i)=>s+i.total,0); let tax=taxEnabled?sub*taxRate/100:0; let total=sub+tax; let items=''; cart.forEach(i=>{ items+=`<tr><td style="padding:5px">${i.name}</td><td style="padding:5px">${i.size}</td><td style="padding:5px">${i.qty}</td><td style="padding:5px">${formatCurrency(i.price)}</td><td style="padding:5px">${formatCurrency(i.total)}</td></tr>`; }); let html=`<div style="font-family:Arial;max-width:600px;margin:auto;border:2px solid #ffd700;border-radius:10px"><div style="background:#1a1a2e;color:#ffd700;padding:12px;text-align:center"><h2>🏢 ${companyName} - Cart</h2></div><div style="padding:15px"><p><b>Customer:</b> ${cust}</p><table style="width:100%"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${items}</tbody></td><div style="text-align:right;margin-top:10px"><h3>Total: ${formatCurrency(total)}</h3></div></div></div>`;
+async function generateCartPDF() { if(cart.length===0){ showToast('Cart empty'); return; } let cust=document.getElementById('customerName').value; let sub=cart.reduce((s,i)=>s+i.total,0); let tax=taxEnabled?sub*taxRate/100:0; let total=sub+tax; let items=''; cart.forEach(i=>{ items+=`<tr><td style="padding:5px">${i.name}</td><td style="padding:5px">${i.size}</td><td style="padding:5px">${i.qty}</td><td style="padding:5px">${formatCurrency(i.price)}</td><td style="padding:5px">${formatCurrency(i.total)}</td></tr>`; }); let html=`<div style="font-family:Arial;max-width:600px;margin:auto;border:2px solid #ffd700;border-radius:10px"><div style="background:#1a1a2e;color:#ffd700;padding:12px;text-align:center"><h2>🏢 ${companyName} - Cart</h2></div><div style="padding:15px"><p><b>Customer:</b> ${cust}</p><table style="width:100%"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${items}</tbody></table><div style="text-align:right;margin-top:10px"><h3>Total: ${formatCurrency(total)}</h3></div></div></div>`;
     let tpl=document.getElementById('pdfTemplate'); tpl.innerHTML=html;
     try{ let canvas=await html2canvas(tpl,{scale:2}); let img=canvas.toDataURL('image/png'); let {jsPDF}=window.jspdf; let doc=new jsPDF('p','mm','a4'); doc.addImage(img,'PNG',10,0,190,(canvas.height*190)/canvas.width); doc.save(`${companyName}_Cart.pdf`); showToast('PDF Downloaded'); }catch(e){ showToast('Error'); } }
 
-// ==================== SETTINGS ==================
 function saveSettings() { companyName=document.getElementById('companyNameSetting').value; taxRate=parseFloat(document.getElementById('taxRateSetting').value); taxEnabled=document.getElementById('taxEnableCheck').checked; saveData(); document.getElementById('companyName').innerHTML=`🏢 ${companyName}`; showToast('Saved'); }
 function backupData() { let data={products,orders,customers,taxEnabled,taxRate,companyName}; let a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:'application/json'})); a.download=`backup_${new Date().toISOString().slice(0,19)}.json`; a.click(); showToast('Backup created'); }
 function resetAll() { if(prompt('Type CONFIRM to reset:')==='CONFIRM'){ localStorage.clear(); location.reload(); } }
 
-// ==================== INIT ==================
 loadData(); displayProducts(); loadInventory(); updateCartDisplay(); displayCustomers(); displayInvoices(); loadMonthlyReport(); loadDailyReport();
 document.getElementById('monthPicker').value=new Date().toISOString().slice(0,7);
 document.getElementById('dailyDate').value=new Date().toISOString().slice(0,10);
