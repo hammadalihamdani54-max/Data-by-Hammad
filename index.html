@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>TABUK MARBLE - Complete System</title>
+    <title>TABUK MARBLE - Complete Business System</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
@@ -25,12 +25,12 @@
         @media(max-width:900px){.pos-grid{grid-template-columns:1fr;}}
         .panel{background:white;padding:15px;border-radius:12px;box-shadow:0 1px 5px rgba(0,0,0,0.08);}
         .panel h3{margin-bottom:12px;color:#1a1a2e;border-left:4px solid #ffd700;padding-left:10px;font-size:16px;}
-        .product-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;max-height:400px;overflow-y:auto;margin-top:10px;}
+        .product-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;max-height:400px;overflow-y:auto;margin-top:10px;}
         .product-card{background:white;padding:8px;border:1px solid #e2e8f0;border-radius:10px;cursor:pointer;transition:0.2s;}
         .product-card:hover{border-color:#ffd700;transform:translateY(-2px);box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-        .product-name{font-weight:bold;font-size:13px;}
-        .product-size{font-size:10px;color:#666;margin:3px 0;}
-        .product-price{color:#27ae60;font-weight:bold;font-size:11px;}
+        .product-name{font-weight:bold;font-size:12px;}
+        .product-size{font-size:9px;color:#666;margin:2px 0;}
+        .product-price{color:#27ae60;font-weight:bold;font-size:10px;}
         .group-filter{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
         .group-btn{padding:5px 12px;background:#e2e8f0;border:none;border-radius:20px;cursor:pointer;font-weight:bold;font-size:11px;}
         .group-btn.active{background:#ffd700;}
@@ -74,7 +74,6 @@
         .stat-card h4{font-size:12px;}
         .stat-card .value{font-size:22px;font-weight:bold;color:#ffd700;margin-top:5px;}
         .daily-card{background:#f0fdf4;border-radius:8px;padding:10px;margin-bottom:8px;border-left:3px solid #ffd700;}
-        @media(max-width:600px){.product-list{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}.input-row{flex-direction:column;}.input-group{width:100%;}}
     </style>
 </head>
 <body>
@@ -82,8 +81,8 @@
     <div class="header">
         <div><h2 id="companyNameDisplay">🏢 TABUK MARBLE</h2><p id="companyTaglineDisplay">Premium Marble Solutions</p></div>
         <div class="lang-currency">
-            <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">English</button>
-            <button class="lang-btn" data-lang="ar" onclick="setLanguage('ar')">العربية</button>
+            <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">🇬🇧 English</button>
+            <button class="lang-btn" data-lang="ar" onclick="setLanguage('ar')">🇸🇦 العربية</button>
             <button class="currency-btn active" data-currency="SAR" onclick="setCurrency('SAR')">SAR</button>
             <button class="currency-btn" data-currency="USD" onclick="setCurrency('USD')">USD</button>
         </div>
@@ -106,9 +105,9 @@
                 <h3 id="productsTitle">Products</h3>
                 <div class="group-filter" id="productFilter">
                     <button class="group-btn active" data-group="all" onclick="filterProducts('all')">All</button>
-                    <button class="group-btn" data-group="mwad" onclick="filterProducts('mwad')">MWAD</button>
-                    <button class="group-btn" data-group="mojali" onclick="filterProducts('mojali')">ABIAZ MAJLI</button>
-                    <button class="group-btn" data-group="mosnafar" onclick="filterProducts('mosnafar')">ABIAZ MUSANFR</button>
+                    <button class="group-btn" data-group="mwad" onclick="filterProducts('mwad')">مواد بناء</button>
+                    <button class="group-btn" data-group="mojali" onclick="filterProducts('mojali')">حجر مجلي</button>
+                    <button class="group-btn" data-group="mosnafar" onclick="filterProducts('mosnafar')">حجر مصنفر</button>
                 </div>
                 <div class="search-box"><input type="text" id="searchProduct" placeholder="Search..." onkeyup="displayProducts()"></div>
                 <div class="product-list" id="productList"></div>
@@ -116,9 +115,9 @@
             <div class="panel">
                 <h3 id="cartTitle">Shopping Cart</h3>
                 <div class="mode-btns" id="modeBtns">
-                    <div class="mode-btn active" data-mode="sqm" onclick="setMode('sqm')">📐 SQM</div>
+                    <div class="mode-btn active" data-mode="sqm" onclick="setMode('sqm')">📐 SQM (Marble)</div>
                     <div class="mode-btn" data-mode="manual" onclick="setMode('manual')">📏 Manual m²</div>
-                    <div class="mode-btn" data-mode="pieces" onclick="setMode('pieces')">🔧 Pieces</div>
+                    <div class="mode-btn" data-mode="pieces" onclick="setMode('pieces')">🔧 Pieces (Fittings)</div>
                 </div>
                 <div class="input-row">
                     <div class="input-group"><label id="itemNameLabel">Item Name</label><input type="text" id="itemName" placeholder="Select item"></div>
@@ -128,7 +127,7 @@
                     <div class="input-row"><div class="input-group"><label>Thickness (cm)</label><input type="number" id="thickness" value="3" step="0.1"></div><div class="input-group"><label>Width (m)</label><input type="number" id="width" value="0.40" step="0.01"></div><div class="input-group"><label>Length (m)</label><input type="number" id="length" value="0.80" step="0.01"></div><div class="input-group"><label>Price / m²</label><input type="number" id="sqmPrice" step="0.01"></div></div>
                 </div>
                 <div id="manualFields" style="display:none">
-                    <div class="input-row"><div class="input-group"><label>Thickness (cm)</label><input type="number" id="manualThickness" value="3" step="0.1"></div><div class="input-group"><label>Width (m)</label><input type="number" id="manualWidth" value="0.40" step="0.01"></div><div class="input-group"><label>Length (m)</label><input type="number" id="manualLength" value="0.80" step="0.01"></div><div class="input-group"><label>Area (m²)</label><input type="number" id="manualArea" step="0.01" placeholder="e.g., 200"></div><div class="input-group"><label>Price / m²</label><input type="number" id="manualPrice" step="0.01"></div></div>
+                    <div class="input-row"><div class="input-group"><label>Area (m²)</label><input type="number" id="manualArea" step="0.01" placeholder="Enter m²"></div><div class="input-group"><label>Price / m²</label><input type="number" id="manualPrice" step="0.01"></div></div>
                 </div>
                 <div id="piecesFields" style="display:none">
                     <div class="input-row"><div class="input-group"><label>Size</label><input type="text" id="pieceSize" placeholder="Size"></div><div class="input-group"><label>Quantity</label><input type="number" id="pieceQty" value="1" step="1"></div><div class="input-group"><label>Price / piece</label><input type="number" id="piecePrice" step="0.01"></div></div>
@@ -137,7 +136,7 @@
                 
                 <div class="form-group" style="margin-top:10px"><label id="customerNameLabel">Customer Name</label><input type="text" id="customerName"></div>
                 <div class="form-group"><label id="phoneLabel">Phone Number</label><input type="text" id="customerPhone"></div>
-                <div class="form-group"><label id="receivedLabel">Amount Received (SAR)</label><input type="number" id="amountReceived" value="0" step="0.01" oninput="updateTotals()"></div>
+                <div class="form-group"><label id="receivedLabel">Amount Received</label><input type="number" id="amountReceived" value="0" step="0.01" oninput="updateTotals()"></div>
                 
                 <div style="overflow-x:auto; max-height:220px; overflow-y:auto">
                     <table id="cartTable">
@@ -147,6 +146,7 @@
                 </div>
                 <div class="total-box">
                     <p><strong id="subtotalLabel">Subtotal:</strong> <span id="subtotal">SAR 0.00</span></p>
+                    <p><strong id="taxLabel">Tax (<span id="taxRateDisplay">0</span>%):</strong> <span id="taxAmount">SAR 0.00</span></p>
                     <p><strong id="totalLabel">Total:</strong> <span id="grandTotal">SAR 0.00</span></p>
                     <p><strong id="receivedLabel2">Received:</strong> <span id="received">SAR 0.00</span></p>
                     <p id="remainingMsg" style="font-weight:bold;font-size:11px"></p>
@@ -181,9 +181,9 @@
         <div class="panel"><h3>Inventory</h3>
             <div class="group-filter" id="inventoryFilter">
                 <button class="group-btn active" data-group="all" onclick="filterInventory('all')">All</button>
-                <button class="group-btn" data-group="mwad" onclick="filterInventory('mwad')">MWAD</button>
-                <button class="group-btn" data-group="mojali" onclick="filterInventory('mojali')">ABIAZ MAJLI</button>
-                <button class="group-btn" data-group="mosnafar" onclick="filterInventory('mosnafar')">ABIAZ MUSANFR</button>
+                <button class="group-btn" data-group="mwad" onclick="filterInventory('mwad')">مواد بناء</button>
+                <button class="group-btn" data-group="mojali" onclick="filterInventory('mojali')">حجر مجلي</button>
+                <button class="group-btn" data-group="mosnafar" onclick="filterInventory('mosnafar')">حجر مصنفر</button>
             </div>
             <div class="search-box"><input type="text" id="inventorySearch" placeholder="Search..." onkeyup="loadInventory()"></div>
             <button onclick="addNewProduct()" class="btn-success" style="margin-bottom:8px">+ Add Product</button>
@@ -194,7 +194,7 @@
     <!-- INVOICES TAB -->
     <div id="invoicesTab" class="tab-content">
         <div class="panel"><h3>All Invoices</h3><div class="search-box"><input type="text" id="invoiceSearch" placeholder="Search..." onkeyup="displayInvoices()"></div>
-        <div style="overflow-x:auto"><table id="invoicesTable"><thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody id="invoicesBody"></tbody></table></div></div>
+        <div style="overflow-x:auto"><table id="invoicesTable"><thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody id="invoicesBody"></tbody>｜｜DSML｜｜</div></div>
     </div>
 
     <!-- MONTHLY TAB -->
@@ -239,76 +239,143 @@ let taxEnabled = false, taxRate = 15, taxName = "VAT";
 let company = { name: "TABUK MARBLE", logo: "🏢", tagline: "Premium Marble Solutions", address: "Tabuk, KSA", phone: "0598074287" };
 let invoiceFooter = "Thank you for choosing TABUK MARBLE!";
 
-// ==================== BUILD ALL PRODUCTS (COMPLETE) ====================
+// ==================== ALL PRODUCTS (INDIVIDUAL) ====================
 function buildProducts() {
     let prods = []; let id = 1;
     
-    // ===== MWAD MATERIALS (Complete) =====
-    const materials = [
-        ["زاویہ اپ ڈاون","4*4*3mm",9200],["زاویہ اپ ڈاون","4*4*2mm",6600],["زاویہ اپ ڈاون","4*3*3mm",4300],["زاویہ اپ ڈاون","4*3*2mm",2500],
-        ["زاویہ اپ ڈاون","4*5*3mm",1200],["زاویہ اپ ڈاون","4*6*3mm",850],["زاویہ اپ ڈاون","4*8*3mm",420],["زاویہ اپ ڈاون","4*10*3mm",400],
-        ["زاویہ اپ ڈاون","5*5*3mm",0],["زاویہ اپ ڈاون","4*4*3mm (مط)",0],["مسمار مغلوب","10*40",4800],["مسمار مغلوب","10*50",4800],
-        ["مسمار مغلوب","10*60",3500],["مسمار مغلوب","10*80",1500],["مسمار مغلوب","10*100",1440],["براغی سقف","10*72",2200],
-        ["براغی سقف","10*92",2100],["براغی سقف","10*112",1920],["براغی سقف","10*115",2200],["براغی سقف","10*202",1040],
-        ["جولی ابو جمل","Standard",5],["جولی گلیڈتیر","Standard",0],["دسک حجر احمر اے ایس","7 بوسہ",0],["دسک حجر احمر اے ایس","4.50 بوسہ",7],
-        ["دسک جرانیت ایے وا","7 بوسہ",3],["دسک بوش","9 بوسہ",20],["دسک حجر احمر اے ایس","9 بوسہ",0],["ریشہ ہلتی","20cm",0],
-        ["ریشہ ہلتی","15cm",24],["ریشہ ہلتی","10cm",1],["ریشہ دریل","4mm",12],["ریشہ دریل","6mm",10],["ریشہ دریل","10mm",16],
-        ["گمتا چوڑی","Standard",7],["گمتا سادہ","Standard",7],["بکرا","Standard",1]
+    // ===== مواد بناء (MWAD) - Materials =====
+    const mwadItems = [
+        ["زاویہ اپ ڈاون","4*4*3mm",9200,0,0],["زاویہ اپ ڈاون","4*4*2mm",6600,0,0],["زاویہ اپ ڈاون","4*3*3mm",4300,0,0],
+        ["زاویہ اپ ڈاون","4*3*2mm",2500,0,0],["زاویہ اپ ڈاون","4*5*3mm",1200,0,0],["زاویہ اپ ڈاون","4*6*3mm",850,0,0],
+        ["زاویہ اپ ڈاون","4*8*3mm",420,0,0],["زاویہ اپ ڈاون","4*10*3mm",400,0,0],["زاویہ اپ ڈاون","5*5*3mm",0,0,0],
+        ["مسمار مغلوب","10*40",4800,0,0],["مسمار مغلوب","10*50",4800,0,0],["مسمار مغلوب","10*60",3500,0,0],
+        ["مسمار مغلوب","10*80",1500,0,0],["مسمار مغلوب","10*100",1440,0,0],["براغی سقف","10*72",2200,0,0],
+        ["براغی سقف","10*92",2100,0,0],["براغی سقف","10*112",1920,0,0],["براغی سقف","10*115",2200,0,0],
+        ["براغی سقف","10*202",1040,0,0],["جولی ابو جمل","Standard",5,0,0],["جولی گلیڈتیر","Standard",0,0,0],
+        ["دسک حجر احمر اے ایس","7 بوسہ",0,0,0],["دسک حجر احمر اے ایس","4.50 بوسہ",7,0,0],["دسک جرانیت ایے وا","7 بوسہ",3,0,0],
+        ["دسک بوش","9 بوسہ",20,0,0],["ریشہ ہلتی","20cm",0,0,0],["ریشہ ہلتی","15cm",24,0,0],
+        ["ریشہ ہلتی","10cm",1,0,0],["ریشہ دریل","4mm",12,0,0],["ریشہ دریل","6mm",10,0,0],
+        ["ریشہ دریل","10mm",16,0,0],["گمتا چوڑی","Standard",7,0,0],["گمتا سادہ","Standard",7,0,0],["بکرا","Standard",1,0,0]
     ];
-    materials.forEach(m => { prods.push({ id: id++, name: m[0], size: m[1], group: 'mwad', sellingPrice: 0, costPrice: 0, stock: m[2], type: 'pieces' }); });
+    mwadItems.forEach(m => { prods.push({ id: id++, name: m[0], size: m[1], group: 'mwad', sellingPrice: m[3], costPrice: m[4], stock: m[2], type: 'pieces' }); });
     
-    // ===== ABIAZ MUSANFR (Honed) - Complete =====
-    const honedSizes = ["3*7", "3*10", "3*15", "3*18", "3*20", "3*25", "3*27", "3*30", "3*32", "3*35", "3*37", "3*40", "3*50", "3*60", "4*7", "5*7"];
-    const honedTypes = ["ابیض مصنفر مبروم", "ابیض مصنفر سادہ", "ابیض مصنفر غرفہ رومانی"];
-    honedTypes.forEach(type => { honedSizes.forEach(size => { prods.push({ id: id++, name: type, size: size, group: 'mosnafar', sellingPrice: 60, costPrice: 50, stock: 50, type: 'sqm', thickness: 3 }); }); });
-    
-    const honedSpecial = [
-        ["ابیض مصنفر فرزا 1*2","3*40*80",65],["(C)ابیض مصنفر فرزا 1*2","3*40*60",65],["(B)ابیض مصنفر فرزا 1*2","3*50*100",70],
-        ["(B)ابیض مصنفر فرزا 1*2","3*40*1.00",65],["(B)ابیض مصنفرفرزتین1*2","3*40*80",70],["ابیض مصنفر فرزا 1*2","3*40*100",68],
-        ["ابیض مصنفر مشطوف","3*30*1.00",65],["ابیض مصنفر مبروم مفروز","3*25*1.00",65],["پیانو ابیض مصنفر","3*20*50",55],
-        ["پیانو ابیض مصنفر","3*25*50",60],["پیانو ابیض مصنفر","3*30*60",65],["پیانو ابیض مصنفر","5*25*50",70]
+    // ===== حجر مجلي (Polished Marble) - Individual Items =====
+    const mojaliItems = [
+        ["(A) ابیض مجلی فرزا 1*2","3*40*80",50,70,60],["(C) ابیض مجلی فرزا 1*2","3*40*60",50,70,60],["(B) ابیض مجلی فرزا 1*2","3*40*80",50,70,60],
+        ["(A) ابیض مجلی فرزا 1*2","3*30*30",50,65,55],["ایضض مجلی مبروم","3*7",50,25,18],["ایضض مجلی مبروم","3*10",50,30,22],
+        ["ایضض مجلی مبروم","3*15",50,38,28],["ایضض مجلی مبروم","3*18",50,42,32],["ایضض مجلی مبروم","3*20",50,48,35],
+        ["ایضض مجلی مبروم","3*25",50,55,40],["ایضض مجلی مبروم","3*27",50,58,42],["ایضض مجلی مبروم","3*30",50,62,45],
+        ["ایضض مجلی مبروم","3*32",50,65,48],["ایضض مجلی مبروم","3*35",50,68,50],["ایضض مجلی مبروم","3*37",50,70,52],
+        ["ایضض مجلی مبروم","3*40",50,75,55],["ایضض مجلی مبروم","3*50",50,85,62],["ایضض مجلی مبروم","3*60",50,95,70],
+        ["ابیض مجلی مشطوف","3*30",50,70,52],["ابیض مجلی سادہ","3*10",50,28,20],["ابیض مجلی سادہ","3*15",50,35,25],
+        ["ابیض مجلی سادہ","3*18",50,40,28],["ابیض مجلی سادہ","3*20",50,45,32],["(B) ابیض مجلی سادہ","3*25",50,52,38],
+        ["(A) ابیض مجلی سادہ","2*25",50,42,30],["(B) ابیض مجلی سادہ","3*30",50,58,42],["(A) ابیض مجلی سادہ","3*30",50,58,42],
+        ["ابیض مجلی سادہ","3*40",50,68,50],["ابیض مجلی سادہ","3*50",50,78,58],["ابیض مجلی غرفہ رومانی","3*15",50,38,28],
+        ["ابیض مجلی غرفہ رومانی","3*20",50,45,32],["ابیض مجلی غرفہ رومانی","3*25",50,52,38],["ابیض مجلی غرفہ رومانی","3*30",50,60,44],
+        ["ابیض مجلی غرفہ رومانی","3*35",50,65,48],["ابیض مجلی غرفہ رومانی","3*40",50,72,54],["ابیض مجلی غرفہ رومانی","3*50",50,82,62],
+        ["ابیض بشارتہ فرزا 1*2","3*40*80",50,85,65],["ابیض بشارتہ فرزا 1*2","3*40*60",50,80,60],["ابیض بشارتہ فرزا 1*2","3*30*60",50,75,55],
+        ["B ابیض بشارتہ فرزا 1*2","3*40",50,78,58],["ابیض بشارتہ مشطوف B","3*30*60",50,80,60],["ابیض بشارتہ A","3*40*80",50,90,68],
+        ["KAREEMI HJAR SADA","3*40",50,70,52],["C ابیض بشارتہ مشطوف","3*40*60",50,82,62],["C ابیض بشارتہ مشطوف","3*50*50",50,85,65],
+        ["ابیض بشارتہ A","4*6*75",50,95,72],["MNHOOD ABIAZ","3*20*1.20",50,65,48],["MNHOOD ABIAZ","3*15*1.20",50,60,45]
     ];
-    honedSpecial.forEach(s => { prods.push({ id: id++, name: s[0], size: s[1], group: 'mosnafar', sellingPrice: s[2], costPrice: s[2]-10, stock: 50, type: 'sqm', thickness: 3 }); });
+    mojaliItems.forEach(m => { prods.push({ id: id++, name: m[0], size: m[1], group: 'mojali', sellingPrice: m[3], costPrice: m[4], stock: m[2], type: 'sqm', thickness: 3 }); });
     
-    // ===== ABIAZ MAJLI (Polished) - Complete =====
-    const polishedSizes = ["3*7", "3*10", "3*15", "3*18", "3*20", "3*25", "3*27", "3*30", "3*32", "3*35", "3*37", "3*40", "3*50", "3*60"];
-    const polishedTypes = ["ابیض مجلی مبروم", "ابیض مجلی سادہ", "ابیض مجلی غرفہ رومانی"];
-    polishedTypes.forEach(type => { polishedSizes.forEach(size => { prods.push({ id: id++, name: type, size: size, group: 'mojali', sellingPrice: 70, costPrice: 60, stock: 50, type: 'sqm', thickness: 3 }); }); });
-    
-    const polishedSpecial = [
-        ["(A)ابیض مجلی فرزا 1*2","3*40*80",75],["(C)ابیض مجلی فرزا 1*2","3*40*60",75],["(B)ابیض مجلی فرزا 1*2","3*40*80",75],
-        ["(A)ابیض مجلی فرزا 1*2","3*30*30",70],["ابیض مجلی مشطوف","3*30*1.00",80],["ابیض بشارتہ فرزا 1*2","3*40*80",85],
-        ["ابیض بشارتہ فرزا 1*2","3*40*60",85],["ابیض بشارتہ فرزا 1*2","3*30*60",80],["B ابیض بشارتہ فرزا 1*2","3*40*1.00",85],
-        ["ابیض بشارتہ مشطوف B","3*30*60",85],["ابیض بشارتہ A","3*40*80",90],["KAREEMI HJAR SADA","3*40*1.00",70],
-        ["C ابیض بشارتہ مشطوف","3*40*60",85],["C ابیض بشارتہ مشطوف","3*50*50",85],["ابیض بشارتہ A","4*60*75",95],
-        ["ابیض منحوت","3*20*1.20",65],["MNHOOD ABIAZ","3*15*1.20",60]
+    // ===== حجر مصنفر (Honed Marble) - Individual Items =====
+    const mosnafarItems = [
+        ["ابیض مصنفر فرزا 1*2","3*40*80",50,65,55],["(C) ابیض مصنفر فرزا 1*2","3*40*60",50,62,52],["(B) ابیض مصنفر فرزا 1*2","3*50*100",50,70,58],
+        ["(B) ابیض مصنفر فرزا 1*2","3*40",50,60,50],["(B) ابیض مصنفرفرزتین 1*2","3*40*80",50,68,56],["ابیض مصنفر فرزا 1*2","3*40*100",50,68,56],
+        ["ایضض مصنفر مبروم","4*7",50,22,15],["ایضض مصنفر مبروم","5*7",50,28,20],["ایضض مصنفر مبروم","3*7",50,18,12],
+        ["ایضض مصنفر مبروم","3*10",50,22,15],["ایضض مصنفر مبروم","3*15",50,28,20],["ایضض مصنفر مبروم","3*18",50,32,24],
+        ["ایضض مصنفر مبروم","3*20",50,35,26],["ایضض مصنفر مبروم","3*25",50,42,32],["ایضض مصنفر مبروم","3*27",50,45,34],
+        ["ایضض مصنفر مبروم","3*30",50,48,36],["ایضض مصنفر مبروم","3*32",50,50,38],["ایضض مصنفر مبروم","3*35",50,52,40],
+        ["ایضض مصنفر مبروم","3*37",50,55,42],["(B) ایضض مصنفر مبروم","3*40",50,58,44],["ایضض مصنفر مبروم","3*50",50,65,50],
+        ["ایضض مصنفر مبروم","3*60",50,72,55],["ابیض مصنفر سادہ","3*7",50,15,10],["ابیض مصنفر سادہ","3*10",50,18,12],
+        ["ابیض مصنفر سادہ","3*15",50,22,16],["ابیض مصنفر سادہ","3*18",50,26,18],["ابیض مصنفر سادہ","3*20",50,30,22],
+        ["ابیض مصنفر سادہ","3*25",50,35,26],["ابیض مصنفر سادہ","2*27",50,30,22],["ابیض مصنفر سادہ","3*30",50,42,32],
+        ["ABIZ MUSANFR B","3*30",50,42,32],["ابیض مصنفر سادہ (B)","3*40",50,52,40],["ابیض مصنفر سادہ","3*50",50,60,46],
+        ["ایضض مصنفر","3*60",50,65,50],["ایضض مصنفر مشطوف","3*30",50,48,36],["ابیض مصنفر غرفہ رومانی","3*15",50,28,20],
+        ["ابیض مصنفر غرفہ رومانی","3*20",50,32,24],["ابیض مصنفر غرفہ رومانی","3*25",50,38,28],["ابیض مصنفر غرفہ رومانی","3*30",50,45,34],
+        ["ابیض مصنفر غرفہ رومانی","3*35",50,48,36],["ابیض مصنفر غرفہ رومانی","3*40",50,55,42],["ابیض مصنفر غرفہ رومانی","3*50",50,62,48],
+        ["ابیض مصنفر مبروم مفروز","3*25",50,45,34],["پیانو ابیض مصنفر","3*20*50",50,45,35],["پیانو ابیض مصنفر","3*25*50",50,50,38],
+        ["پیانو ابیض مصنفر","3*30*60",50,55,42],["پیانو ابیض مصنفر","5*25*50",50,60,48]
     ];
-    polishedSpecial.forEach(s => { prods.push({ id: id++, name: s[0], size: s[1], group: 'mojali', sellingPrice: s[2], costPrice: s[2]-10, stock: 50, type: 'sqm', thickness: 3 }); });
+    mosnafarItems.forEach(m => { prods.push({ id: id++, name: m[0], size: m[1], group: 'mosnafar', sellingPrice: m[3], costPrice: m[4], stock: m[2], type: 'sqm', thickness: 3 }); });
     
     console.log("Total Products Loaded:", prods.length);
     return prods;
 }
 
+// ==================== HELPERS ====================
 function formatNumber(n) { let val = n.toFixed(2); if(currentLang === 'ar') return val.replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); return val; }
 function formatCurrency(amt) { let r = currentCurrency === 'SAR' ? 1 : 0.27; let sym = currentCurrency === 'SAR' ? 'SAR ' : '$ '; return sym + formatNumber(amt * r); }
-function getGroupName(g) { if(g === 'mwad') return 'MWAD'; if(g === 'mojali') return 'ABIAZ MAJLI'; return 'ABIAZ MUSANFR'; }
+function getGroupName(g) { if(g === 'mwad') return 'مواد بناء'; if(g === 'mojali') return 'حجر مجلي'; return 'حجر مصنفر'; }
 function showToast(msg) { let t = document.createElement('div'); t.className = 'toast'; t.innerText = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2000); }
 function saveData() { localStorage.setItem('tabuk_products', JSON.stringify(products)); localStorage.setItem('tabuk_orders', JSON.stringify(orders)); localStorage.setItem('tabuk_customers', JSON.stringify(customers)); localStorage.setItem('tabuk_company', JSON.stringify(company)); localStorage.setItem('tabuk_taxEnabled', taxEnabled); localStorage.setItem('tabuk_taxRate', taxRate); localStorage.setItem('tabuk_taxName', taxName); localStorage.setItem('tabuk_invoiceFooter', invoiceFooter); }
 function loadData() { let p = localStorage.getItem('tabuk_products'); products = (p && JSON.parse(p).length) ? JSON.parse(p) : buildProducts(); let o = localStorage.getItem('tabuk_orders'); if(o) orders = JSON.parse(o); let c = localStorage.getItem('tabuk_customers'); if(c) customers = JSON.parse(c); let comp = localStorage.getItem('tabuk_company'); if(comp) company = JSON.parse(comp); let te = localStorage.getItem('tabuk_taxEnabled'); if(te !== null) taxEnabled = te === 'true'; let tr = localStorage.getItem('tabuk_taxRate'); if(tr) taxRate = parseFloat(tr); let tn = localStorage.getItem('tabuk_taxName'); if(tn) taxName = tn; let invF = localStorage.getItem('tabuk_invoiceFooter'); if(invF) invoiceFooter = invF; }
 
-// ==================== UI ====================
-function setLanguage(lang) { currentLang = lang; document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active')); document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active'); if(lang === 'ar') document.body.classList.add('rtl'); else document.body.classList.remove('rtl'); applyLanguage(); displayProducts(); loadInventory(); displayCustomers(); displayInvoices(); loadMonthlyData(); updateProfitLoss(); updateDailyData(); updateCartDisplay(); }
-function applyLanguage() { let ar = currentLang === 'ar'; document.getElementById('productsTitle').innerText = ar ? 'المنتجات' : 'Products'; document.getElementById('cartTitle').innerText = ar ? 'سلة المشتريات' : 'Shopping Cart'; document.getElementById('itemNameLabel').innerText = ar ? 'اسم المنتج' : 'Item Name'; document.getElementById('costLabel').innerText = ar ? 'سعر التكلفة' : 'Cost Price'; document.getElementById('customerNameLabel').innerText = ar ? 'اسم العميل' : 'Customer Name'; document.getElementById('phoneLabel').innerText = ar ? 'رقم الجوال' : 'Phone Number'; document.getElementById('receivedLabel').innerText = ar ? 'المبلغ المستلم' : 'Amount Received'; document.getElementById('receivedLabel2').innerText = ar ? 'المستلم:' : 'Received:'; document.getElementById('subtotalLabel').innerHTML = ar ? 'المجموع:' : 'Subtotal:'; document.getElementById('totalLabel').innerHTML = ar ? 'الإجمالي:' : 'Total:'; document.getElementById('thItem').innerText = ar ? 'المنتج' : 'Item'; document.getElementById('thSize').innerText = ar ? 'المقاس' : 'Size'; document.getElementById('thQty').innerText = ar ? 'الكمية' : 'Qty'; document.getElementById('thPrice').innerText = ar ? 'السعر' : 'Price'; document.getElementById('thTotal').innerText = ar ? 'الإجمالي' : 'Total'; }
-function setCurrency(curr) { currentCurrency = curr; document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active')); document.querySelector(`.currency-btn[data-currency="${curr}"]`).classList.add('active'); displayProducts(); loadInventory(); updateCartDisplay(); updateProfitLoss(); displayCustomers(); displayInvoices(); loadMonthlyData(); updateDailyData(); }
-function setMode(mode) { currentMode = mode; document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active')); document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active'); document.getElementById('sqmFields').style.display = mode === 'sqm' ? 'block' : 'none'; document.getElementById('manualFields').style.display = mode === 'manual' ? 'block' : 'none'; document.getElementById('piecesFields').style.display = mode === 'pieces' ? 'block' : 'none'; }
-function showTab(tab) { document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); document.getElementById(tab + 'Tab').classList.add('active'); document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); event.target.classList.add('active'); if(tab === 'inventory') loadInventory(); if(tab === 'invoices') displayInvoices(); if(tab === 'monthly') loadMonthlyData(); if(tab === 'profitloss') updateProfitLoss(); if(tab === 'customers') displayCustomers(); if(tab === 'daily') updateDailyData(); }
+// ==================== UI FUNCTIONS ====================
+function setLanguage(lang) { 
+    currentLang = lang; 
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active')); 
+    document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active'); 
+    if(lang === 'ar') document.body.classList.add('rtl'); else document.body.classList.remove('rtl');
+    document.getElementById('taxRateDisplay').innerHTML = taxRate;
+    displayProducts(); loadInventory(); displayCustomers(); displayInvoices(); loadMonthlyData(); updateProfitLoss(); updateDailyData(); updateCartDisplay(); 
+    showToast(lang === 'ar' ? 'اللغة العربية' : 'English'); 
+}
+function setCurrency(curr) { 
+    currentCurrency = curr; 
+    document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active')); 
+    document.querySelector(`.currency-btn[data-currency="${curr}"]`).classList.add('active'); 
+    displayProducts(); loadInventory(); updateCartDisplay(); updateProfitLoss(); displayCustomers(); displayInvoices(); loadMonthlyData(); updateDailyData(); 
+}
+function setMode(mode) { 
+    currentMode = mode; 
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active')); 
+    document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active'); 
+    document.getElementById('sqmFields').style.display = mode === 'sqm' ? 'block' : 'none'; 
+    document.getElementById('manualFields').style.display = mode === 'manual' ? 'block' : 'none'; 
+    document.getElementById('piecesFields').style.display = mode === 'pieces' ? 'block' : 'none'; 
+}
+function showTab(tab) { 
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); 
+    document.getElementById(tab + 'Tab').classList.add('active'); 
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); 
+    event.target.classList.add('active'); 
+    if(tab === 'inventory') loadInventory(); 
+    if(tab === 'invoices') displayInvoices(); 
+    if(tab === 'monthly') loadMonthlyData(); 
+    if(tab === 'profitloss') updateProfitLoss(); 
+    if(tab === 'customers') displayCustomers(); 
+    if(tab === 'daily') updateDailyData(); 
+}
 
 // ==================== PRODUCTS ====================
 function displayProducts() {
     let search = document.getElementById('searchProduct').value.toLowerCase();
     let filtered = products.filter(p => (currentProductGroup === 'all' || p.group === currentProductGroup) && (p.name.toLowerCase().includes(search) || p.size.toLowerCase().includes(search)));
     let container = document.getElementById('productList'); container.innerHTML = '';
-    filtered.forEach(p => { let div = document.createElement('div'); div.className = 'product-card'; div.innerHTML = `<div class="product-name">${p.name}</div><div class="product-size">${p.size}</div><div class="product-price">${p.sellingPrice > 0 ? formatCurrency(p.sellingPrice) : 'Set Price'}${p.type === 'sqm' ? '/m²' : '/pc'}</div><div>Stock: ${p.stock}</div>`; div.onclick = () => { document.getElementById('itemName').value = p.name; document.getElementById('costPrice').value = p.costPrice; if(p.type === 'sqm') { setMode('sqm'); document.getElementById('thickness').value = p.thickness || 3; document.getElementById('width').value = 0.40; document.getElementById('length').value = 0.80; document.getElementById('sqmPrice').value = p.sellingPrice; } else { setMode('pieces'); document.getElementById('pieceSize').value = p.size; document.getElementById('piecePrice').value = p.sellingPrice; } showToast(p.name + ' loaded'); }; container.appendChild(div); });
+    filtered.forEach(p => { 
+        let div = document.createElement('div'); div.className = 'product-card'; 
+        div.innerHTML = `<div class="product-name">${p.name}</div><div class="product-size">${p.size}</div><div class="product-price">${p.sellingPrice > 0 ? formatCurrency(p.sellingPrice) : 'Set Price'}${p.type === 'sqm' ? '/m²' : '/pc'}</div><div>Stock: ${p.stock}</div>`; 
+        div.onclick = () => { 
+            document.getElementById('itemName').value = p.name; 
+            document.getElementById('costPrice').value = p.costPrice; 
+            if(p.type === 'sqm') { 
+                setMode('sqm'); 
+                document.getElementById('thickness').value = p.thickness || 3; 
+                document.getElementById('width').value = 0.40; 
+                document.getElementById('length').value = 0.80; 
+                document.getElementById('sqmPrice').value = p.sellingPrice; 
+            } else { 
+                setMode('pieces'); 
+                document.getElementById('pieceSize').value = p.size; 
+                document.getElementById('piecePrice').value = p.sellingPrice; 
+            } 
+            showToast(p.name + ' loaded'); 
+        }; 
+        container.appendChild(div); 
+    });
 }
 function filterProducts(group) { currentProductGroup = group; document.querySelectorAll('#productFilter .group-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); displayProducts(); }
 function filterInventory(group) { currentInventoryGroup = group; document.querySelectorAll('#inventoryFilter .group-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); loadInventory(); }
@@ -316,10 +383,31 @@ function loadInventory() {
     let search = document.getElementById('inventorySearch').value.toLowerCase();
     let filtered = products.filter(p => (currentInventoryGroup === 'all' || p.group === currentInventoryGroup) && (p.name.toLowerCase().includes(search) || p.size.toLowerCase().includes(search)));
     let tb = document.getElementById('inventoryBody'); tb.innerHTML = '';
-    filtered.forEach(p => { let r = tb.insertRow(); r.insertCell(0).innerHTML = getGroupName(p.group); r.insertCell(1).innerHTML = p.name; r.insertCell(2).innerHTML = p.size; r.insertCell(3).innerHTML = `<span style="cursor:pointer;color:#3b82f6" onclick="editProductField(${p.id},'sellingPrice')">✏️ ${formatCurrency(p.sellingPrice)}</span>`; r.insertCell(4).innerHTML = `<span style="cursor:pointer;color:#8b5cf6" onclick="editProductField(${p.id},'costPrice')">✏️ ${formatCurrency(p.costPrice)}</span>`; r.insertCell(5).innerHTML = `<span style="cursor:pointer;color:#10b981" onclick="editProductField(${p.id},'stock')">✏️ ${p.stock}</span>`; let c = r.insertCell(6); let d = document.createElement('button'); d.innerHTML = 'Delete'; d.style.background = '#e74c3c'; d.style.padding = '2px 8px'; d.onclick = () => { if(confirm('Delete product?')) { products = products.filter(x => x.id !== p.id); saveData(); loadInventory(); displayProducts(); showToast('Deleted'); } }; c.appendChild(d); });
+    filtered.forEach(p => { 
+        let r = tb.insertRow(); 
+        r.insertCell(0).innerHTML = getGroupName(p.group); 
+        r.insertCell(1).innerHTML = p.name; 
+        r.insertCell(2).innerHTML = p.size; 
+        r.insertCell(3).innerHTML = `<span style="cursor:pointer;color:#3b82f6" onclick="editProductField(${p.id},'sellingPrice')">✏️ ${formatCurrency(p.sellingPrice)}</span>`; 
+        r.insertCell(4).innerHTML = `<span style="cursor:pointer;color:#8b5cf6" onclick="editProductField(${p.id},'costPrice')">✏️ ${formatCurrency(p.costPrice)}</span>`; 
+        r.insertCell(5).innerHTML = `<span style="cursor:pointer;color:#10b981" onclick="editProductField(${p.id},'stock')">✏️ ${p.stock}</span>`; 
+        let c = r.insertCell(6); 
+        let d = document.createElement('button'); d.innerHTML = 'Delete'; d.style.background = '#e74c3c'; d.style.padding = '2px 8px'; 
+        d.onclick = () => { if(confirm('Delete product?')) { products = products.filter(x => x.id !== p.id); saveData(); loadInventory(); displayProducts(); showToast('Deleted'); } }; 
+        c.appendChild(d); 
+    });
 }
 window.editProductField = (id, field) => { let p = products.find(x => x.id === id); if(p) { let v = prompt(`Edit ${field}:`, p[field]); if(v !== null && !isNaN(parseFloat(v))) { p[field] = parseFloat(v); saveData(); loadInventory(); displayProducts(); showToast(`${field} updated`); } } };
-function addNewProduct() { let type = confirm('Marble (SQM) - OK, Fitting (Pieces) - Cancel') ? 'sqm' : 'pieces'; let g = prompt('Group: 1-MWAD, 2-ABIAZ MAJLI, 3-ABIAZ MUSANFR'); let gn = 'mwad'; if(g === '2') gn = 'mojali'; else if(g === '3') gn = 'mosnafar'; let name = prompt('Name:'); if(!name) return; let id = Math.max(...products.map(p => p.id), 0) + 1; let np = { id, name, size: prompt('Size:'), group: gn, sellingPrice: parseFloat(prompt('Selling Price:')), costPrice: parseFloat(prompt('Cost Price:')) || 0, stock: parseInt(prompt('Stock:')) || (gn === 'mwad' ? 2000 : 50), type }; if(type === 'sqm') np.thickness = parseFloat(prompt('Thickness cm:')) || 3; products.push(np); saveData(); displayProducts(); loadInventory(); showToast('Product added'); }
+function addNewProduct() { 
+    let type = confirm('Marble (SQM) - OK, Fitting (Pieces) - Cancel') ? 'sqm' : 'pieces'; 
+    let g = prompt('Group: 1-MWAD, 2-ABIAZ MAJLI, 3-ABIAZ MUSANFR'); 
+    let gn = 'mwad'; if(g === '2') gn = 'mojali'; else if(g === '3') gn = 'mosnafar'; 
+    let name = prompt('Name:'); if(!name) return; 
+    let id = Math.max(...products.map(p => p.id), 0) + 1; 
+    let np = { id, name, size: prompt('Size:'), group: gn, sellingPrice: parseFloat(prompt('Selling Price:')), costPrice: parseFloat(prompt('Cost Price:')) || 0, stock: parseInt(prompt('Stock:')) || (gn === 'mwad' ? 2000 : 50), type }; 
+    if(type === 'sqm') np.thickness = parseFloat(prompt('Thickness cm:')) || 3; 
+    products.push(np); saveData(); displayProducts(); loadInventory(); showToast('Product added'); 
+}
 
 // ==================== CART ====================
 function saveCartHistory() { cartHistory.push(JSON.parse(JSON.stringify(cart))); if(cartHistory.length > 20) cartHistory.shift(); }
@@ -329,21 +417,23 @@ function addToCart() {
     saveCartHistory();
     let cost = parseFloat(document.getElementById('costPrice').value) || 0;
     if(currentMode === 'sqm') {
-        let t = parseFloat(document.getElementById('thickness').value), w = parseFloat(document.getElementById('width').value), l = parseFloat(document.getElementById('length').value), p = parseFloat(document.getElementById('sqmPrice').value);
+        let t = parseFloat(document.getElementById('thickness').value) || 3;
+        let w = parseFloat(document.getElementById('width').value) || 0.40;
+        let l = parseFloat(document.getElementById('length').value) || 0.80;
+        let p = parseFloat(document.getElementById('sqmPrice').value);
         if(!p) { showToast('Enter price'); return; }
-        let area = w * l; let total = area * p;
-        let sizeStr = `${t}*${w.toFixed(2)}*${l.toFixed(2)}`;
-        cart.push({ id: Date.now(), name, size: sizeStr, qty: area.toFixed(2) + ' m²', price: p, cost: cost || p * 0.7, total });
+        let area = w * l;
+        let total = area * p;
+        cart.push({ id: Date.now(), name, size: `${t}*${w.toFixed(2)}*${l.toFixed(2)}`, qty: area.toFixed(2) + ' m²', price: p, cost: cost || p * 0.7, total });
     } else if(currentMode === 'manual') {
-        let t = parseFloat(document.getElementById('manualThickness').value) || 3;
-        let w = parseFloat(document.getElementById('manualWidth').value) || 0.40;
-        let l = parseFloat(document.getElementById('manualLength').value) || 0.80;
-        let area = parseFloat(document.getElementById('manualArea').value), p = parseFloat(document.getElementById('manualPrice').value);
+        let area = parseFloat(document.getElementById('manualArea').value);
+        let p = parseFloat(document.getElementById('manualPrice').value);
         if(!area || !p) { showToast('Enter area and price'); return; }
-        let sizeStr = `${t}*${w.toFixed(2)}*${l.toFixed(2)}`;
-        cart.push({ id: Date.now(), name, size: sizeStr, qty: area.toFixed(2) + ' m²', price: p, cost: cost || p * 0.7, total: area * p });
+        cart.push({ id: Date.now(), name, size: 'Manual', qty: area.toFixed(2) + ' m²', price: p, cost: cost || p * 0.7, total: area * p });
     } else {
-        let size = document.getElementById('pieceSize').value, qty = parseFloat(document.getElementById('pieceQty').value), p = parseFloat(document.getElementById('piecePrice').value);
+        let size = document.getElementById('pieceSize').value;
+        let qty = parseFloat(document.getElementById('pieceQty').value);
+        let p = parseFloat(document.getElementById('piecePrice').value);
         if(!p) { showToast('Enter price'); return; }
         cart.push({ id: Date.now(), name, size: size, qty: qty + ' pcs', price: p, cost: cost || p * 0.6, total: qty * p });
     }
@@ -354,10 +444,10 @@ function updateCartDisplay() {
     cart.forEach((item, idx) => { sub += item.total; let r = tb.insertRow(); r.insertCell(0).innerHTML = item.name; r.insertCell(1).innerHTML = item.size; r.insertCell(2).innerHTML = item.qty; r.insertCell(3).innerHTML = formatCurrency(item.price); r.insertCell(4).innerHTML = formatCurrency(item.total); let btn = document.createElement('button'); btn.innerHTML = '✖'; btn.style.background = '#e74c3c'; btn.style.padding = '2px 6px'; btn.onclick = () => { saveCartHistory(); cart.splice(idx, 1); updateCartDisplay(); }; r.insertCell(5).appendChild(btn); });
     updateTotals(sub);
 }
-function updateTotals(sub) { if(!sub) sub = cart.reduce((s,i)=>s+i.total,0); let tax = taxEnabled ? sub * taxRate / 100 : 0; let total = sub + tax; document.getElementById('subtotal').innerHTML = formatCurrency(sub); document.getElementById('grandTotal').innerHTML = formatCurrency(total); let rec = parseFloat(document.getElementById('amountReceived').value) || 0; document.getElementById('received').innerHTML = formatCurrency(rec); let rem = total - rec; let msg = rem > 0 ? `Remaining to Customer: ${formatCurrency(rem)}` : (rem < 0 ? `Remaining to Company (${company.name}): ${formatCurrency(Math.abs(rem))}` : 'Fully Paid'); document.getElementById('remainingMsg').innerHTML = msg; }
+function updateTotals(sub) { if(!sub) sub = cart.reduce((s,i)=>s+i.total,0); let tax = taxEnabled ? sub * taxRate / 100 : 0; let total = sub + tax; document.getElementById('subtotal').innerHTML = formatCurrency(sub); document.getElementById('taxAmount').innerHTML = formatCurrency(tax); document.getElementById('grandTotal').innerHTML = formatCurrency(total); let rec = parseFloat(document.getElementById('amountReceived').value) || 0; document.getElementById('received').innerHTML = formatCurrency(rec); let rem = total - rec; let msg = rem > 0 ? `Remaining to pay: ${formatCurrency(rem)}` : (rem < 0 ? `Return to customer: ${formatCurrency(Math.abs(rem))}` : 'Fully Paid'); document.getElementById('remainingMsg').innerHTML = msg; }
 function clearCart() { if(confirm('Clear cart?')) { saveCartHistory(); cart = []; updateCartDisplay(); } }
 function editCartItem() { if(cart.length === 0) { showToast('Cart empty'); return; } let idx = prompt(`Item number (1-${cart.length}):`); if(idx && idx > 0 && idx <= cart.length) { currentEditCartIndex = idx - 1; let item = cart[currentEditCartIndex]; document.getElementById('editCartPrice').value = item.price; document.getElementById('editCartModal').style.display = 'flex'; } }
-function saveCartEdit() { if(currentEditCartIndex !== null) { let newPrice = parseFloat(document.getElementById('editCartPrice').value); if(!isNaN(newPrice)) { saveCartHistory(); cart[currentEditCartIndex].price = newPrice; if(cart[currentEditCartIndex].type === 'sqm' || cart[currentEditCartIndex].type === 'manual') { let qtyNum = parseFloat(cart[currentEditCartIndex].qty); cart[currentEditCartIndex].total = qtyNum * newPrice; } else { let qtyNum = parseFloat(cart[currentEditCartIndex].qty); cart[currentEditCartIndex].total = qtyNum * newPrice; } updateCartDisplay(); showToast('Item updated'); } } closeCartEditModal(); }
+function saveCartEdit() { if(currentEditCartIndex !== null) { let newPrice = parseFloat(document.getElementById('editCartPrice').value); if(!isNaN(newPrice)) { saveCartHistory(); cart[currentEditCartIndex].price = newPrice; let qtyNum = parseFloat(cart[currentEditCartIndex].qty); cart[currentEditCartIndex].total = qtyNum * newPrice; updateCartDisplay(); showToast('Item updated'); } } closeCartEditModal(); }
 function closeCartEditModal() { document.getElementById('editCartModal').style.display = 'none'; currentEditCartIndex = null; }
 
 // ==================== ORDERS ====================
@@ -389,7 +479,7 @@ function displayCustomers() {
     let search = document.getElementById('customerSearch').value.toLowerCase();
     let filtered = customers.filter(c => c.name.toLowerCase().includes(search) || (c.phone && c.phone.includes(search)));
     let container = document.getElementById('customerList'); container.innerHTML = '';
-    filtered.forEach(c => { let due = c.invoices.reduce((s,i)=>s+(i.amount-i.paid),0); let div = document.createElement('div'); div.className = 'customer-card'; div.innerHTML = `<div style="display:flex;justify-content:space-between;flex-wrap:wrap"><div><strong>${c.name}</strong> | 📞 ${c.phone || '-'}</div><div><span class="badge ${due > 0 ? 'badge-unpaid' : (due < 0 ? 'badge-partial' : 'badge-paid')}">${due > 0 ? 'Due: ' + formatCurrency(due) : (due < 0 ? 'Advance: ' + formatCurrency(Math.abs(due)) : 'Settled')}</span></div></div><div>${c.invoices.map(i => `<div style="font-size:10px; padding:6px; border-top:1px solid #eee; margin-top:4px"><strong>${i.invoiceNo}</strong> | Total: ${formatCurrency(i.amount)} | Paid: ${formatCurrency(i.paid)} | Remaining: ${formatCurrency(i.amount-i.paid)} | <span class="badge badge-${i.status}">${i.status}</span><div class="action-btns" style="margin-top:4px"><button onclick="openPaymentModal('${i.invoiceNo}')" class="btn-success" style="padding:2px 6px">Pay</button><button onclick="viewInvoice('${i.invoiceNo}')" class="btn-info" style="padding:2px 6px">View</button><button onclick="deleteInvoice('${i.invoiceNo}')" class="btn-danger" style="padding:2px 6px">Delete</button><button onclick="shareInvoiceFromInv('${i.invoiceNo}')" class="btn-whatsapp" style="padding:2px 6px">Share</button></div></div>`).join('')}</div>`; container.appendChild(div); });
+    filtered.forEach(c => { let due = c.invoices.reduce((s,i)=>s+(i.amount-i.paid),0); let div = document.createElement('div'); div.className = 'customer-card'; div.innerHTML = `<div style="display:flex;justify-content:space-between;flex-wrap:wrap"><div><strong>${c.name}</strong> | 📞 ${c.phone || '-'}</div><div><span class="badge ${due > 0 ? 'badge-unpaid' : 'badge-paid'}">${due > 0 ? 'Due: ' + formatCurrency(due) : 'Settled'}</span></div></div><div>${c.invoices.map(i => `<div style="font-size:10px; padding:6px; border-top:1px solid #eee; margin-top:4px"><strong>${i.invoiceNo}</strong> | Total: ${formatCurrency(i.amount)} | Paid: ${formatCurrency(i.paid)} | Remaining: ${formatCurrency(i.amount-i.paid)} | <span class="badge badge-${i.status}">${i.status}</span><div class="action-btns" style="margin-top:4px"><button onclick="openPaymentModal('${i.invoiceNo}')" class="btn-success" style="padding:2px 6px">Pay</button><button onclick="viewInvoice('${i.invoiceNo}')" class="btn-info" style="padding:2px 6px">View</button><button onclick="deleteInvoice('${i.invoiceNo}')" class="btn-danger" style="padding:2px 6px">Delete</button><button onclick="shareInvoiceFromInv('${i.invoiceNo}')" class="btn-whatsapp" style="padding:2px 6px">Share</button></div></div>`).join('')}</div>`; container.appendChild(div); });
 }
 function displayInvoices() {
     let search = document.getElementById('invoiceSearch').value.toLowerCase();
@@ -430,41 +520,51 @@ function updateDailyData() {
 }
 function loadDailyData() { updateDailyData(); }
 
-// ==================== INVOICE VIEW & SHARE ====================
+// ==================== INVOICE VIEW & PDF ====================
 function viewInvoice(invNo) {
     let o = orders.find(x => x.invoiceNo === invNo); if(!o) return;
     let itemsHtml = '<table style="width:100%"><thead><tr style="background:#1a1a2e;color:#ffd700"><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>';
     o.items.forEach(i => { itemsHtml += `<tr><td style="padding:6px">${i.name}</td><td style="padding:6px">${i.size}</td><td style="padding:6px">${i.qty}</td><td style="padding:6px">${formatCurrency(i.price)}</td><td style="padding:6px">${formatCurrency(i.total)}</td></tr>`; });
     itemsHtml += '</tbody></table>';
     let remaining = o.total - (o.paid || 0);
-    let html = `<div id="invoicePrint" style="font-family:Arial;max-width:650px;margin:auto;border:2px solid #ffd700;border-radius:10px"><div style="background:#1a1a2e;color:#ffd700;padding:12px;text-align:center"><h2>${company.logo} ${company.name}</h2><p>${company.tagline}</p><p>${company.address} | Tel: ${company.phone}</p></div><div style="padding:12px"><div style="background:#f8f9fa;padding:10px;border-radius:8px"><strong>Invoice:</strong> ${o.invoiceNo}<br><strong>Date:</strong> ${new Date(o.date).toLocaleString()}<br><strong>Customer:</strong> ${o.customer}<br><strong>Phone:</strong> ${o.customerPhone}</div>${itemsHtml}<div style="text-align:right;margin-top:12px;border-top:2px solid #ffd700;padding-top:8px"><h3>Total: ${formatCurrency(o.total)}</h3><p>Paid: ${formatCurrency(o.paid || 0)}</p><p><strong>Remaining: ${formatCurrency(Math.abs(remaining))}</strong></p><p><strong>${remaining > 0 ? `To Customer: ${o.customer}` : (remaining < 0 ? `To Company: ${company.name}` : 'Settled')}</strong></p></div><div style="text-align:center;margin-top:12px;font-size:9px;color:#666;border-top:1px solid #ddd;padding-top:8px">${invoiceFooter}</div></div></div>`;
-    if(currentLang === 'ar') { html = html.replace(/Item/g,'المنتج').replace(/Size/g,'المقاس').replace(/Qty/g,'الكمية').replace(/Price/g,'السعر').replace(/Total/g,'الإجمالي').replace(/Invoice/g,'الفاتورة').replace(/Date/g,'التاريخ').replace(/Customer/g,'العميل').replace(/Phone/g,'الجوال').replace(/Paid/g,'مدفوع').replace(/Remaining/g,'المتبقي').replace(/To Customer/g,'للعميل').replace(/To Company/g,'للشركة').replace(/Settled/g,'مستحق'); }
+    let html = `<div id="invoicePrint" style="font-family:Arial;max-width:650px;margin:auto;border:2px solid #ffd700;border-radius:10px"><div style="background:#1a1a2e;color:#ffd700;padding:12px;text-align:center"><h2>${company.logo} ${company.name}</h2><p>${company.tagline}</p><p>${company.address} | Tel: ${company.phone}</p></div><div style="padding:12px"><div style="background:#f8f9fa;padding:10px;border-radius:8px"><strong>Invoice:</strong> ${o.invoiceNo}<br><strong>Date:</strong> ${new Date(o.date).toLocaleString()}<br><strong>Customer:</strong> ${o.customer}<br><strong>Phone:</strong> ${o.customerPhone}</div>${itemsHtml}<div style="text-align:right;margin-top:12px;border-top:2px solid #ffd700;padding-top:8px"><h3>Total: ${formatCurrency(o.total)}</h3><p>Paid: ${formatCurrency(o.paid || 0)}</p><p><strong>Remaining: ${formatCurrency(Math.abs(remaining))}</strong></p>${remaining > 0 ? `<p>Due from customer</p>` : (remaining < 0 ? `<p>Refund to customer</p>` : '<p>Settled ✓</p>')}</div><div style="text-align:center;margin-top:12px;font-size:9px;color:#666;border-top:1px solid #ddd;padding-top:8px">${invoiceFooter}</div></div></div>`;
     document.getElementById('invoiceDetails').innerHTML = html;
     document.getElementById('invoiceModal').style.display = 'flex';
     currentInvoiceNo = invNo;
 }
-async function downloadInvoicePDF() { if(!currentInvoiceNo) return; let o = orders.find(x => x.invoiceNo === currentInvoiceNo); if(!o) return; let itemsHtml = ''; o.items.forEach(i => { itemsHtml += `<tr><td style="padding:6px">${i.name}</td><td style="padding:6px">${i.size}</td><td style="padding:6px">${i.qty}</td><td style="padding:6px">${formatCurrency(i.price)}</td><td style="padding:6px">${formatCurrency(i.total)}</td></td>`; }); let remaining = o.total - (o.paid || 0); let html = `<div style="font-family:Arial;max-width:650px;margin:auto;border:2px solid #ffd700;border-radius:10px"><div style="background:#1a1a2e;color:#ffd700;padding:12px;text-align:center"><h2>${company.logo} ${company.name}</h2><p>${company.tagline}</p><p>${company.address}</p></div><div style="padding:12px"><div style="background:#f8f9fa;padding:10px;border-radius:8px"><strong>${currentLang === 'ar' ? 'الفاتورة' : 'Invoice'}:</strong> ${o.invoiceNo}<br><strong>${currentLang === 'ar' ? 'التاريخ' : 'Date'}:</strong> ${new Date(o.date).toLocaleString()}<br><strong>${currentLang === 'ar' ? 'العميل' : 'Customer'}:</strong> ${o.customer}<br><strong>${currentLang === 'ar' ? 'الجوال' : 'Phone'}:</strong> ${o.customerPhone}</div><table style="width:100%"><thead><tr style="background:#1a1a2e;color:#ffd700"><th>${currentLang === 'ar' ? 'المنتج' : 'Item'}</th><th>${currentLang === 'ar' ? 'المقاس' : 'Size'}</th><th>${currentLang === 'ar' ? 'الكمية' : 'Qty'}</th><th>${currentLang === 'ar' ? 'السعر' : 'Price'}</th><th>${currentLang === 'ar' ? 'الإجمالي' : 'Total'}</th></tr></thead><tbody>${itemsHtml}</tbody></table><div style="text-align:right;margin-top:12px;border-top:2px solid #ffd700;padding-top:8px"><h3>${currentLang === 'ar' ? 'الإجمالي' : 'Total'}: ${formatCurrency(o.total)}</h3><p>${currentLang === 'ar' ? 'مدفوع' : 'Paid'}: ${formatCurrency(o.paid || 0)}</p><p><strong>${currentLang === 'ar' ? 'المتبقي' : 'Remaining'}: ${formatCurrency(Math.abs(remaining))}</strong></p></div><div style="text-align:center;margin-top:12px;font-size:9px;color:#666">${invoiceFooter}</div></div></div>`;
+async function downloadInvoicePDF() { if(!currentInvoiceNo) return; let o = orders.find(x => x.invoiceNo === currentInvoiceNo); if(!o) return; let itemsHtml = ''; o.items.forEach(i => { itemsHtml += `<tr><td style="padding:6px">${i.name}</td><td style="padding:6px">${i.size}</td><td style="padding:6px">${i.qty}</td><td style="padding:6px">${formatCurrency(i.price)}</td><td style="padding:6px">${formatCurrency(i.total)}</td></tr>`; }); let remaining = o.total - (o.paid || 0); let html = `<div style="font-family:Arial;max-width:650px;margin:auto;border:2px solid #ffd700;border-radius:10px"><div style="background:#1a1a2e;color:#ffd700;padding:12px;text-align:center"><h2>${company.logo} ${company.name}</h2><p>${company.tagline}</p><p>${company.address}</p></div><div style="padding:12px"><div style="background:#f8f9fa;padding:10px;border-radius:8px"><strong>Invoice:</strong> ${o.invoiceNo}<br><strong>Date:</strong> ${new Date(o.date).toLocaleString()}<br><strong>Customer:</strong> ${o.customer}<br><strong>Phone:</strong> ${o.customerPhone}</div><table style="width:100%"><thead><tr style="background:#1a1a2e;color:#ffd700"><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${itemsHtml}</tbody></table><div style="text-align:right;margin-top:12px;border-top:2px solid #ffd700;padding-top:8px"><h3>Total: ${formatCurrency(o.total)}</h3><p>Paid: ${formatCurrency(o.paid || 0)}</p><p><strong>Remaining: ${formatCurrency(Math.abs(remaining))}</strong></p></div><div style="text-align:center;margin-top:12px;font-size:9px;color:#666">${invoiceFooter}</div></div></div>`;
     let tpl = document.getElementById('pdfTemplate'); tpl.innerHTML = html;
     try { let canvas = await html2canvas(tpl, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); let { jsPDF } = window.jspdf; let imgWidth = 190, imgHeight = (canvas.height * imgWidth) / canvas.width; let doc = new jsPDF('p', 'mm', 'a4'); doc.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight); doc.save(`${company.name}_${o.invoiceNo}.pdf`); showToast('PDF Downloaded'); } catch(e) { showToast('Error: ' + e.message); } }
-async function shareInvoiceAsImage() { if(!currentInvoiceNo) return; let el = document.getElementById('invoicePrint'); if(!el) return; let canvas = await html2canvas(el, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); let w = window.open('', '_blank'); w.document.write(`<html><body style="margin:0"><img src="${imgData}" style="max-width:100%"></body></html>`); w.document.close(); showToast('Image ready - share from new tab'); }
-async function shareInvoiceFromInv(invNo) { let o = orders.find(x => x.invoiceNo === invNo); if(!o) return; let itemsHtml = ''; o.items.forEach(i => { itemsHtml += `<tr><td style="padding:4px">${i.name}</td><td style="padding:4px">${i.size}</td><td style="padding:4px">${i.qty}</td><td style="padding:4px">${formatCurrency(i.price)}</td><td style="padding:4px">${formatCurrency(i.total)}</td><tr>`; }); let remaining = o.total - (o.paid || 0); let div = document.createElement('div'); div.style.cssText = 'font-family:Arial;max-width:500px;margin:auto;background:white;padding:12px;border:2px solid #ffd700;border-radius:10px'; div.innerHTML = `<div style="background:#1a1a2e;color:#ffd700;padding:8px;text-align:center"><h3>${company.logo} ${company.name}</h3></div><div style="padding:8px"><strong>Invoice:</strong> ${o.invoiceNo}<br><strong>Date:</strong> ${new Date(o.date).toLocaleString()}<br><strong>Customer:</strong> ${o.customer}<br><strong>Phone:</strong> ${o.customerPhone}</div><table style="width:100%;margin-top:8px"><thead><tr style="background:#ffd700"><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${itemsHtml}</tbody></table><div style="text-align:right;margin-top:8px;border-top:1px solid #ffd700;padding-top:6px"><h3>Total: ${formatCurrency(o.total)}</h3><p>Paid: ${formatCurrency(o.paid||0)}</p><p><strong>Remaining: ${formatCurrency(Math.abs(remaining))}</strong></p></div>`;
+async function shareInvoiceAsImage() { let el = document.getElementById('invoicePrint'); if(!el) return; let canvas = await html2canvas(el, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); let w = window.open('', '_blank'); w.document.write(`<html><body style="margin:0"><img src="${imgData}" style="max-width:100%"></body></html>`); w.document.close(); showToast('Image ready - share from new tab'); }
+async function shareInvoiceFromInv(invNo) { let o = orders.find(x => x.invoiceNo === invNo); if(!o) return; let itemsHtml = ''; o.items.forEach(i => { itemsHtml += `<tr><td style="padding:4px">${i.name}</td><td style="padding:4px">${i.size}</td><td style="padding:4px">${i.qty}</td><td style="padding:4px">${formatCurrency(i.price)}</td><td style="padding:4px">${formatCurrency(i.total)}</td></tr>`; }); let remaining = o.total - (o.paid || 0); let div = document.createElement('div'); div.style.cssText = 'font-family:Arial;max-width:500px;margin:auto;background:white;padding:12px;border:2px solid #ffd700;border-radius:10px'; div.innerHTML = `<div style="background:#1a1a2e;color:#ffd700;padding:8px;text-align:center"><h3>${company.logo} ${company.name}</h3></div><div style="padding:8px"><strong>Invoice:</strong> ${o.invoiceNo}<br><strong>Date:</strong> ${new Date(o.date).toLocaleString()}<br><strong>Customer:</strong> ${o.customer}<br><strong>Phone:</strong> ${o.customerPhone}</div><table style="width:100%;margin-top:8px"><thead><tr style="background:#ffd700"><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${itemsHtml}</tbody>｜｜DSML｜｜<div style="text-align:right;margin-top:8px;border-top:1px solid #ffd700;padding-top:6px"><h3>Total: ${formatCurrency(o.total)}</h3><p>Paid: ${formatCurrency(o.paid||0)}</p><p><strong>Remaining: ${formatCurrency(Math.abs(remaining))}</strong></p></div>`;
     document.body.appendChild(div); let canvas = await html2canvas(div, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); document.body.removeChild(div); let w = window.open('', '_blank'); w.document.write(`<html><body style="margin:0"><img src="${imgData}" style="max-width:100%"></body></html>`); w.document.close(); showToast('Image ready - share from new tab'); }
 function sendInvoiceWhatsApp() { let o = orders.find(x => x.invoiceNo === currentInvoiceNo); if(!o || !o.customerPhone) { showToast('No phone number'); return; } let p = o.customerPhone.replace(/\D/g,''); if(p.startsWith('05')) p = '966' + p.substring(1); let msg = `${company.name} Invoice ${o.invoiceNo}%0ATotal: ${formatCurrency(o.total)}%0A${invoiceFooter}`; window.open(`https://wa.me/${p}?text=${msg}`); }
 function printInvoice() { let w = window.open('', '_blank'); w.document.write(`<html><head><title>Invoice</title><style>body{padding:15px} table{width:100%} th,td{padding:6px;border-bottom:1px solid #ddd}</style></head><body>${document.getElementById('invoiceDetails').innerHTML}</body></html>`); w.document.close(); w.print(); }
 function closeModal() { document.getElementById('invoiceModal').style.display = 'none'; }
-async function generateCartPDF() { if(cart.length === 0) { showToast('Cart empty'); return; } let cust = document.getElementById('customerName').value; let sub = cart.reduce((s,i)=>s+i.total,0); let tax = taxEnabled ? sub * taxRate / 100 : 0; let total = sub + tax; let itemsHtml = ''; cart.forEach(i => { itemsHtml += `<tr><td style="padding:6px">${i.name}<tr><td style="padding:6px">${i.size}</td><td style="padding:6px">${i.qty}</td><td style="padding:6px">${formatCurrency(i.price)}</td><td style="padding:6px">${formatCurrency(i.total)}</td></tr>`; }); let html = `<div style="font-family:Arial;max-width:600px;margin:auto;border:2px solid #ffd700;border-radius:10px"><div style="background:#1a1a2e;color:#ffd700;padding:10px;text-align:center"><h3>${company.name} - Cart Preview</h3></div><div style="padding:12px"><p><strong>Customer:</strong> ${cust}</p><table style="width:100%"><thead><tr style="background:#ffd700"><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${itemsHtml}</tbody></table><div style="text-align:right;margin-top:10px"><h3>Total: ${formatCurrency(total)}</h3></div></div></div>`;
+async function generateCartPDF() { if(cart.length === 0) { showToast('Cart empty'); return; } let cust = document.getElementById('customerName').value; let sub = cart.reduce((s,i)=>s+i.total,0); let tax = taxEnabled ? sub * taxRate / 100 : 0; let total = sub + tax; let itemsHtml = ''; cart.forEach(i => { itemsHtml += `<tr><td style="padding:6px">${i.name}</td><td style="padding:6px">${i.size}</td><td style="padding:6px">${i.qty}</td><td style="padding:6px">${formatCurrency(i.price)}</td><td style="padding:6px">${formatCurrency(i.total)}</td><tr>`; }); let html = `<div style="font-family:Arial;max-width:600px;margin:auto;border:2px solid #ffd700;border-radius:10px"><div style="background:#1a1a2e;color:#ffd700;padding:10px;text-align:center"><h3>${company.name} - Cart Preview</h3></div><div style="padding:12px"><p><strong>Customer:</strong> ${cust}</p><table style="width:100%"><thead><tr style="background:#ffd700"><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${itemsHtml}</tbody></table><div style="text-align:right;margin-top:10px"><h3>Total: ${formatCurrency(total)}</h3></div></div></div>`;
     let tpl = document.getElementById('pdfTemplate'); tpl.innerHTML = html;
     try { let canvas = await html2canvas(tpl, { scale: 2 }); let imgData = canvas.toDataURL('image/png'); let { jsPDF } = window.jspdf; let imgWidth = 190, imgHeight = (canvas.height * imgWidth) / canvas.width; let doc = new jsPDF('p', 'mm', 'a4'); doc.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight); doc.save(`${company.name}_Cart.pdf`); showToast('PDF Downloaded'); } catch(e) { showToast('Error'); } }
 
 // ==================== SETTINGS ====================
 function saveCompanySettings() { company.name = document.getElementById('companyNameSetting').value; company.logo = document.getElementById('companyLogoSetting').value; company.tagline = document.getElementById('companyTaglineSetting').value; company.address = document.getElementById('companyAddressSetting').value; company.phone = document.getElementById('companyPhoneSetting').value; saveData(); document.getElementById('companyNameDisplay').innerHTML = `${company.logo} ${company.name}`; document.getElementById('companyTaglineDisplay').innerHTML = company.tagline; showToast('Saved'); }
-function saveTaxSettings() { taxEnabled = document.getElementById('taxEnable').checked; taxRate = parseFloat(document.getElementById('taxRate').value); taxName = document.getElementById('taxName').value; saveData(); updateTotals(); showToast('Saved'); }
+function saveTaxSettings() { taxEnabled = document.getElementById('taxEnable').checked; taxRate = parseFloat(document.getElementById('taxRate').value); taxName = document.getElementById('taxName').value; saveData(); document.getElementById('taxRateDisplay').innerHTML = taxRate; updateTotals(); showToast('Saved'); }
 function backupData() { let data = { products, orders, customers, company, taxEnabled, taxRate, taxName, invoiceFooter }; let a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: 'application/json' })); a.download = `tabuk_backup_${new Date().toISOString().slice(0,19)}.json`; a.click(); showToast('Backup created'); }
 function restoreData(file) { let r = new FileReader(); r.onload = e => { try { let d = JSON.parse(e.target.result); if(d.products) products = d.products; if(d.orders) orders = d.orders; if(d.customers) customers = d.customers; if(d.company) company = d.company; if(d.taxEnabled !== undefined) taxEnabled = d.taxEnabled; if(d.taxRate) taxRate = d.taxRate; if(d.taxName) taxName = d.taxName; saveData(); location.reload(); } catch(err) { showToast('Invalid file'); } }; r.readAsText(file); }
 function resetAll() { if(prompt('Type CONFIRM to DELETE ALL DATA:') === 'CONFIRM') { localStorage.clear(); location.reload(); } }
 
 // ==================== INIT ====================
-loadData(); displayProducts(); loadInventory(); updateCartDisplay(); updateProfitLoss(); displayCustomers(); displayInvoices(); loadMonthlyData(); updateDailyData(); setLanguage('en'); document.getElementById('monthPicker').value = new Date().toISOString().slice(0,7); document.getElementById('dailyDatePicker').value = new Date().toISOString().slice(0,10); document.getElementById('companyNameSetting').value = company.name; document.getElementById('companyLogoSetting').value = company.logo; document.getElementById('companyTaglineSetting').value = company.tagline; document.getElementById('companyAddressSetting').value = company.address; document.getElementById('companyPhoneSetting').value = company.phone; document.getElementById('taxEnable').checked = taxEnabled; document.getElementById('taxRate').value = taxRate; document.getElementById('taxName').value = taxName;
+loadData(); displayProducts(); loadInventory(); updateCartDisplay(); updateProfitLoss(); displayCustomers(); displayInvoices(); loadMonthlyData(); updateDailyData(); 
+document.getElementById('monthPicker').value = new Date().toISOString().slice(0,7); 
+document.getElementById('dailyDatePicker').value = new Date().toISOString().slice(0,10); 
+document.getElementById('companyNameSetting').value = company.name; 
+document.getElementById('companyLogoSetting').value = company.logo; 
+document.getElementById('companyTaglineSetting').value = company.tagline; 
+document.getElementById('companyAddressSetting').value = company.address; 
+document.getElementById('companyPhoneSetting').value = company.phone; 
+document.getElementById('taxEnable').checked = taxEnabled; 
+document.getElementById('taxRate').value = taxRate; 
+document.getElementById('taxName').value = taxName; 
+document.getElementById('taxRateDisplay').innerHTML = taxRate;
 window.openPaymentModal = openPaymentModal; window.viewInvoice = viewInvoice; window.deleteInvoice = deleteInvoice; window.shareInvoiceFromInv = shareInvoiceFromInv;
 </script>
 </body>
