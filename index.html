@@ -10,9 +10,10 @@
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif;}
         body{background:#0f2027;padding:10px;}
         .container{max-width:1400px;margin:0 auto;background:white;border-radius:15px;overflow:hidden;}
-        .header{background:#1a1a2e;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
+        .header{background:#1a1a2e;padding:12px 20px;text-align:center;border-bottom:3px solid #ffd700;}
         .header h2{color:#ffd700;font-size:22px;}
-        .lang-currency{display:flex;gap:8px;}
+        .header p{color:#a0c4e0;font-size:10px;margin-top:3px;}
+        .lang-currency{position:absolute;top:12px;right:20px;display:flex;gap:8px;}
         .lang-currency button{padding:5px 12px;background:#2c3e50;color:white;border:none;border-radius:5px;cursor:pointer;}
         .lang-currency button.active{background:#ffd700;color:#1a1a2e;}
         .tabs{display:flex;background:#2c3e50;flex-wrap:wrap;}
@@ -60,7 +61,7 @@
         .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;justify-content:center;align-items:center;}
         .modal-content{background:white;padding:20px;border-radius:10px;max-width:600px;width:95%;max-height:80vh;overflow:auto;}
         .toast{position:fixed;bottom:20px;right:20px;background:#1a1a2e;color:#ffd700;padding:8px 16px;border-radius:8px;z-index:1000;}
-        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:15px;}
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:15px;}
         .stat-card{background:#1a1a2e;padding:12px;border-radius:10px;text-align:center;color:white;}
         .stat-card .value{font-size:22px;font-weight:bold;color:#ffd700;}
         .action-btns{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
@@ -81,7 +82,8 @@
 <body>
 <div class="container">
     <div class="header">
-        <div><h2 id="companyName">🏢 TABUK MARBLE</h2><p id="companyTagline" style="font-size:10px;color:#a0c4e0;">Premium Marble Solutions</p></div>
+        <h2 id="companyName">🏢 TABUK MARBLE</h2>
+        <p id="companyTagline">Premium Marble Solutions | Since 2018</p>
         <div class="lang-currency">
             <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
             <button class="lang-btn" data-lang="ar" onclick="setLanguage('ar')">AR</button>
@@ -137,23 +139,35 @@
     </div>
 
     <!-- CUSTOMERS TAB -->
-    <div id="customersTab" class="tab-content"><div class="panel"><h3>Customer Accounts</h3><input type="text" id="customerSearch" placeholder="Search..." onkeyup="displayCustomers()" style="width:100%;margin-bottom:10px;"><div id="customerList"></div><div id="customerTotalBox" class="customer-total" style="margin-top:15px;"></div></div></div>
+    <div id="customersTab" class="tab-content"><div class="panel"><h3>Customer Accounts</h3><input type="text" id="customerSearch" placeholder="Search by name or phone..." onkeyup="displayCustomers()" style="width:100%;margin-bottom:10px;"><div id="customerList"></div><div id="customerTotalBox" class="customer-total" style="margin-top:15px;"></div></div></div>
 
     <!-- INVENTORY TAB -->
     <div id="inventoryTab" class="tab-content"><div class="panel"><h3>Inventory</h3>
         <div class="group-filter"><button class="group-btn active" onclick="filterInventory('all')">All</button><button onclick="filterInventory('mwad')">مواد بناء</button><button onclick="filterInventory('mojali')">حجر مجلي</button><button onclick="filterInventory('mosnafar')">حجر مصنفر</button></div>
         <input type="text" id="inventorySearch" placeholder="Search..." onkeyup="loadInventory()" style="width:100%;margin-bottom:10px;">
-        <div style="overflow-x:auto"><table id="inventoryTable"><thead><tr><th>Group</th><th>Name</th><th>Size</th><th>Selling</th><th>Cost</th><th>Stock</th><th></th></tr></thead><tbody id="inventoryBody"></tbody></table></div>
+        <div style="overflow-x:auto"><table id="inventoryTable"><thead><tr><th>Group</th><th>Name</th><th>Size</th><th>Selling</th><th>Cost</th><th>Stock</th><th></th></td></thead><tbody id="inventoryBody"></tbody></table></div>
     </div></div>
 
     <!-- INVOICES TAB -->
-    <div id="invoicesTab" class="tab-content"><div class="panel"><h3>All Invoices</h3><input type="text" id="invoiceSearch" placeholder="Search..." onkeyup="displayInvoices()" style="width:100%;margin-bottom:10px;"><div style="overflow-x:auto"><table id="invoicesTable"><thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody id="invoicesBody"></tbody></table></div></div></div>
+    <div id="invoicesTab" class="tab-content"><div class="panel"><h3>All Invoices</h3><input type="text" id="invoiceSearch" placeholder="Search..." onkeyup="displayInvoices()" style="width:100%;margin-bottom:10px;"><div style="overflow-x:auto"><table id="invoicesTable"><thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody id="invoicesBody"></tbody></tr></div></div></div>
 
     <!-- DAILY REPORT TAB -->
     <div id="dailyTab" class="tab-content"><div class="panel"><h3>Daily Sales Report</h3><div><label>Select Date:</label><input type="date" id="dailyDate" onchange="loadDailyReport()" style="width:200px;margin-bottom:15px;"></div><div id="dailyList" style="margin-top:10px;"></div><div id="dailyTotal" style="margin-top:15px;padding:12px;background:#1a1a2e;color:white;border-radius:8px;text-align:right"></div></div></div>
 
     <!-- MONTHLY REPORT TAB -->
-    <div id="monthlyTab" class="tab-content"><div class="panel"><h3>Monthly Transactions</h3><div><label>Select Month:</label><input type="month" id="monthPicker" onchange="loadMonthlyReport()" style="width:200px;margin-bottom:15px;"></div><div style="overflow-x:auto;margin-top:10px"><table id="monthlyTable"><thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Profit</th><th>Status</th><th>Actions</th></tr></thead><tbody id="monthlyBody"></tbody></table></div></div></div>
+    <div id="monthlyTab" class="tab-content">
+        <div class="panel">
+            <h3>Monthly Transactions</h3>
+            <div class="stats-grid">
+                <div class="stat-card"><h4>Total Sales</h4><div class="value" id="monthlyTotalSales">SAR 0</div></div>
+                <div class="stat-card"><h4>Total Profit</h4><div class="value" id="monthlyTotalProfit">SAR 0</div></div>
+                <div class="stat-card"><h4>Total Orders</h4><div class="value" id="monthlyTotalOrders">0</div></div>
+                <div class="stat-card"><h4>Avg Order</h4><div class="value" id="monthlyAvgOrder">SAR 0</div></div>
+            </div>
+            <div><label>Select Month:</label><input type="month" id="monthPicker" onchange="loadMonthlyReport()" style="width:200px;margin-bottom:15px;"></div>
+            <div style="overflow-x:auto;margin-top:10px"><table id="monthlyTable"><thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Profit</th><th>Status</th><th>Actions</th></tr></thead><tbody id="monthlyBody"></tbody></table></div>
+        </div>
+    </div>
 
     <!-- SETTINGS TAB -->
     <div id="settingsTab" class="tab-content"><div class="panel"><h3>Settings</h3><div class="form-group"><label>Company Name</label><input type="text" id="companyNameSetting"></div><div class="form-group"><label>Company Tagline</label><input type="text" id="companyTaglineSetting"></div><div class="form-group"><label>Company Address</label><input type="text" id="companyAddressSetting"></div><div class="form-group"><label>Company Phone</label><input type="text" id="companyPhoneSetting"></div><div class="form-group"><label>Tax Rate (%)</label><input type="number" id="taxRateSetting" value="15"></div><div class="form-group"><label><input type="checkbox" id="taxEnableCheck"> Enable Tax</label></div><button onclick="saveSettings()" class="btn-success">Save</button><button onclick="backupData()" class="btn-info">Backup</button><button onclick="resetAll()" class="btn-danger">Reset All</button></div></div>
@@ -171,7 +185,7 @@ let products = [], orders = [], customers = [], cart = [], cartHistory = [];
 let currentLang = 'en', currentCurrency = 'SAR', currentMode = 'sqm';
 let currentGroup = 'all', currentInvGroup = 'all';
 let taxEnabled = true, taxRate = 15;
-let company = { name: "TABUK MARBLE", tagline: "Premium Marble Solutions", address: "Tabuk, Saudi Arabia", phone: "+966 59 807 4287" };
+let company = { name: "TABUK MARBLE", tagline: "Premium Marble Solutions | Since 2018", address: "Tabuk, Saudi Arabia", phone: "+966 59 807 4287" };
 let currentInvoiceNo = null, currentPayInvoice = null, currentEditInvoice = null;
 
 // ==================== ALL PRODUCTS ==================
@@ -243,7 +257,10 @@ function updateCartDisplay() {
     cart.forEach((item,idx)=>{ sub+=item.total; let r=tb.insertRow(); r.insertCell(0).innerHTML=item.name; r.insertCell(1).innerHTML=item.size; r.insertCell(2).innerHTML=item.qty; r.insertCell(3).innerHTML=formatCurrency(item.price); r.insertCell(4).innerHTML=formatCurrency(item.total); let btn=document.createElement('button'); btn.innerHTML='✖'; btn.style.background='#e74c3c'; btn.onclick=()=>{ cart.splice(idx,1); updateCartDisplay(); }; r.insertCell(5).appendChild(btn); });
     updateTotals(sub);
 }
-function updateTotals(sub) { if(!sub) sub=cart.reduce((s,i)=>s+i.total,0); let tax=taxEnabled?sub*taxRate/100:0; let total=sub+tax; document.getElementById('subtotal').innerHTML=formatCurrency(sub); document.getElementById('taxAmount').innerHTML=formatCurrency(tax); document.getElementById('grandTotal').innerHTML=formatCurrency(total); let rec=parseFloat(document.getElementById('amountReceived').value)||0; document.getElementById('received').innerHTML=formatCurrency(rec); let bal=total-rec; if(bal>0){ document.getElementById('balanceMsg').innerHTML=`<span class="balance-negative">Due from customer: ${formatCurrency(bal)}</span>`; }else if(bal<0){ document.getElementById('balanceMsg').innerHTML=`<span class="balance-positive">Refund to customer: ${formatCurrency(Math.abs(bal))}</span>`; }else{ document.getElementById('balanceMsg').innerHTML=`<span class="balance-zero">Fully Paid ✓</span>`; } }
+function updateTotals(sub) { if(!sub) sub=cart.reduce((s,i)=>s+i.total,0); let tax=taxEnabled?sub*taxRate/100:0; let total=sub+tax; document.getElementById('subtotal').innerHTML=formatCurrency(sub); document.getElementById('taxAmount').innerHTML=formatCurrency(tax); document.getElementById('grandTotal').innerHTML=formatCurrency(total); let rec=parseFloat(document.getElementById('amountReceived').value)||0; document.getElementById('received').innerHTML=formatCurrency(rec); let bal=total-rec; let custName = document.getElementById('customerName').value || 'customer';
+    if(bal>0){ document.getElementById('balanceMsg').innerHTML=`<span class="balance-negative">Due from ${custName}: ${formatCurrency(bal)}</span>`; }
+    else if(bal<0){ document.getElementById('balanceMsg').innerHTML=`<span class="balance-positive">Refund to ${custName}: ${formatCurrency(Math.abs(bal))}</span>`; }
+    else{ document.getElementById('balanceMsg').innerHTML=`<span class="balance-zero">Fully Paid ✓</span>`; } }
 function clearCart() { if(confirm('Clear?')){ cartHistory.push(JSON.parse(JSON.stringify(cart))); cart=[]; updateCartDisplay(); } }
 function undoCart() { if(cartHistory.length){ cart=cartHistory.pop(); updateCartDisplay(); showToast('Undo'); } else showToast('Nothing'); }
 function confirmOrder() {
@@ -274,7 +291,7 @@ function displayCustomers() {
     let container=document.getElementById('customerList'); container.innerHTML='';
     let totalDueAll=0, totalPaidAll=0;
     filtered.forEach(c=>{ let due=c.invoices.reduce((s,i)=>s+(i.amount-i.paid),0); let paidAmt=c.invoices.reduce((s,i)=>s+i.paid,0); totalDueAll+=due; totalPaidAll+=paidAmt; let div=document.createElement('div'); div.className='customer-card'; div.innerHTML=`<div><b>${c.name}</b> ${c.phone?`📞 ${c.phone}`:''} <span class="badge ${due>0?'badge-unpaid':'badge-paid'}">${due>0?'Due: '+formatCurrency(due):'Settled'}</span></div>`; c.invoices.forEach(i=>{ div.innerHTML+=`<div style="font-size:11px;border-top:1px solid #eee;padding:5px"><b>${i.invoiceNo}</b> | Total: ${formatCurrency(i.amount)} | Paid: ${formatCurrency(i.paid)} | Remaining: ${formatCurrency(i.amount-i.paid)} | <span class="badge badge-${i.status}">${i.status}</span><div class="action-btns"><button onclick="openPayment('${i.invoiceNo}')" class="btn-success">Pay</button><button onclick="viewInvoice('${i.invoiceNo}')" class="btn-info">View</button><button onclick="editInvoice('${i.invoiceNo}')" class="btn-warning">Edit</button><button onclick="deleteInvoice('${i.invoiceNo}')" class="btn-danger">Del</button><button onclick="shareInvoice('${i.invoiceNo}')" class="btn-whatsapp">Share</button></div></div>`; }); container.appendChild(div); });
-    document.getElementById('customerTotalBox').innerHTML = `<b>Summary</b><br>Total Due: ${formatCurrency(totalDueAll)}<br>Total Paid: ${formatCurrency(totalPaidAll)}<br>Net Balance: ${formatCurrency(totalDueAll)}`;
+    document.getElementById('customerTotalBox').innerHTML = `<b>Overall Summary</b><br>Total Due from Customers: ${formatCurrency(totalDueAll)}<br>Total Paid by Customers: ${formatCurrency(totalPaidAll)}<br>Net Receivable: ${formatCurrency(totalDueAll)}`;
 }
 function displayInvoices() {
     let search=document.getElementById('invoiceSearch').value.toLowerCase();
@@ -311,6 +328,14 @@ function loadMonthlyReport() {
     let m = document.getElementById('monthPicker').value;
     if(!m){ let today = new Date(); m = today.toISOString().slice(0,7); document.getElementById('monthPicker').value = m; }
     let filtered = orders.filter(o => o.date.substring(0,7) === m);
+    let totalSales = filtered.reduce((s,o) => s + o.total, 0);
+    let totalProfit = filtered.reduce((s,o) => s + o.profit, 0);
+    let totalOrders = filtered.length;
+    let avgOrder = totalOrders > 0 ? totalSales / totalOrders : 0;
+    document.getElementById('monthlyTotalSales').innerHTML = formatCurrency(totalSales);
+    document.getElementById('monthlyTotalProfit').innerHTML = formatCurrency(totalProfit);
+    document.getElementById('monthlyTotalOrders').innerHTML = totalOrders;
+    document.getElementById('monthlyAvgOrder').innerHTML = formatCurrency(avgOrder);
     let tb = document.getElementById('monthlyBody'); tb.innerHTML = '';
     if(filtered.length === 0){ tb.innerHTML = '<tr><td colspan="9" style="text-align:center">No orders found</td></tr>'; return; }
     filtered.forEach(o => { let r = tb.insertRow(); r.insertCell(0).innerHTML = new Date(o.date).toLocaleDateString(); r.insertCell(1).innerHTML = o.invoiceNo; r.insertCell(2).innerHTML = o.customer; r.insertCell(3).innerHTML = o.phone || '-'; r.insertCell(4).innerHTML = o.items.length; r.insertCell(5).innerHTML = formatCurrency(o.total); r.insertCell(6).innerHTML = formatCurrency(o.profit); r.insertCell(7).innerHTML = `<span class="badge badge-${o.status}">${o.status}</span>`; let c = r.insertCell(8); c.innerHTML = `<div class="action-btns"><button onclick="viewInvoice('${o.invoiceNo}')" class="btn-info">View</button><button onclick="editInvoice('${o.invoiceNo}')" class="btn-warning">Edit</button><button onclick="openPayment('${o.invoiceNo}')" class="btn-success">Pay</button><button onclick="shareInvoice('${o.invoiceNo}')" class="btn-whatsapp">Share</button></div>`; });
@@ -318,11 +343,12 @@ function loadMonthlyReport() {
 
 function viewInvoice(invNo) {
     let o=orders.find(x=>x.invoiceNo===invNo); if(!o) return;
-    let items='<table style="width:100%"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>';
-    o.items.forEach(i=>{ items+=`<tr><td>${i.name}</td><td>${i.size}</td><td>${i.qty}</td><td>${formatCurrency(i.price)}</td><td>${formatCurrency(i.total)}</td></tr>`; });
+    let items='<table style="width:100%"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></td></thead><tbody>';
+    o.items.forEach(i=>{ items+=`<tr><td style="padding:6px">${i.name}</td><td style="padding:6px">${i.size}</td><td style="padding:6px">${i.qty}</td><td style="padding:6px">${formatCurrency(i.price)}</td><td style="padding:6px">${formatCurrency(i.total)}</td></tr>`; });
     items+='</tbody></table>';
     let rem=o.total-(o.paid||0);
-    let html=`<div id="invoicePrint" class="invoice-box"><div class="header"><h2>🏢 ${company.name}</h2><p style="font-size:10px">${company.tagline}</p><p style="font-size:9px">${company.address} | ${company.phone}</p></div><div class="body"><div><b>Invoice:</b> ${o.invoiceNo}<br><b>Date:</b> ${new Date(o.date).toLocaleString()}<br><b>Customer:</b> ${o.customer}<br><b>Phone:</b> ${o.phone}</div>${items}<div style="text-align:right;margin-top:10px"><h3>Total: ${formatCurrency(o.total)}</h3><p>Paid: ${formatCurrency(o.paid||0)}</p><p><b>Balance: ${formatCurrency(Math.abs(rem))}</b></p>${rem>0?'<p class="balance-negative">Due from customer</p>':(rem<0?'<p class="balance-positive">Refund to customer</p>':'<p class="balance-zero">Fully Paid ✓</p>')}</div></div></div>`;
+    let balanceMsg = rem>0 ? `<span class="balance-negative">Due from ${o.customer}: ${formatCurrency(rem)}</span>` : (rem<0 ? `<span class="balance-positive">Refund to ${o.customer}: ${formatCurrency(Math.abs(rem))}</span>` : '<span class="balance-zero">Fully Paid ✓</span>');
+    let html=`<div id="invoicePrint" class="invoice-box"><div class="header"><h2>🏢 ${company.name}</h2><p style="font-size:10px">${company.tagline}</p><p style="font-size:9px">${company.address} | ${company.phone}</p></div><div class="body"><div><b>Invoice:</b> ${o.invoiceNo}<br><b>Date:</b> ${new Date(o.date).toLocaleString()}<br><b>Customer:</b> ${o.customer}<br><b>Phone:</b> ${o.phone}</div>${items}<div style="text-align:right;margin-top:10px"><h3>Total: ${formatCurrency(o.total)}</h3><p>Paid: ${formatCurrency(o.paid||0)}</p><p><b>${balanceMsg}</b></p></div></div></div>`;
     if(currentLang==='ar'){ html=html.replace('Item','المنتج').replace('Size','المقاس').replace('Qty','الكمية').replace('Price','السعر').replace('Total','الإجمالي').replace('Invoice','الفاتورة').replace('Date','التاريخ').replace('Customer','العميل').replace('Phone','الجوال'); }
     document.getElementById('invoiceDetails').innerHTML=html;
     document.getElementById('invoiceModal').style.display='flex';
@@ -332,12 +358,12 @@ async function downloadPDF() { if(!currentInvoiceNo) return; let o=orders.find(x
     let tpl=document.getElementById('pdfTemplate'); tpl.innerHTML=html;
     try{ let canvas=await html2canvas(tpl,{scale:2}); let img=canvas.toDataURL('image/png'); let {jsPDF}=window.jspdf; let doc=new jsPDF('p','mm','a4'); doc.addImage(img,'PNG',10,0,190,(canvas.height*190)/canvas.width); doc.save(`${company.name}_${o.invoiceNo}.pdf`); showToast('PDF Downloaded'); }catch(e){ showToast('Error'); } }
 async function shareImage() { let el=document.getElementById('invoicePrint'); if(!el) return; let canvas=await html2canvas(el,{scale:2}); let img=canvas.toDataURL('image/png'); let w=window.open('','_blank'); w.document.write(`<html><body style="margin:0"><img src="${img}" style="max-width:100%"></body></html>`); w.document.close(); showToast('Image ready'); }
-async function shareInvoice(invNo) { let o=orders.find(x=>x.invoiceNo===invNo); if(!o) return; let items=''; o.items.forEach(i=>{ items+=`<tr><td style="padding:3px">${i.name}</td><td style="padding:3px">${i.size}</td><td style="padding:3px">${i.qty}</td><td style="padding:3px">${formatCurrency(i.price)}</td><td style="padding:3px">${formatCurrency(i.total)}</td><table>`; }); let div=document.createElement('div'); div.style.cssText='font-family:Arial;background:white;padding:10px;border:2px solid #ffd700'; div.innerHTML=`<div style="background:#1a1a2e;color:#ffd700;padding:8px;text-align:center"><b>🏢 ${company.name}</b></div><div style="padding:8px"><b>${currentLang==='ar'?'الفاتورة':'Invoice'}:</b> ${o.invoiceNo}<br><b>${currentLang==='ar'?'التاريخ':'Date'}:</b> ${new Date(o.date).toLocaleString()}<br><b>${currentLang==='ar'?'العميل':'Customer'}:</b> ${o.customer}</div><table style="width:100%"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${items}</tbody></table><div style="text-align:right;margin-top:8px"><b>Total: ${formatCurrency(o.total)}</b><br>Paid: ${formatCurrency(o.paid||0)}<br>Balance: ${formatCurrency(o.total-(o.paid||0))}</div>`;
+async function shareInvoice(invNo) { let o=orders.find(x=>x.invoiceNo===invNo); if(!o) return; let items=''; o.items.forEach(i=>{ items+=`<tr><td style="padding:3px">${i.name}</td><td style="padding:3px">${i.size}</td><td style="padding:3px">${i.qty}</td><td style="padding:3px">${formatCurrency(i.price)}</td><td style="padding:3px">${formatCurrency(i.total)}</td></tr>`; }); let div=document.createElement('div'); div.style.cssText='font-family:Arial;background:white;padding:10px;border:2px solid #ffd700'; div.innerHTML=`<div style="background:#1a1a2e;color:#ffd700;padding:8px;text-align:center"><b>🏢 ${company.name}</b></div><div style="padding:8px"><b>${currentLang==='ar'?'الفاتورة':'Invoice'}:</b> ${o.invoiceNo}<br><b>${currentLang==='ar'?'التاريخ':'Date'}:</b> ${new Date(o.date).toLocaleString()}<br><b>${currentLang==='ar'?'العميل':'Customer'}:</b> ${o.customer}</div><table style="width:100%"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${items}</tbody></table><div style="text-align:right;margin-top:8px"><b>Total: ${formatCurrency(o.total)}</b><br>Paid: ${formatCurrency(o.paid||0)}<br>Balance: ${formatCurrency(o.total-(o.paid||0))}</div>`;
     document.body.appendChild(div); let canvas=await html2canvas(div,{scale:2}); let img=canvas.toDataURL('image/png'); document.body.removeChild(div); let w=window.open('','_blank'); w.document.write(`<html><body style="margin:0"><img src="${img}" style="max-width:100%"></body></html>`); w.document.close(); showToast('Image ready'); }
 function sendWhatsApp() { let o=orders.find(x=>x.invoiceNo===currentInvoiceNo); if(!o || !o.phone){ showToast('No phone'); return; } let p=o.phone.replace(/\D/g,''); if(p.startsWith('05')) p='966'+p.substring(1); let msg=`${company.name} Invoice ${o.invoiceNo}%0ATotal: ${formatCurrency(o.total)}%0A${currentLang==='ar'?'شكرا':'Thank you'}`; window.open(`https://wa.me/${p}?text=${msg}`); }
 function printInvoice() { let w=window.open('','_blank'); w.document.write(`<html><head><title>Invoice</title><style>body{padding:20px} table{width:100%} th,td{padding:8px;border-bottom:1px solid #ddd} th{background:#1a1a2e;color:#ffd700}</style></head><body>${document.getElementById('invoiceDetails').innerHTML}</body></html>`); w.document.close(); w.print(); }
 function closeModal() { document.getElementById('invoiceModal').style.display='none'; }
-async function generateCartPDF() { if(cart.length===0){ showToast('Cart empty'); return; } let cust=document.getElementById('customerName').value; let sub=cart.reduce((s,i)=>s+i.total,0); let tax=taxEnabled?sub*taxRate/100:0; let total=sub+tax; let items=''; cart.forEach(i=>{ items+=`<tr><td style="padding:5px">${i.name}<tr><td style="padding:5px">${i.size}</td><td style="padding:5px">${i.qty}</td><td style="padding:5px">${formatCurrency(i.price)}</td><td style="padding:5px">${formatCurrency(i.total)}</td></tr>`; }); let html=`<div style="font-family:Arial;max-width:600px;margin:auto;border:2px solid #ffd700;border-radius:10px"><div style="background:#1a1a2e;color:#ffd700;padding:12px;text-align:center"><h2>🏢 ${company.name} - Cart</h2></div><div style="padding:15px"><p><b>Customer:</b> ${cust}</p><table style="width:100%"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${items}</tbody><table><div style="text-align:right;margin-top:10px"><h3>Total: ${formatCurrency(total)}</h3></div></div></div>`;
+async function generateCartPDF() { if(cart.length===0){ showToast('Cart empty'); return; } let cust=document.getElementById('customerName').value; let sub=cart.reduce((s,i)=>s+i.total,0); let tax=taxEnabled?sub*taxRate/100:0; let total=sub+tax; let items=''; cart.forEach(i=>{ items+=`<tr><td style="padding:5px">${i.name}</td><td style="padding:5px">${i.size}</td><td style="padding:5px">${i.qty}</td><td style="padding:5px">${formatCurrency(i.price)}</td><td style="padding:5px">${formatCurrency(i.total)}</td></tr>`; }); let html=`<div style="font-family:Arial;max-width:600px;margin:auto;border:2px solid #ffd700;border-radius:10px"><div style="background:#1a1a2e;color:#ffd700;padding:12px;text-align:center"><h2>🏢 ${company.name} - Cart</h2></div><div style="padding:15px"><p><b>Customer:</b> ${cust}</p><table style="width:100%"><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${items}</tbody></table><div style="text-align:right;margin-top:10px"><h3>Total: ${formatCurrency(total)}</h3></div></div></div>`;
     let tpl=document.getElementById('pdfTemplate'); tpl.innerHTML=html;
     try{ let canvas=await html2canvas(tpl,{scale:2}); let img=canvas.toDataURL('image/png'); let {jsPDF}=window.jspdf; let doc=new jsPDF('p','mm','a4'); doc.addImage(img,'PNG',10,0,190,(canvas.height*190)/canvas.width); doc.save(`${company.name}_Cart.pdf`); showToast('PDF Downloaded'); }catch(e){ showToast('Error'); } }
 
